@@ -258,6 +258,10 @@ runs:
         NEW_VERSION="${{ steps.bump.outputs.new_version }}"
         CHANGELOG_FILE="${{ inputs.changelog-file }}"
         REPO_URL="https://github.com/${{ github.repository }}"
+        FEATURE_PATTERN="${{ env.feature_pattern }}"
+        FIX_PATTERN="${{ env.fix_pattern }}"
+        REFACTOR_PATTERN="${{ env.refactor_pattern }}"
+        BREAKING_PATTERN="${{ env.breaking_pattern }}"
         
         TMP_FILE="${CHANGELOG_FILE}.tmp"
         VERSION_TITLE="## $NEW_VERSION"
@@ -286,7 +290,7 @@ runs:
           # Tout ce qui n'est pas feat, fix, refactor, perf, BREAKING CHANGE
           # | grep -Ev "^- ((feat|fix|refactor|perf)(\(|:)|(✨|🚀|🐛|♻️|⚡|🎨))|(BREAKING CHANGE|!:)|Merge" | sed -E "s|//||g; s|\\?!:|:|g" || true
           echo "$ALL_COMMITS_FORMATTED" \
-            | grep -Ev "^- ((feat|fix|refactor|perf)(\(|:)|((${{ env.feature_pattern }})|(${{ env.fix_pattern }})|(${{ env.refactor }})))|(${{ env.breaking_pattern }})|Merge" | sed -E "s|//||g; s|\\?!:|:|g" || true
+            | grep -Ev "^- ((feat|fix|refactor|perf)(\(|:)|((${FEATURE_PATTERN})|(${FIX_PATTERN})|(${REFACTOR_PATTERN})))|(${BREAKING_PATTERN})|Merge" | sed -E "s|//||g; s|\\?!:|:|g" || true
         }
         extract_merge_commits() {
           # Tout ce qui n'est pas feat, fix, refactor, perf, BREAKING CHANGE
