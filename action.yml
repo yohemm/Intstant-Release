@@ -382,6 +382,9 @@ runs:
             fi
           fi
 
+          if [ ${{ inputs.debug }} = "true" ]; then
+            echo "Before Misc check, HAS_CHANGES=$HAS_CHANGES"
+          fi
           
           # Others / Misc
           MISC=$(extract_misc_commits)
