@@ -1,3 +1,30 @@
+## v1.0.2 - 2025-10-16
+
+### 🚀 Features
+🔍 [DEBUG] Extracting commits for pattern: (feat|✨|🚀)
+
+### 🐛 Fixes
+🔍 [DEBUG] Extracting commits for pattern: (fix|🐛)
+- fix: mistake rename var ([commit 9175f3e](https://github.com/yohemm/Intstant-Release/commit/9175f3e787ea5256d2e4e0e75621a36537b43d2a)) by yohemm
+
+### ♻️ Refactors / Performance
+🔍 [DEBUG] Extracting commits for pattern: (refactor|♻️|perf|⚡|🎨)
+
+### 📝 Autres changements
+🔍 [DEBUG] Extracting miscellaneous commits
+
+### 📊 Release Stats
+- Commits: 
+- Contributors: 1
+- Files changed: 1
+- Period: 2025-10-16 → 2025-10-16
+- Impact score: 0 🚀
+### 🤝 Contributors
+- yohemm
+
+
+Compare changes: [v1.0.1...v1.0.2](https://github.com/yohemm/Intstant-Release/compare/v1.0.1...v1.0.2)
+
 ## v1.0.1 - 2025-10-16
 
 ### 🚀 Features
