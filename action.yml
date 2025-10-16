@@ -353,7 +353,7 @@ runs:
             fi
           fi
           # Fixes          
-          FIXES=$(extract_commits "(${{ env.fix_pattern }})")
+          FIXES=$(extract_commits "(${{ env.fix_pattern }})") || true
           echo "FIXES=[${FIXES}]"
           echo "FIXES_COUNT=$(echo "$FIXES" | wc -l)"
           if [ -n "$FIXES" ]; then
@@ -374,7 +374,7 @@ runs:
             echo "Before Refactors check, HAS_CHANGES=$HAS_CHANGES"
           fi
           # Refactors & Performance
-          REFACTORS=$(extract_commits "(${{ env.refactor_pattern }})") || echo ""
+          REFACTORS=$(extract_commits "(${{ env.refactor_pattern }})") || true
           echo "REFACTORS=[${REFACTORS}]"
           echo "REFACTORS_COUNT=$(echo "$REFACTORS" | wc -l)"
           if [ -n "$REFACTORS" ]; then
