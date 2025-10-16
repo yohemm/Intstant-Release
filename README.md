@@ -2,7 +2,7 @@
 
 Automatic versioning for simpler continuous deployment!
 
-GitHub Action that automatically generates: 
+GitHub Action that automatically generates:
 
 * [x] Project versioning following the Angular semantic-release commit convention (or custom)
 * [x] Version tags
