@@ -212,6 +212,9 @@ runs:
         if [ "$IS_INITIAL" = "true" ]; then
           NEW_VERSION="${{ inputs.initial-version }}"
           echo "bump_type=initial" >> $GITHUB_OUTPUT
+          if [ "${{ inputs.debug }}" = "true" ]; then
+            echo "🧩 [DEBUG] Initial version, no bump needed"
+          fi
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
           echo "🆕 Initial version: $NEW_VERSION"
           exit 0
@@ -240,16 +243,24 @@ runs:
         NEW_VERSION="v${MAJOR}.${MINOR}.${PATCH}"
         
         echo "bump_type=$BUMP_TYPE" >> $GITHUB_OUTPUT
-        echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
-
         if [ "${{ inputs.debug }}" = "true" ]; then
-          echo "🔍 [DEBUG] Determined bump type: $BUMP_TYPE"
+          echo "🧩 [DEBUG] Version bump type: $BUMP_TYPE"
         fi
+        echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
         
         if [ "$BUMP_TYPE" != "none" ]; then
           echo "📈 Version bump: $BUMP_TYPE → $NEW_VERSION"
         else
           echo "⏭️ No version bump needed"
+        fi
+        
+        if [ "$BUMP_TYPE" = "none" ]; then
+          NEW_VERSION="$LAST_TAG"
+        fi
+        
+        echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+        if [ "${{ inputs.debug }}" = "true" ]; then
+          echo "🧩 [DEBUG] Final new version: $NEW_VERSION"
         fi
 
     - name: 'Generate Changelog'
@@ -409,6 +420,7 @@ runs:
             echo "" >> "$TMP_FILE"
             MERGE_COUNT=$(echo "$MERGE" | wc -l)
             echo "merge_count=$MERGE_COUNT" >> $GITHUB_ENV
+            HAS_CHANGES="true"
             if [ "${{ inputs.debug }}" = "true" ]; then
               echo ""
               echo "🔍 [DEBUG] Merge commits found:"
@@ -493,6 +505,7 @@ runs:
         echo "has_changes=$HAS_CHANGES" >> $GITHUB_OUTPUT
         
         if [ "${{ inputs.debug }}" = "true" ]; then
+          echo "🧩 [DEBUG] has_changes i set to $HAS_CHANGES"
           echo "🔍 [DEBUG] Changelog generated: $HAS_CHANGES"
         fi
 
@@ -557,13 +570,6 @@ runs:
         fi
         
         echo "Tags created: $TAG_CREATED"
-
-        VERSION="$LAST_TAG"
-        if [ "$BUMP_TYPE" != "none" ]; then
-          VERSION="$NEW_VERSION"
-        fi
-        echo "version=$VERSION" >> $GITHUB_OUTPUT
-        echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
         echo "tag_created=$TAG_CREATED" >> $GITHUB_OUTPUT
 
     # ========== 8. Résumé final ==========
@@ -574,9 +580,8 @@ runs:
         echo "=========================================="
         echo "✅ Semantic Versioning Complete"
         echo "=========================================="
-        echo "📌 New Version: ${{ steps.bump.outputs.new_version }}"
+        echo "📌 Version: ${{ steps.bump.outputs.new_version }}"
         echo "📊 Bump Type: ${{ steps.bump.outputs.bump_type }}"
         echo "📝 Changelog: ${{ steps.changelog.outputs.has_changes }}"
         echo "🏷️ Tag Created: ${{ steps.tag.outputs.tag_created }}"
-        echo "📍 Current Version: ${{ steps.get_tag.outputs.last_tag }}"
         echo "=========================================="
