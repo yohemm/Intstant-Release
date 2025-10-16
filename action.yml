@@ -433,6 +433,7 @@ runs:
           echo "- Files changed: $FILES_CHANGED" >> "$TMP_FILE"
           echo "- Period: $START_DATE → $END_DATE" >> "$TMP_FILE"
           echo "- Impact score: $IMPACT_SCORE 🚀" >> "$TMP_FILE"
+          echo "" >> "$TMP_FILE"
           
           CONTRIBUTORS_LIST=$(git log "${LAST_TAG}..HEAD" --pretty=format:"%an" | sort -u)
           if [ -n "$CONTRIBUTORS_LIST" ]; then
