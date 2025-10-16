@@ -13,6 +13,7 @@ jobs:
         with:
           fetch-depth: 0
           fetch-tags: true
+          persist-credentials: true
       
       # Tester l'action avec elle-même
       - name: Test Action
