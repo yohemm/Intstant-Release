@@ -263,6 +263,9 @@ runs:
         VERSION_TITLE="## $NEW_VERSION"
 
         extract_commits() {
+          if [ "${{ inputs.debug }}" = "true" ]; then
+            echo "🔍 [DEBUG] Extracting commits for pattern: $1"
+          fi
           local pattern="$1"
           echo "$ALL_COMMITS_FORMATTED" | grep -E "^- ${pattern}" | while read -r line; do
             # Si le commit commence par le pattern (type connu)
