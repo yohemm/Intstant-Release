@@ -1,3 +1,21 @@
+## v0.2.0 - 2025-10-16
+
+### 🚀 Features
+- endOFtest:start  begin final test ([commit 1cffdb9](https://github.com/yohemm/Intstant-Release/commit/1cffdb93c02adb0feb6f74c4145d0f95a6ad1fbf)) by yohemm
+
+### 📊 Release Stats
+- Commits: 
+- Contributors: 1
+- Files changed: 1
+- Period: 2025-10-16 → 2025-10-16
+- Impact score: 0 🚀
+
+### 🤝 Contributors
+- yohemm
+
+
+Compare changes: [v0.1.0...v0.2.0](https://github.com/yohemm/Intstant-Release/compare/v0.1.0...v0.2.0)
+
 ## v0.1.0 - 2025-10-16
 
 ### 🚀 Features
