@@ -1,3 +1,37 @@
+## v1.0.1 - 2025-10-16
+
+### 🚀 Features
+🔍 [DEBUG] Extracting commits for pattern: (feat|✨|🚀)
+
+### 🐛 Fixes
+🔍 [DEBUG] Extracting commits for pattern: (fix|🐛)
+- fix: mistake rename var ([commit d634691](https://github.com/yohemm/Intstant-Release/commit/d63469103508c8552d025ac5bc623bddc8128f92)) by yohemm
+- fix: mistake rename var ([commit 8c001c3](https://github.com/yohemm/Intstant-Release/commit/8c001c389a2ecb3225d406924a239837b0794083)) by yohemm
+- fix: mistake rename var ([commit 5bf0637](https://github.com/yohemm/Intstant-Release/commit/5bf0637ccc03e48687f5b010d9ee52ab504b5b06)) by yohemm
+- fix: mistake rename var ([commit 8a8b15f](https://github.com/yohemm/Intstant-Release/commit/8a8b15fb2c933aab183119802732ee6f80b37ea8)) by yohemm
+- fix: mistake rename var ([commit 70cb2f7](https://github.com/yohemm/Intstant-Release/commit/70cb2f72999c7e0485e6482f1dfdcd0ad43e04a0)) by yohemm
+
+### ♻️ Refactors / Performance
+🔍 [DEBUG] Extracting commits for pattern: (refactor|♻️|perf|⚡|🎨)
+
+### 📝 Autres changements
+🔍 [DEBUG] Extracting miscellaneous commits
+
+### 🔀 Merges
+- Merge branch 'develop' of github.com:yohemm/Intstant-Release into develop ([commit ed6d90a](https://github.com/yohemm/Intstant-Release/commit/ed6d90aed2b8e8063392ff219915a4f7bc6b487b)) by yohemm
+
+### 📊 Release Stats
+- Commits: 
+- Contributors: 1
+- Files changed: 3
+- Period: 2025-10-16 → 2025-10-16
+- Impact score: 0 🚀
+### 🤝 Contributors
+- yohemm
+
+
+Compare changes: [v1.0.0...v1.0.1](https://github.com/yohemm/Intstant-Release/compare/v1.0.0...v1.0.1)
+
 ## v1.0.0 - 2025-10-16
 
 ### ⚠️ Breaking Changes
