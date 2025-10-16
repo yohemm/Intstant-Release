@@ -335,7 +335,9 @@ runs:
 
           
           # Features
-          FEATURES=$(extract_commits "(${{ env.feature_pattern }})")
+          FEATURES=$(extract_commits "(${{ env.feature_pattern }})") || true
+          echo "FEATURES=[${FEATURES}]"
+          echo "FEATURES_COUNT=$(echo "$FEATURES" | wc -l)"
           if [ -n "$FEATURES" ]; then
             echo "### 🚀 Features" >> "$TMP_FILE"
             echo "$FEATURES" >> "$TMP_FILE"
