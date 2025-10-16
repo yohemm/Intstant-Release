@@ -20,8 +20,8 @@ jobs:
         with:
           debug: 'true'
           generate-changelog: 'true'
-          auto-commit: 'false'  # Important en test
-          create-tags: 'false'  # Important en test
+          auto-commit: 'true'  # Important en test
+          create-tags: 'true'  # Important en test
       
       - name: Verify Changelog
         run: |
