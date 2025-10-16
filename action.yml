@@ -439,7 +439,6 @@ runs:
           if [ -n "$CONTRIBUTORS_LIST" ]; then
             echo "### 🤝 Contributors" >> "$TMP_FILE"
             echo "$CONTRIBUTORS_LIST" | sed 's/^/- /' >> "$TMP_FILE"
-            echo "" >> "$TMP_FILE"
           fi
 
           echo "" >> "$TMP_FILE"
