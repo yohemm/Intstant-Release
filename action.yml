@@ -62,6 +62,7 @@ inputs:
     required: false
     default: true
   
+  # Path to changelog file (with name)
   changelog-file:
     description: Path(with name) to the changelog file
     required: false
@@ -120,7 +121,6 @@ runs:
         git fetch --tags --all
         echo "✅ Git configured and ready"
     
-    # Init Variables
     - name: 'Initialize Variables'
       id: init
       shell: bash
@@ -272,9 +272,6 @@ runs:
         MISC_COUNT=0
 
         extract_commits() {
-          if [ "${{ inputs.debug }}" = "true" ]; then
-            echo "🔍 [DEBUG] Extracting commits for pattern: $1"
-          fi
           local pattern="$1"
           echo "$ALL_COMMITS_FORMATTED" | grep -E "^- ${pattern}" | while read -r line; do
             # Si le commit commence par le pattern (type connu)
