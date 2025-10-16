@@ -1,3 +1,21 @@
+## v1.1.0 - 2025-10-16
+
+### 🚀 Features
+- feat: mistake rename var ([commit 0720774](https://github.com/yohemm/Intstant-Release/commit/0720774d851029b703d3889f92a3df7f0e90aac9)) by yohemm
+- feat: mistake rename var ([commit 304cbdc](https://github.com/yohemm/Intstant-Release/commit/304cbdc51685526ad307bb712014a93c539f2e9a)) by yohemm
+
+### 📊 Release Stats
+- Commits: 
+- Contributors: 1
+- Files changed: 3
+- Period: 2025-10-16 → 2025-10-16
+- Impact score: 0 🚀
+### 🤝 Contributors
+- yohemm
+
+
+Compare changes: [v1.0.2...v1.1.0](https://github.com/yohemm/Intstant-Release/compare/v1.0.2...v1.1.0)
+
 ## v1.0.2 - 2025-10-16
 
 ### 🚀 Features
