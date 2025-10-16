@@ -279,8 +279,8 @@ runs:
         extract_misc_commits() {
           # Tout ce qui n'est pas feat, fix, refactor, perf, BREAKING CHANGE
           echo "$ALL_COMMITS_FORMATTED" \
-            # | grep -Ev "^- ((feat|fix|refactor|perf)(\(|:)|(✨|🚀|🐛|♻️|⚡|🎨))|BREAKING CHANGE|!:|Merge" | sed -E "s|//||g; s|\\?!:|:|g" || true
             | grep -Ev "^- ((feat|fix|refactor|perf)(\(|:)|((${{ env.feature_pattern }})|(${{ env.fix_pattern }})|(${{ env.refactor }})))|(${{ env.breaking_pattern }})|Merge" | sed -E "s|//||g; s|\\?!:|:|g" || true
+          # | grep -Ev "^- ((feat|fix|refactor|perf)(\(|:)|(✨|🚀|🐛|♻️|⚡|🎨))|(BREAKING CHANGE|!:)|Merge" | sed -E "s|//||g; s|\\?!:|:|g" || true
         }
         extract_merge_commits() {
           # Tout ce qui n'est pas feat, fix, refactor, perf, BREAKING CHANGE
