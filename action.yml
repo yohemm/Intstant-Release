@@ -374,7 +374,7 @@ runs:
             echo "Before Refactors check, HAS_CHANGES=$HAS_CHANGES"
           fi
           # Refactors & Performance
-          REFACTORS=$(extract_commits "(${{ env.refactor_pattern }})")
+          REFACTORS=$(extract_commits "(${{ env.refactor_pattern }})") || echo ""
           echo "REFACTORS=[${REFACTORS}]"
           echo "REFACTORS_COUNT=$(echo "$REFACTORS" | wc -l)"
           if [ -n "$REFACTORS" ]; then
