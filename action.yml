@@ -558,8 +558,10 @@ runs:
         
         echo "Tags created: $TAG_CREATED"
 
-
-        VERSION=$(echo "${NEW_VERSION}" || echo ${LAST_TAG})
+        VERSION="$LAST_TAG"
+        if [ "$BUMP_TYPE" != "none" ]; then
+          VERSION="$NEW_VERSION"
+        fi
         echo "version=$VERSION" >> $GITHUB_OUTPUT
         echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
         echo "tag_created=$TAG_CREATED" >> $GITHUB_OUTPUT
