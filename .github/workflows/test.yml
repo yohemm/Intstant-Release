@@ -9,7 +9,6 @@ on:
 # ✅ CLÉS: Permissions explicites pour le token GitHub
 permissions:
   contents: write      # Pour committer et créer des releases
-  tags: write          # Pour créer et pousser les tags
   pull-requests: read  # Pour les PRs
   id-token: write  # nécessaire si tu fais des OIDC logins
   actions: read    # lecture des actions, si nécessaire
