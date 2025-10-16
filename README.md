@@ -9,7 +9,7 @@ GitHub Action that automatically generates:
 * [x] Releases
 * [x] Detailed changelogs of your commits / commit types, version differences, and version statistics
 * [ ] Project versioning following a custom commit convention
-* [ ] Synchronization of files (package.json, composer.json, etc...)
+* [ ] Synchronization of files (package.json, composer.json, etc.)
 
 ## ![License](./LICENSE.md)
 
