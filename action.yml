@@ -294,7 +294,7 @@ runs:
           fi
           # Tout ce qui n'est pas feat, fix, refactor, perf, BREAKING CHANGE
           echo "$ALL_COMMITS_FORMATTED" \
-            | grep -Ev "^- ((feat|fix|refactor|perf)(\(|:)|((${FEATURE_PATTERN})|(${FIX_PATTERN})|(${REFACTOR_PATTERN})))|(${BREAKING_PATTERN})|Merge" 2>/dev/null || echo "" | sed -E "s|//||g; s|\\?!:|:|g" 
+            | grep -Ev "^- ((feat|fix|refactor|perf)(\(|:)|((${FEATURE_PATTERN})|(${FIX_PATTERN})|(${REFACTOR_PATTERN})))|(${BREAKING_PATTERN})|Merge" | sed -E "s|//||g; s|\\?!:|:|g" || true
         }
         extract_merge_commits() {
           # Tout ce qui n'est pas feat, fix, refactor, perf, BREAKING CHANGE
@@ -352,6 +352,8 @@ runs:
           fi
           # Fixes          
           FIXES=$(extract_commits "(${{ env.fix_pattern }})")
+          echo "FIXES=[${FIXES}]"
+          echo "FIXES_COUNT=$(echo "$FIXES" | wc -l)"
           if [ -n "$FIXES" ]; then
             echo "### 🐛 Fixes" >> "$TMP_FILE"
             echo "$FIXES" >> "$TMP_FILE"
@@ -371,6 +373,8 @@ runs:
           fi
           # Refactors & Performance
           REFACTORS=$(extract_commits "(${{ env.refactor_pattern }})")
+          echo "REFACTORS=[${REFACTORS}]"
+          echo "REFACTORS_COUNT=$(echo "$REFACTORS" | wc -l)"
           if [ -n "$REFACTORS" ]; then
             echo "### ♻️ Refactors / Performance" >> "$TMP_FILE"
             echo "$REFACTORS" >> "$TMP_FILE"
@@ -392,6 +396,9 @@ runs:
           
           # Others / Misc
           MISC=$(extract_misc_commits)
+          MISC=$(extract_misc_commits)
+          echo "MISC=[${MISC}]"
+          echo "MISC_COUNT=$(echo "$MISC" | wc -l)"
           if [ -n "$MISC" ]; then
             echo "### 📝 Autres changements" >> "$TMP_FILE"
             echo "$MISC" >> "$TMP_FILE"
