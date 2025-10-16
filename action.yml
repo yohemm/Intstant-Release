@@ -420,8 +420,7 @@ runs:
           FILES_CHANGED=$(git log "${LAST_TAG}..HEAD" --name-only --pretty=format: | sort -u | wc -l)
           START_DATE=$(git log "${LAST_TAG}" -1 --format=%cs)
           END_DATE=$(date +'%Y-%m-%d')
-          IMPACT_SCORE=0
-          # IMPACT_SCORE=$(( FEATURE_COUNT*3 + FIX_COUNT*2 + REFACTOR_COUNT + MISC_COUNT/2 ))
+          IMPACT_SCORE=$(( FEATURE_COUNT*3 + FIX_COUNT*2 + REFACTOR_COUNT + MISC_COUNT/2 ))
           echo "period=${START_DATE} → ${END_DATE}" >> $GITHUB_ENV
           echo "contributors=$CONTRIBUTORS" >> $GITHUB_ENV
           echo "files_changed=$FILES_CHANGED" >> $GITHUB_ENV
