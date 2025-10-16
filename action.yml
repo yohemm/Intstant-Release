@@ -289,9 +289,6 @@ runs:
         }
 
         extract_misc_commits() {
-          if [ "${{ inputs.debug }}" = "true" ]; then
-            echo "🔍 [DEBUG] Extracting miscellaneous commits"
-          fi
           # Tout ce qui n'est pas feat, fix, refactor, perf, BREAKING CHANGE
           echo "$ALL_COMMITS_FORMATTED" \
             | grep -Ev "^- ((feat|fix|refactor|perf)(\(|:)|((${FEATURE_PATTERN})|(${FIX_PATTERN})|(${REFACTOR_PATTERN})))|(${BREAKING_PATTERN})|Merge" | sed -E "s|//||g; s|\\?!:|:|g" || true
@@ -309,10 +306,6 @@ runs:
         HAS_CHANGES="false"
         
         if [ "$IS_INITIAL" = "false" ]; then
-          if [ "${{ inputs.debug }}" = "true" ]; then
-            echo "🔍 [DEBUG] Generating changelog from $LAST_TAG to HEAD"
-          fi
-
           ALL_COMMITS_FORMATTED="$(git log "${LAST_TAG}..HEAD" --pretty=format:"- %s ([commit %h](${REPO_URL}/commit/%H)) by %an" || true)"
           
           if [ "${{ inputs.debug }}" = "true" ]; then
@@ -336,8 +329,6 @@ runs:
           
           # Features
           FEATURES=$(extract_commits "(${{ env.feature_pattern }})") || true
-          echo "FEATURES=[${FEATURES}]"
-          echo "FEATURES_COUNT=$(echo "$FEATURES" | wc -l)"
           if [ -n "$FEATURES" ]; then
             echo "### 🚀 Features" >> "$TMP_FILE"
             echo "$FEATURES" >> "$TMP_FILE"
@@ -354,8 +345,6 @@ runs:
           fi
           # Fixes          
           FIXES=$(extract_commits "(${{ env.fix_pattern }})") || true
-          echo "FIXES=[${FIXES}]"
-          echo "FIXES_COUNT=$(echo "$FIXES" | wc -l)"
           if [ -n "$FIXES" ]; then
             echo "### 🐛 Fixes" >> "$TMP_FILE"
             echo "$FIXES" >> "$TMP_FILE"
@@ -375,8 +364,6 @@ runs:
           fi
           # Refactors & Performance
           REFACTORS=$(extract_commits "(${{ env.refactor_pattern }})") || true
-          echo "REFACTORS=[${REFACTORS}]"
-          echo "REFACTORS_COUNT=$(echo "$REFACTORS" | wc -l)"
           if [ -n "$REFACTORS" ]; then
             echo "### ♻️ Refactors / Performance" >> "$TMP_FILE"
             echo "$REFACTORS" >> "$TMP_FILE"
@@ -397,10 +384,7 @@ runs:
           fi
           
           # Others / Misc
-          MISC=$(extract_misc_commits)
-          MISC=$(extract_misc_commits)
-          echo "MISC=[${MISC}]"
-          echo "MISC_COUNT=$(echo "$MISC" | wc -l)"
+          MISC=$(extract_misc_commits) || true
           if [ -n "$MISC" ]; then
             echo "### 📝 Autres changements" >> "$TMP_FILE"
             echo "$MISC" >> "$TMP_FILE"
@@ -417,7 +401,7 @@ runs:
           fi
 
           # --- 🔀 Merges & Pull Requests ---
-          MERGE=$(extract_merge_commits)
+          MERGE=$(extract_merge_commits) || true
           if [ -n "$MERGE" ]; then
             echo "### 🔀 Merges" >> "$TMP_FILE"
             echo "$MERGE" >> "$TMP_FILE"
@@ -512,7 +496,6 @@ runs:
           echo "🔍 [DEBUG] Changelog generated: $HAS_CHANGES"
         fi
 
-    # ========== 6. Committer les changements ==========
     - name: 'Commit Changes'
       id: commit
       if: ${{ inputs.auto-commit == 'true' }}
@@ -537,7 +520,6 @@ runs:
           fi
         fi
 
-    # ========== 7. Créer le tag ==========
     - name: 'Create Tag'
       id: tag
       if: ${{ inputs.create-tags == 'true' }}

@@ -39,7 +39,7 @@ jobs:
         id: semantic_action
         uses: ./
         with:
-          debug: 'false'
+          debug: 'true'
           generate-changelog: 'true'
           auto-commit: 'true'
           create-tags: 'true'
