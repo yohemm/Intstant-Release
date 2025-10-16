@@ -446,7 +446,7 @@ runs:
             echo "🔍 [DEBUG] Merging with existing changelog"
           fi
           
-          if [ -f "$FINAL_FILE" ] && grep -q "^$VERSION_TITLE" "$FINAL_FILE"; then
+          if [ -f "$CHANGELOG_FILE" ] && grep -q "^$VERSION_TITLE" "$CHANGELOG_FILE"; then
             awk -v ver="$VERSION_TITLE" '
               BEGIN {found=0}
               {
