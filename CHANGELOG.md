@@ -1,3 +1,20 @@
+## v1.1.0 - 2025-10-16
+
+### 🚀 Features
+- yessss:start  begin final test ([commit c70072d](https://github.com/yohemm/Intstant-Release/commit/c70072d3cdabc589d7aeaf03a91c4d65363ed699)) by yohemm
+
+### 📊 Release Stats
+- Commits: 
+- Contributors: 1
+- Files changed: 1
+- Period: 2025-10-16 → 2025-10-16
+- Impact score: 3 🚀
+
+### 🤝 Contributors
+- yohemm
+
+Compare changes: [v1.0.0...v1.1.0](https://github.com/yohemm/Intstant-Release/compare/v1.0.0...v1.1.0)
+
 ## v1.0.0 - 2025-10-16
 
 ### ⚠️ Breaking Changes

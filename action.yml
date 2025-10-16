@@ -109,6 +109,10 @@ outputs:
   tag-created:
     description: Indiques if a new tag was created
     value: ${{ steps.tag.outputs.tag_created }}
+  
+  current-version:
+    description: Current version
+    value: ${{ steps.tag.outputs.version }}
 
 runs:
   using: 'composite'
@@ -524,6 +528,7 @@ runs:
         NEW_VERSION="${{ steps.bump.outputs.new_version }}"
         BUMP_TYPE="${{ steps.bump.outputs.bump_type }}"
         CURRENT_COMMIT=$(git rev-parse HEAD)
+        LAST_TAG="${{ steps.get_tag.outputs.last_tag }}"
         
         TAG_CREATED="false"
         
@@ -553,11 +558,15 @@ runs:
         
         echo "Tags created: $TAG_CREATED"
 
+
+        VERSION=$(echo "${NEW_VERSION}" || echo ${LAST_TAG})
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
         echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
         echo "tag_created=$TAG_CREATED" >> $GITHUB_OUTPUT
 
     # ========== 8. Résumé final ==========
     - name: 'Summary'
+      id: summary
       shell: bash
       run: |
         echo "=========================================="
@@ -567,4 +576,5 @@ runs:
         echo "📊 Bump Type: ${{ steps.bump.outputs.bump_type }}"
         echo "📝 Changelog: ${{ steps.changelog.outputs.has_changes }}"
         echo "🏷️ Tag Created: ${{ steps.tag.outputs.tag_created }}"
+        echo "📍 Current Version: ${{ steps.get_tag.outputs.last_tag }}"
         echo "=========================================="
