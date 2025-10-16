@@ -350,7 +350,7 @@ runs:
           fi
           
           # Refactors & Performance
-          REFACTORS=$(extract_commits "(${{ $env.refactor_pattern }})")
+          REFACTORS=$(extract_commits "(${{ env.refactor_pattern }})")
           if [ -n "$REFACTORS" ]; then
             echo "### ♻️ Refactors / Performance" >> "$TMP_FILE"
             echo "$REFACTORS" >> "$TMP_FILE"
