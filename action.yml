@@ -295,6 +295,10 @@ runs:
         HAS_CHANGES="false"
         
         if [ "$IS_INITIAL" = "false" ]; then
+          if [ "${{ inputs.debug }}" = "true" ]; then
+            echo "🔍 [DEBUG] Generating changelog from $LAST_TAG to HEAD"
+          fi
+
           ALL_COMMITS_FORMATTED="$(git log "${LAST_TAG}..HEAD" --pretty=format:"- %s ([commit %h](${REPO_URL}/commit/%H)) by %an" || true)"
           
           if [ "${{ inputs.debug }}" = "true" ]; then
