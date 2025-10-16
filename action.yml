@@ -94,9 +94,9 @@ inputs:
 
 
 outputs:
-  new-version:
+  current-version:
     description: New version created
-    value: ${{ steps.tag.outputs.new_version }}
+    value: ${{ steps.tag.outputs.current_version }}
   
   version-bump:
     description: Bump type (major, minor, patch, none)
@@ -110,10 +110,10 @@ outputs:
     description: Indiques if a new tag was created
     value: ${{ steps.tag.outputs.tag_created }}
   
-  current-version:
-    description: Current version
-    value: ${{ steps.tag.outputs.version }}
-
+  new-version:
+    description: New version created
+    value: ${{ steps.bump.outputs.new_version }}
+    
 runs:
   using: 'composite'
   steps:
@@ -257,8 +257,8 @@ runs:
         if [ "$BUMP_TYPE" = "none" ]; then
           NEW_VERSION="$LAST_TAG"
         fi
-        
-        echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+
+        echo "current_version=$NEW_VERSION" >> $GITHUB_OUTPUT
         if [ "${{ inputs.debug }}" = "true" ]; then
           echo "🧩 [DEBUG] Final new version: $NEW_VERSION"
         fi
