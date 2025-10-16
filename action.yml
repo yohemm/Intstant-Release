@@ -358,7 +358,9 @@ runs:
               echo "🔍 [DEBUG] Fix count: $FIX_COUNT"
             fi
           fi
-          
+          if [ ${{ inputs.debug }} = "true" ]; then
+            echo "Before Refactors check, HAS_CHANGES=$HAS_CHANGES"
+          fi
           # Refactors & Performance
           REFACTORS=$(extract_commits "(${{ env.refactor_pattern }})")
           if [ -n "$REFACTORS" ]; then
