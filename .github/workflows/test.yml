@@ -1,0 +1,34 @@
+name: Test Semantic Versioning Action
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+      
+      # Tester l'action avec elle-même
+      - name: Test Action
+        uses: ./
+        with:
+          debug: 'true'
+          generate-changelog: 'true'
+          auto-commit: 'false'  # Important en test
+          create-tags: 'false'  # Important en test
+      
+      - name: Verify Changelog
+        run: |
+          if [ -f "CHANGELOG.md" ]; then
+            echo "✅ CHANGELOG.md created"
+            cat CHANGELOG.md
+          else
+            echo "❌ CHANGELOG.md not created"
+            exit 1
+          fi
