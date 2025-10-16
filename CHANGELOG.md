@@ -1,3 +1,23 @@
+## v1.0.0 - 2025-10-16
+
+### ⚠️ Breaking Changes
+- feat(endOFtest):start  BREAKING CHANGE begin final test ([commit 4bd2014](https:github.com/yohemm/Intstant-Release/commit/4bd20140315647bd35fc1720a79f743486426a52)) by yohemm
+
+### 🚀 Features
+- endOFtest:start  BREAKING CHANGE begin final test ([commit 4bd2014](https://github.com/yohemm/Intstant-Release/commit/4bd20140315647bd35fc1720a79f743486426a52)) by yohemm
+
+### 📊 Release Stats
+- Commits: 
+- Contributors: 1
+- Files changed: 1
+- Period: 2025-10-16 → 2025-10-16
+- Impact score: 0 🚀
+
+### 🤝 Contributors
+- yohemm
+
+Compare changes: [v0.2.0...v1.0.0](https://github.com/yohemm/Intstant-Release/compare/v0.2.0...v1.0.0)
+
 ## v0.2.0 - 2025-10-16
 
 ### 🚀 Features
