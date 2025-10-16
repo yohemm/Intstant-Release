@@ -1,26 +1,25 @@
-# Intstant-Release
+# Instant-Release
 
-Versioning automatique pour du deploiment continue plus simple !
+Automatic versioning for simpler continuous deployment!
 
-GitHub Action permettant de généré automatiquements :
-- [x] Versioning de votre projet suivant la convention de commit d'angular semantic-release (ou custom)
-- [x] Tags des versions 
-- [x] Releases
-- [x] Changelogs détaillées de vos commit / types de commit, différences entre version et statistiques de version
-- [ ] Versioning de votre projet suivant une convention de commit custom
-- [ ] Synchroniser les fichiers (packages.json, composer.json, ...)
+GitHub Action that automatically generates:
 
-## ![Licence](./LICENSE.md)
+* [x] Project versioning following the Angular semantic-release commit convention (or custom)
+* [x] Version tags
+* [x] Releases
+* [x] Detailed changelogs of your commits / commit types, version differences, and version statistics
+* [ ] Project versioning following a custom commit convention
+* [ ] Synchronization of files (package.json, composer.json, etc.)
 
-Cette extension est gratuite pour un usage personnel, éducatif ou non-commercial. 
-Toute utilisation professionnelle ou commerciale est strictement interdite sans 
-autorisation écrite préalable de l'auteur. 
+## ![License](./LICENSE.md)
 
-Veuillez consulter le fichier ![LICENSE.md](./LICENSE.md) pour les détails complets.
+This extension is free for personal, educational, or non-commercial use.
+Any professional or commercial use is strictly prohibited without prior written authorization from the author.
 
-Pour obtenir une licence professionnelle, contactez : [vaxelaire.yohem@gmail.com](mailto:vaxelaire.yohem@gmail.com).
+Please refer to the ![LICENSE.md](./LICENSE.md) file for full details.
+
+To obtain a professional license, contact: [vaxelaire.yohem@gmail.com](mailto:vaxelaire.yohem@gmail.com).
 
 ## Attribution
 
-Si vous utilisez cette extension dans un projet personnel ou éducatif, 
-merci de mentionner le projet dans vos travaux ou documentation.
+If you use this extension in a personal or educational project, please credit the project in your work or documentation.
