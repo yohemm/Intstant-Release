@@ -27,12 +27,12 @@ jobs:
           # ✅ IMPORTANT: Persister les credentials pour git push
           persist-credentials: true
       
-      # 2. Configurer Git AVANT l'action
-      - name: Configure Git
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+      # # 2. Configurer Git AVANT l'action
+      # - name: Configure Git
+      #   run: |
+      #     git config --global user.name "github-actions[bot]"
+      #     git config --global user.email "github-actions[bot]@users.noreply.github.com"
+      #     git config --global --add safe.directory "$GITHUB_WORKSPACE"
       
       # 3. Tester l'action avec elle-même
       - name: Test Action (Debug Mode)
