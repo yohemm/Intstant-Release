@@ -44,7 +44,6 @@ jobs:
           echo "📊 Bump Type: ${{ steps.semantic_action.outputs.version-bump }}"
           echo "📝 Changelog Generated: ${{ steps.semantic_action.outputs.changelog-generated }}"
           echo "🏷️ Tag Created: ${{ steps.semantic_action.outputs.tag-created }}"
-          echo "📍 Current Version: ${{ steps.semantic_action.outputs.current-version }}"
       
       # 5. Vérifier le fichier CHANGELOG
       - name: Verify Changelog File

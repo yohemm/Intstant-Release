@@ -109,10 +109,6 @@ outputs:
   tag-created:
     description: Indiques if a new tag was created
     value: ${{ steps.tag.outputs.tag_created }}
-  
-  new-version:
-    description: New version created
-    value: ${{ steps.bump.outputs.new_version }}
     
 runs:
   using: 'composite'
@@ -235,7 +231,7 @@ runs:
           BUMP_TYPE="minor"
           MINOR=$((MINOR + 1))
           PATCH=0
-        elif echo "$COMMITS" | grep -E -q "^((${{ env.fix_pattern }})|( env.refactor_pattern ))"; then
+        elif echo "$COMMITS" | grep -E -q "^((${{ env.fix_pattern }})|(${{ env.refactor_pattern }}))"; then
           BUMP_TYPE="patch"
           PATCH=$((PATCH + 1))
         fi
@@ -371,7 +367,7 @@ runs:
               echo "🔍 [DEBUG] Fix count: $FIX_COUNT"
             fi
           fi
-          if [ ${{ inputs.debug }} = "true" ]; then
+          if [ "${{ inputs.debug }}" = "true" ]; then
             echo "Before Refactors check, HAS_CHANGES=$HAS_CHANGES"
           fi
           # Refactors & Performance
@@ -391,7 +387,7 @@ runs:
             fi
           fi
 
-          if [ ${{ inputs.debug }} = "true" ]; then
+          if [ "${{ inputs.debug }}" = "true" ]; then
             echo "Before Misc check, HAS_CHANGES=$HAS_CHANGES"
           fi
           
@@ -540,7 +536,7 @@ runs:
       run: |
         NEW_VERSION="${{ steps.bump.outputs.new_version }}"
         BUMP_TYPE="${{ steps.bump.outputs.bump_type }}"
-        CURRENT_COMMIT=$(git rev-parse HEAD)
+        TAG_COMMIT=$(git rev-list -n 1 "$TAG")
         LAST_TAG="${{ steps.get_tag.outputs.last_tag }}"
         
         TAG_CREATED="false"
