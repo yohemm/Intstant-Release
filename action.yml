@@ -13,7 +13,7 @@ inputs:
   trigger-branches:
     description: 'Branches on which to trigger versioning (comma-separated)'
     required: false
-    default: main
+    default: main,develop
   
   # Breaking changes indicators
   breaking-change-indicators:
@@ -538,11 +538,14 @@ runs:
         BUMP_TYPE="${{ steps.bump.outputs.bump_type }}"
         # TAG_COMMIT=$(git rev-list -n 1 "$NEW_VERSION" 2>/dev/null || echo "")
         LAST_TAG="${{ steps.get_tag.outputs.last_tag }}"
+        CURRENT_COMMIT=$(git rev-parse HEAD)
         
         TAG_CREATED="false"
         
+        # Vérifie si le tag existe déjà
         if git rev-parse "$NEW_VERSION" >/dev/null 2>&1; then
-          if [ "${LAST_TAG}" != "${NEW_VERSION}" ]; then
+          TAG_COMMIT=$(git rev-list -n 1 "$TAG")
+          if [ "$TAG_COMMIT" = "$CURRENT_COMMIT" ]; then
             if [ "${{ inputs.debug }}" = "true" ]; then
               echo "🔍 [DEBUG] Tag $NEW_VERSION already exists at the current commit $CURRENT_COMMIT"
             fi
