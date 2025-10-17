@@ -40,7 +40,7 @@ jobs:
       # 4. Vérifier les outputs
       - name: Check Action Outputs
         run: |
-          echo "📌 New Version: ${{ steps.semantic_action.outputs.new-version }}"
+          echo "📌 New Version: ${{ steps.semantic_action.outputs.current-version }}"
           echo "📊 Bump Type: ${{ steps.semantic_action.outputs.version-bump }}"
           echo "📝 Changelog Generated: ${{ steps.semantic_action.outputs.changelog-generated }}"
           echo "🏷️ Tag Created: ${{ steps.semantic_action.outputs.tag-created }}"
