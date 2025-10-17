@@ -1,0 +1,3 @@
+- Full github action ?
+- Web Supervions ou autre ?
+- Application possibles pour faire des rectifications (faire ses push et commit depuis l'app)
