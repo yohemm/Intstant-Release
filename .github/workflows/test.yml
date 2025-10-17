@@ -36,6 +36,7 @@ jobs:
           generate-changelog: 'true'
           auto-commit: 'false'
           create-tags: 'false'
+
       
       # 4. Vérifier les outputs
       - name: Check Action Outputs
