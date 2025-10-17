@@ -536,20 +536,19 @@ runs:
       run: |
         NEW_VERSION="${{ steps.bump.outputs.new_version }}"
         BUMP_TYPE="${{ steps.bump.outputs.bump_type }}"
-        TAG_COMMIT=$(git rev-list -n 1 "$TAG")
+        # TAG_COMMIT=$(git rev-list -n 1 "$NEW_VERSION" 2>/dev/null || echo "")
         LAST_TAG="${{ steps.get_tag.outputs.last_tag }}"
         
         TAG_CREATED="false"
         
         if git rev-parse "$NEW_VERSION" >/dev/null 2>&1; then
-          TAG_COMMIT=$(git rev-list -n 1 "$NEW_VERSION")
-          if [ "$NEW_VERSION_COMMIT" = "$CURRENT_COMMIT" ]; then
+          if [ "${LAST_TAG}" != "${NEW_VERSION}" ]; then
             if [ "${{ inputs.debug }}" = "true" ]; then
               echo "🔍 [DEBUG] Tag $NEW_VERSION already exists at the current commit $CURRENT_COMMIT"
             fi
           else
             if [ "${{ inputs.debug }}" = "true" ]; then
-              echo "🔍 [DEBUG] Tag $NEW_VERSION exists but points to $TAG_COMMIT, updating to $CURRENT_COMMIT"
+              echo "🔍 [DEBUG] Tag $NEW_VERSION exists but points to $NEW_VERSION, updating to $CURRENT_COMMIT"
             fi
             git tag -d "$NEW_VERSION"
             git tag "$NEW_VERSION"
