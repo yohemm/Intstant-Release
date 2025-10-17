@@ -96,7 +96,7 @@ inputs:
 outputs:
   current-version:
     description: New version created
-    value: ${{ steps.tag.outputs.current_version }}
+    value: ${{ steps.bump.outputs.current_version }}
   
   version-bump:
     description: Bump type (major, minor, patch, none)
