@@ -1,0 +1,5 @@
+[2025-10-18 23:50:52] INFO: Configuring git user: TestBot <test@example.com>
+[2025-10-18 23:50:52] DEBUG: Git user configured
+[2025-10-18 23:50:54] DEBUG: Last tag: v1.0.0
+[2025-10-18 23:50:55] DEBUG: Tag 'v1.0.0' exists
+[2025-10-18 23:50:55] DEBUG: Tag 'nonexistent' does not exist

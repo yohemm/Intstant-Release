@@ -64,6 +64,7 @@ detect_bump_type() {
     major_indicator=$(escape_regex_parts "$major_indicator")
     minor_indicator=$(escape_regex_parts "$minor_indicator")
     patch_indicator=$(escape_regex_parts "$patch_indicator")
+    commits=$(escape_regex_parts "$commits")
     
     if echo "$commits" | grep -Eq "$major_indicator" > /dev/null 2>&1; then
         echo "major"
