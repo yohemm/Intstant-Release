@@ -1,0 +1,438 @@
+[2025-10-18 23:22:45] DEBUG: Initializing configuration from defaults
+[2025-10-18 23:22:45] DEBUG: Configuration initialized with 44 values
+[2025-10-18 23:22:45] DEBUG: Config: usage: yq [options] <jq filter> [input file...] = 
+[2025-10-18 23:22:45] DEBUG: Config: [--indentless-lists] [--in-place] [--version] = 
+[2025-10-18 23:22:45] DEBUG: Config: [jq_filter] [files ...] = 
+[2025-10-18 23:22:45] DEBUG: Config: yq: Command-line YAML processor - jq wrapper for YAML documents = 
+[2025-10-18 23:22:45] DEBUG: Config: yq transcodes YAML documents to JSON and passes them to jq. = 
+[2025-10-18 23:22:45] DEBUG: Config: See https://github.com/kislyuk/yq for more information. = 
+[2025-10-18 23:22:45] DEBUG: Config: positional arguments: = 
+[2025-10-18 23:22:45] DEBUG: Config: jq_filter = 
+[2025-10-18 23:22:45] DEBUG: Config: files = 
+[2025-10-18 23:22:45] DEBUG: Config: options: = 
+[2025-10-18 23:22:45] DEBUG: Config: -h, --help show this help message and exit = 
+[2025-10-18 23:22:45] DEBUG: Config: --yaml-output, --yml-output, -y = 
+[2025-10-18 23:22:45] DEBUG: Config: Transcode jq JSON output back into YAML and emit it = 
+[2025-10-18 23:22:45] DEBUG: Config: --yaml-roundtrip, --yml-roundtrip, -Y = 
+[2025-10-18 23:22:45] DEBUG: Config: Transcode jq JSON output back into YAML and emit it. Preserve YAML tags and styles by representing them as extra items in their enclosing mappings and sequences while in JSON. This option is incompatible with jq filters that do not expect these extra items. = 
+[2025-10-18 23:22:45] DEBUG: Config: --yaml-output-grammar-version {1.1,1.2}, --yml-out-ver {1.1,1.2} = 
+[2025-10-18 23:22:45] DEBUG: Config: When using --yaml-output, specify output grammar (the default is 1.1 and will be changed to 1.2 in a future version). Setting this to 1.2 will cause strings like on and no to be emitted unquoted. = 
+[2025-10-18 23:22:45] DEBUG: Config: --width WIDTH, -w WIDTH = 
+[2025-10-18 23:22:45] DEBUG: Config: When using --yaml-output, specify string wrap width = 
+[2025-10-18 23:22:45] DEBUG: Config: --indentless-lists, --indentless = 
+[2025-10-18 23:22:46] DEBUG: Config: When using --yaml-output, indent block style lists (sequences) with 0 spaces instead of 2 = 
+[2025-10-18 23:22:46] DEBUG: Config: --in-place, -i Edit files in place (no backup - use caution) = 
+[2025-10-18 23:22:46] DEBUG: Config: --version show = 
+[2025-10-18 23:22:46] DEBUG: Config: jq - commandline JSON processor [version 1.6] = 
+[2025-10-18 23:22:46] DEBUG: Config: Usage: jq [options] <jq filter> [file...] = 
+[2025-10-18 23:22:46] DEBUG: Config: jq [options] --args <jq filter> [strings...] = 
+[2025-10-18 23:22:46] DEBUG: Config: jq [options] --jsonargs <jq filter> [JSON_TEXTS...] = 
+[2025-10-18 23:22:46] DEBUG: Config: jq is a tool for processing JSON inputs, applying the given filter to = 
+[2025-10-18 23:22:46] DEBUG: Config: its JSON text inputs and producing the = 
+[2025-10-18 23:22:46] DEBUG: Config: standard output. = 
+[2025-10-18 23:22:46] DEBUG: Config: The simplest filter is ., which copies = 
+[2025-10-18 23:22:46] DEBUG: Config: unmodified (except for formatting, but note that IEEE754 is used = 
+[2025-10-18 23:22:46] DEBUG: Config: for number representation internally, with all that that implies). = 
+[2025-10-18 23:22:46] DEBUG: Config: For more advanced filters see the jq(1) manpage (man jq) = 
+[2025-10-18 23:22:46] DEBUG: Config: and/or https://stedolan.github.io/jq = 
+[2025-10-18 23:22:46] DEBUG: Config: Example: = 
+[2025-10-18 23:22:46] DEBUG: Config: $ echo {"foo": 0} | jq . = 
+[2025-10-18 23:22:46] DEBUG: Config: { = 
+[2025-10-18 23:22:46] DEBUG: Config: foo: 0 = 
+[2025-10-18 23:22:46] DEBUG: Config: } = 
+[2025-10-18 23:22:46] DEBUG: Config: Some of the options include: = 
+[2025-10-18 23:22:46] DEBUG: Config: -c compact instead of pretty-printed output; = 
+[2025-10-18 23:22:46] DEBUG: Config: use `null` as the single input value; = 
+[2025-10-18 23:22:46] DEBUG: Config: set the exit status code based on the output; = 
+[2025-10-18 23:22:46] DEBUG: Config: -s read (slurp) all inputs into an array; apply filter to it; = 
+[2025-10-18 23:22:46] DEBUG: Config: -r output raw strings, not JSON texts; = 
+[2025-10-18 23:22:46] DEBUG: Config: -R read raw strings, not JSON texts; = 
+[2025-10-18 23:22:46] DEBUG: Config: -C colorize JSON; = 
+[2025-10-18 23:22:46] DEBUG: Config: -M monochrome = 
+[2025-10-18 23:22:46] DEBUG: Config: -S sort keys of objects on output; = 
+[2025-10-18 23:22:46] DEBUG: Config: --tab use tabs for indentation; = 
+[2025-10-18 23:22:46] DEBUG: Config: --arg a v set variable $a to value <v>; = 
+[2025-10-18 23:22:46] DEBUG: Config: --argjson a v set variable $a to JSON value <v>; = 
+[2025-10-18 23:22:46] DEBUG: Config: --slurpfile a f set variable $a to an array of JSON texts read from <f>; = 
+[2025-10-18 23:22:46] DEBUG: Config: --rawfile a f set variable $a to a string consisting of the contents of <f>; = 
+[2025-10-18 23:22:46] DEBUG: Config: --args remaining arguments are string arguments, not files; = 
+[2025-10-18 23:22:46] DEBUG: Config: --jsonargs remaining arguments are JSON arguments, not files; = 
+[2025-10-18 23:22:46] DEBUG: Config: -- terminates argument processing; = 
+[2025-10-18 23:22:46] DEBUG: Config: Named arguments are also available as $ARGS.named[], while = 
+[2025-10-18 23:22:46] DEBUG: Config: positional arguments are available as $ARGS.positional[]. = 
+[2025-10-18 23:22:46] DEBUG: Config: See the manpage for more options. = 
+[2025-10-18 23:22:46] SUCCESS: Configuration loaded from file
+[2025-10-18 23:22:46] DEBUG: Using argument: major-indicator = BREAKING CHANGE
+[2025-10-18 23:22:46] DEBUG: Using argument: minor-indicator = feat:
+[2025-10-18 23:22:46] DEBUG: Using argument: patch-indicator = fix:
+[2025-10-18 23:22:46] DEBUG: Using indicators:
+[2025-10-18 23:22:46] DEBUG:   Major: BREAKING CHANGE
+[2025-10-18 23:22:46] DEBUG:   Minor: feat:
+[2025-10-18 23:22:46] DEBUG:   Patch: fix:
+[2025-10-18 23:22:47] DEBUG: Last tag: v1.0.0
+[2025-10-18 23:22:47] DEBUG: Getting commits since v1.0.0
+[2025-10-18 23:22:48] DEBUG: Initializing configuration from defaults
+[2025-10-18 23:22:48] DEBUG: Configuration initialized with 44 values
+[2025-10-18 23:22:48] DEBUG: Config: usage: yq [options] <jq filter> [input file...] = 
+[2025-10-18 23:22:48] DEBUG: Config: [--indentless-lists] [--in-place] [--version] = 
+[2025-10-18 23:22:48] DEBUG: Config: [jq_filter] [files ...] = 
+[2025-10-18 23:22:48] DEBUG: Config: yq: Command-line YAML processor - jq wrapper for YAML documents = 
+[2025-10-18 23:22:48] DEBUG: Config: yq transcodes YAML documents to JSON and passes them to jq. = 
+[2025-10-18 23:22:48] DEBUG: Config: See https://github.com/kislyuk/yq for more information. = 
+[2025-10-18 23:22:48] DEBUG: Config: positional arguments: = 
+[2025-10-18 23:22:48] DEBUG: Config: jq_filter = 
+[2025-10-18 23:22:48] DEBUG: Config: files = 
+[2025-10-18 23:22:48] DEBUG: Config: options: = 
+[2025-10-18 23:22:48] DEBUG: Config: -h, --help show this help message and exit = 
+[2025-10-18 23:22:48] DEBUG: Config: --yaml-output, --yml-output, -y = 
+[2025-10-18 23:22:48] DEBUG: Config: Transcode jq JSON output back into YAML and emit it = 
+[2025-10-18 23:22:48] DEBUG: Config: --yaml-roundtrip, --yml-roundtrip, -Y = 
+[2025-10-18 23:22:48] DEBUG: Config: Transcode jq JSON output back into YAML and emit it. Preserve YAML tags and styles by representing them as extra items in their enclosing mappings and sequences while in JSON. This option is incompatible with jq filters that do not expect these extra items. = 
+[2025-10-18 23:22:48] DEBUG: Config: --yaml-output-grammar-version {1.1,1.2}, --yml-out-ver {1.1,1.2} = 
+[2025-10-18 23:22:48] DEBUG: Config: When using --yaml-output, specify output grammar (the default is 1.1 and will be changed to 1.2 in a future version). Setting this to 1.2 will cause strings like on and no to be emitted unquoted. = 
+[2025-10-18 23:22:48] DEBUG: Config: --width WIDTH, -w WIDTH = 
+[2025-10-18 23:22:48] DEBUG: Config: When using --yaml-output, specify string wrap width = 
+[2025-10-18 23:22:48] DEBUG: Config: --indentless-lists, --indentless = 
+[2025-10-18 23:22:48] DEBUG: Config: When using --yaml-output, indent block style lists (sequences) with 0 spaces instead of 2 = 
+[2025-10-18 23:22:48] DEBUG: Config: --in-place, -i Edit files in place (no backup - use caution) = 
+[2025-10-18 23:22:48] DEBUG: Config: --version show = 
+[2025-10-18 23:22:48] DEBUG: Config: jq - commandline JSON processor [version 1.6] = 
+[2025-10-18 23:22:48] DEBUG: Config: Usage: jq [options] <jq filter> [file...] = 
+[2025-10-18 23:22:48] DEBUG: Config: jq [options] --args <jq filter> [strings...] = 
+[2025-10-18 23:22:48] DEBUG: Config: jq [options] --jsonargs <jq filter> [JSON_TEXTS...] = 
+[2025-10-18 23:22:48] DEBUG: Config: jq is a tool for processing JSON inputs, applying the given filter to = 
+[2025-10-18 23:22:48] DEBUG: Config: its JSON text inputs and producing the = 
+[2025-10-18 23:22:48] DEBUG: Config: standard output. = 
+[2025-10-18 23:22:48] DEBUG: Config: The simplest filter is ., which copies = 
+[2025-10-18 23:22:48] DEBUG: Config: unmodified (except for formatting, but note that IEEE754 is used = 
+[2025-10-18 23:22:48] DEBUG: Config: for number representation internally, with all that that implies). = 
+[2025-10-18 23:22:48] DEBUG: Config: For more advanced filters see the jq(1) manpage (man jq) = 
+[2025-10-18 23:22:48] DEBUG: Config: and/or https://stedolan.github.io/jq = 
+[2025-10-18 23:22:48] DEBUG: Config: Example: = 
+[2025-10-18 23:22:48] DEBUG: Config: $ echo {"foo": 0} | jq . = 
+[2025-10-18 23:22:48] DEBUG: Config: { = 
+[2025-10-18 23:22:48] DEBUG: Config: foo: 0 = 
+[2025-10-18 23:22:48] DEBUG: Config: } = 
+[2025-10-18 23:22:48] DEBUG: Config: Some of the options include: = 
+[2025-10-18 23:22:48] DEBUG: Config: -c compact instead of pretty-printed output; = 
+[2025-10-18 23:22:48] DEBUG: Config: use `null` as the single input value; = 
+[2025-10-18 23:22:48] DEBUG: Config: set the exit status code based on the output; = 
+[2025-10-18 23:22:48] DEBUG: Config: -s read (slurp) all inputs into an array; apply filter to it; = 
+[2025-10-18 23:22:48] DEBUG: Config: -r output raw strings, not JSON texts; = 
+[2025-10-18 23:22:48] DEBUG: Config: -R read raw strings, not JSON texts; = 
+[2025-10-18 23:22:48] DEBUG: Config: -C colorize JSON; = 
+[2025-10-18 23:22:48] DEBUG: Config: -M monochrome = 
+[2025-10-18 23:22:48] DEBUG: Config: -S sort keys of objects on output; = 
+[2025-10-18 23:22:48] DEBUG: Config: --tab use tabs for indentation; = 
+[2025-10-18 23:22:48] DEBUG: Config: --arg a v set variable $a to value <v>; = 
+[2025-10-18 23:22:48] DEBUG: Config: --argjson a v set variable $a to JSON value <v>; = 
+[2025-10-18 23:22:48] DEBUG: Config: --slurpfile a f set variable $a to an array of JSON texts read from <f>; = 
+[2025-10-18 23:22:48] DEBUG: Config: --rawfile a f set variable $a to a string consisting of the contents of <f>; = 
+[2025-10-18 23:22:48] DEBUG: Config: --args remaining arguments are string arguments, not files; = 
+[2025-10-18 23:22:48] DEBUG: Config: --jsonargs remaining arguments are JSON arguments, not files; = 
+[2025-10-18 23:22:48] DEBUG: Config: -- terminates argument processing; = 
+[2025-10-18 23:22:48] DEBUG: Config: Named arguments are also available as $ARGS.named[], while = 
+[2025-10-18 23:22:48] DEBUG: Config: positional arguments are available as $ARGS.positional[]. = 
+[2025-10-18 23:22:48] DEBUG: Config: See the manpage for more options. = 
+[2025-10-18 23:22:48] SUCCESS: Configuration loaded from file
+[2025-10-18 23:22:48] DEBUG: Using argument: major-indicator = BREAKING CHANGE
+[2025-10-18 23:22:48] DEBUG: Using argument: minor-indicator = feat:
+[2025-10-18 23:22:48] DEBUG: Using argument: patch-indicator = fix:
+[2025-10-18 23:22:48] DEBUG: Using indicators:
+[2025-10-18 23:22:48] DEBUG:   Major: BREAKING CHANGE
+[2025-10-18 23:22:48] DEBUG:   Minor: feat:
+[2025-10-18 23:22:48] DEBUG:   Patch: fix:
+[2025-10-18 23:22:49] DEBUG: Last tag: v1.0.0
+[2025-10-18 23:22:49] DEBUG: Getting commits since v1.0.0
+[2025-10-18 23:22:50] DEBUG: Initializing configuration from defaults
+[2025-10-18 23:22:50] DEBUG: Configuration initialized with 44 values
+[2025-10-18 23:22:50] DEBUG: Config: usage: yq [options] <jq filter> [input file...] = 
+[2025-10-18 23:22:50] DEBUG: Config: [--indentless-lists] [--in-place] [--version] = 
+[2025-10-18 23:22:50] DEBUG: Config: [jq_filter] [files ...] = 
+[2025-10-18 23:22:50] DEBUG: Config: yq: Command-line YAML processor - jq wrapper for YAML documents = 
+[2025-10-18 23:22:50] DEBUG: Config: yq transcodes YAML documents to JSON and passes them to jq. = 
+[2025-10-18 23:22:50] DEBUG: Config: See https://github.com/kislyuk/yq for more information. = 
+[2025-10-18 23:22:50] DEBUG: Config: positional arguments: = 
+[2025-10-18 23:22:50] DEBUG: Config: jq_filter = 
+[2025-10-18 23:22:50] DEBUG: Config: files = 
+[2025-10-18 23:22:50] DEBUG: Config: options: = 
+[2025-10-18 23:22:50] DEBUG: Config: -h, --help show this help message and exit = 
+[2025-10-18 23:22:50] DEBUG: Config: --yaml-output, --yml-output, -y = 
+[2025-10-18 23:22:50] DEBUG: Config: Transcode jq JSON output back into YAML and emit it = 
+[2025-10-18 23:22:50] DEBUG: Config: --yaml-roundtrip, --yml-roundtrip, -Y = 
+[2025-10-18 23:22:50] DEBUG: Config: Transcode jq JSON output back into YAML and emit it. Preserve YAML tags and styles by representing them as extra items in their enclosing mappings and sequences while in JSON. This option is incompatible with jq filters that do not expect these extra items. = 
+[2025-10-18 23:22:50] DEBUG: Config: --yaml-output-grammar-version {1.1,1.2}, --yml-out-ver {1.1,1.2} = 
+[2025-10-18 23:22:50] DEBUG: Config: When using --yaml-output, specify output grammar (the default is 1.1 and will be changed to 1.2 in a future version). Setting this to 1.2 will cause strings like on and no to be emitted unquoted. = 
+[2025-10-18 23:22:50] DEBUG: Config: --width WIDTH, -w WIDTH = 
+[2025-10-18 23:22:50] DEBUG: Config: When using --yaml-output, specify string wrap width = 
+[2025-10-18 23:22:50] DEBUG: Config: --indentless-lists, --indentless = 
+[2025-10-18 23:22:50] DEBUG: Config: When using --yaml-output, indent block style lists (sequences) with 0 spaces instead of 2 = 
+[2025-10-18 23:22:50] DEBUG: Config: --in-place, -i Edit files in place (no backup - use caution) = 
+[2025-10-18 23:22:50] DEBUG: Config: --version show = 
+[2025-10-18 23:22:50] DEBUG: Config: jq - commandline JSON processor [version 1.6] = 
+[2025-10-18 23:22:50] DEBUG: Config: Usage: jq [options] <jq filter> [file...] = 
+[2025-10-18 23:22:50] DEBUG: Config: jq [options] --args <jq filter> [strings...] = 
+[2025-10-18 23:22:50] DEBUG: Config: jq [options] --jsonargs <jq filter> [JSON_TEXTS...] = 
+[2025-10-18 23:22:50] DEBUG: Config: jq is a tool for processing JSON inputs, applying the given filter to = 
+[2025-10-18 23:22:50] DEBUG: Config: its JSON text inputs and producing the = 
+[2025-10-18 23:22:51] DEBUG: Config: standard output. = 
+[2025-10-18 23:22:51] DEBUG: Config: The simplest filter is ., which copies = 
+[2025-10-18 23:22:51] DEBUG: Config: unmodified (except for formatting, but note that IEEE754 is used = 
+[2025-10-18 23:22:51] DEBUG: Config: for number representation internally, with all that that implies). = 
+[2025-10-18 23:22:51] DEBUG: Config: For more advanced filters see the jq(1) manpage (man jq) = 
+[2025-10-18 23:22:51] DEBUG: Config: and/or https://stedolan.github.io/jq = 
+[2025-10-18 23:22:51] DEBUG: Config: Example: = 
+[2025-10-18 23:22:51] DEBUG: Config: $ echo {"foo": 0} | jq . = 
+[2025-10-18 23:22:51] DEBUG: Config: { = 
+[2025-10-18 23:22:51] DEBUG: Config: foo: 0 = 
+[2025-10-18 23:22:51] DEBUG: Config: } = 
+[2025-10-18 23:22:51] DEBUG: Config: Some of the options include: = 
+[2025-10-18 23:22:51] DEBUG: Config: -c compact instead of pretty-printed output; = 
+[2025-10-18 23:22:51] DEBUG: Config: use `null` as the single input value; = 
+[2025-10-18 23:22:51] DEBUG: Config: set the exit status code based on the output; = 
+[2025-10-18 23:22:51] DEBUG: Config: -s read (slurp) all inputs into an array; apply filter to it; = 
+[2025-10-18 23:22:51] DEBUG: Config: -r output raw strings, not JSON texts; = 
+[2025-10-18 23:22:51] DEBUG: Config: -R read raw strings, not JSON texts; = 
+[2025-10-18 23:22:51] DEBUG: Config: -C colorize JSON; = 
+[2025-10-18 23:22:51] DEBUG: Config: -M monochrome = 
+[2025-10-18 23:22:51] DEBUG: Config: -S sort keys of objects on output; = 
+[2025-10-18 23:22:51] DEBUG: Config: --tab use tabs for indentation; = 
+[2025-10-18 23:22:51] DEBUG: Config: --arg a v set variable $a to value <v>; = 
+[2025-10-18 23:22:51] DEBUG: Config: --argjson a v set variable $a to JSON value <v>; = 
+[2025-10-18 23:22:51] DEBUG: Config: --slurpfile a f set variable $a to an array of JSON texts read from <f>; = 
+[2025-10-18 23:22:51] DEBUG: Config: --rawfile a f set variable $a to a string consisting of the contents of <f>; = 
+[2025-10-18 23:22:51] DEBUG: Config: --args remaining arguments are string arguments, not files; = 
+[2025-10-18 23:22:51] DEBUG: Config: --jsonargs remaining arguments are JSON arguments, not files; = 
+[2025-10-18 23:22:51] DEBUG: Config: -- terminates argument processing; = 
+[2025-10-18 23:22:51] DEBUG: Config: Named arguments are also available as $ARGS.named[], while = 
+[2025-10-18 23:22:51] DEBUG: Config: positional arguments are available as $ARGS.positional[]. = 
+[2025-10-18 23:22:51] DEBUG: Config: See the manpage for more options. = 
+[2025-10-18 23:22:51] SUCCESS: Configuration loaded from file
+[2025-10-18 23:22:51] DEBUG: Using argument: major-indicator = BREAKING CHANGE
+[2025-10-18 23:22:51] DEBUG: Using argument: minor-indicator = feat:
+[2025-10-18 23:22:51] DEBUG: Using argument: patch-indicator = fix:
+[2025-10-18 23:22:51] DEBUG: Using indicators:
+[2025-10-18 23:22:51] DEBUG:   Major: BREAKING CHANGE
+[2025-10-18 23:22:51] DEBUG:   Minor: feat:
+[2025-10-18 23:22:51] DEBUG:   Patch: fix:
+[2025-10-18 23:22:52] DEBUG: Last tag: v1.0.0
+[2025-10-18 23:22:52] DEBUG: Getting commits since v1.0.0
+[2025-10-18 23:22:53] DEBUG: Initializing configuration from defaults
+[2025-10-18 23:22:53] DEBUG: Configuration initialized with 44 values
+[2025-10-18 23:22:53] DEBUG: Config: usage: yq [options] <jq filter> [input file...] = 
+[2025-10-18 23:22:53] DEBUG: Config: [--indentless-lists] [--in-place] [--version] = 
+[2025-10-18 23:22:53] DEBUG: Config: [jq_filter] [files ...] = 
+[2025-10-18 23:22:53] DEBUG: Config: yq: Command-line YAML processor - jq wrapper for YAML documents = 
+[2025-10-18 23:22:53] DEBUG: Config: yq transcodes YAML documents to JSON and passes them to jq. = 
+[2025-10-18 23:22:53] DEBUG: Config: See https://github.com/kislyuk/yq for more information. = 
+[2025-10-18 23:22:53] DEBUG: Config: positional arguments: = 
+[2025-10-18 23:22:53] DEBUG: Config: jq_filter = 
+[2025-10-18 23:22:53] DEBUG: Config: files = 
+[2025-10-18 23:22:53] DEBUG: Config: options: = 
+[2025-10-18 23:22:53] DEBUG: Config: -h, --help show this help message and exit = 
+[2025-10-18 23:22:53] DEBUG: Config: --yaml-output, --yml-output, -y = 
+[2025-10-18 23:22:53] DEBUG: Config: Transcode jq JSON output back into YAML and emit it = 
+[2025-10-18 23:22:53] DEBUG: Config: --yaml-roundtrip, --yml-roundtrip, -Y = 
+[2025-10-18 23:22:53] DEBUG: Config: Transcode jq JSON output back into YAML and emit it. Preserve YAML tags and styles by representing them as extra items in their enclosing mappings and sequences while in JSON. This option is incompatible with jq filters that do not expect these extra items. = 
+[2025-10-18 23:22:53] DEBUG: Config: --yaml-output-grammar-version {1.1,1.2}, --yml-out-ver {1.1,1.2} = 
+[2025-10-18 23:22:53] DEBUG: Config: When using --yaml-output, specify output grammar (the default is 1.1 and will be changed to 1.2 in a future version). Setting this to 1.2 will cause strings like on and no to be emitted unquoted. = 
+[2025-10-18 23:22:53] DEBUG: Config: --width WIDTH, -w WIDTH = 
+[2025-10-18 23:22:53] DEBUG: Config: When using --yaml-output, specify string wrap width = 
+[2025-10-18 23:22:53] DEBUG: Config: --indentless-lists, --indentless = 
+[2025-10-18 23:22:53] DEBUG: Config: When using --yaml-output, indent block style lists (sequences) with 0 spaces instead of 2 = 
+[2025-10-18 23:22:54] DEBUG: Config: --in-place, -i Edit files in place (no backup - use caution) = 
+[2025-10-18 23:22:54] DEBUG: Config: --version show = 
+[2025-10-18 23:22:54] DEBUG: Config: jq - commandline JSON processor [version 1.6] = 
+[2025-10-18 23:22:54] DEBUG: Config: Usage: jq [options] <jq filter> [file...] = 
+[2025-10-18 23:22:54] DEBUG: Config: jq [options] --args <jq filter> [strings...] = 
+[2025-10-18 23:22:54] DEBUG: Config: jq [options] --jsonargs <jq filter> [JSON_TEXTS...] = 
+[2025-10-18 23:22:54] DEBUG: Config: jq is a tool for processing JSON inputs, applying the given filter to = 
+[2025-10-18 23:22:54] DEBUG: Config: its JSON text inputs and producing the = 
+[2025-10-18 23:22:54] DEBUG: Config: standard output. = 
+[2025-10-18 23:22:54] DEBUG: Config: The simplest filter is ., which copies = 
+[2025-10-18 23:22:54] DEBUG: Config: unmodified (except for formatting, but note that IEEE754 is used = 
+[2025-10-18 23:22:54] DEBUG: Config: for number representation internally, with all that that implies). = 
+[2025-10-18 23:22:54] DEBUG: Config: For more advanced filters see the jq(1) manpage (man jq) = 
+[2025-10-18 23:22:54] DEBUG: Config: and/or https://stedolan.github.io/jq = 
+[2025-10-18 23:22:54] DEBUG: Config: Example: = 
+[2025-10-18 23:22:54] DEBUG: Config: $ echo {"foo": 0} | jq . = 
+[2025-10-18 23:22:54] DEBUG: Config: { = 
+[2025-10-18 23:22:54] DEBUG: Config: foo: 0 = 
+[2025-10-18 23:22:54] DEBUG: Config: } = 
+[2025-10-18 23:22:54] DEBUG: Config: Some of the options include: = 
+[2025-10-18 23:22:54] DEBUG: Config: -c compact instead of pretty-printed output; = 
+[2025-10-18 23:22:54] DEBUG: Config: use `null` as the single input value; = 
+[2025-10-18 23:22:54] DEBUG: Config: set the exit status code based on the output; = 
+[2025-10-18 23:22:54] DEBUG: Config: -s read (slurp) all inputs into an array; apply filter to it; = 
+[2025-10-18 23:22:54] DEBUG: Config: -r output raw strings, not JSON texts; = 
+[2025-10-18 23:22:54] DEBUG: Config: -R read raw strings, not JSON texts; = 
+[2025-10-18 23:22:54] DEBUG: Config: -C colorize JSON; = 
+[2025-10-18 23:22:54] DEBUG: Config: -M monochrome = 
+[2025-10-18 23:22:54] DEBUG: Config: -S sort keys of objects on output; = 
+[2025-10-18 23:22:54] DEBUG: Config: --tab use tabs for indentation; = 
+[2025-10-18 23:22:54] DEBUG: Config: --arg a v set variable $a to value <v>; = 
+[2025-10-18 23:22:54] DEBUG: Config: --argjson a v set variable $a to JSON value <v>; = 
+[2025-10-18 23:22:54] DEBUG: Config: --slurpfile a f set variable $a to an array of JSON texts read from <f>; = 
+[2025-10-18 23:22:54] DEBUG: Config: --rawfile a f set variable $a to a string consisting of the contents of <f>; = 
+[2025-10-18 23:22:54] DEBUG: Config: --args remaining arguments are string arguments, not files; = 
+[2025-10-18 23:22:54] DEBUG: Config: --jsonargs remaining arguments are JSON arguments, not files; = 
+[2025-10-18 23:22:54] DEBUG: Config: -- terminates argument processing; = 
+[2025-10-18 23:22:54] DEBUG: Config: Named arguments are also available as $ARGS.named[], while = 
+[2025-10-18 23:22:54] DEBUG: Config: positional arguments are available as $ARGS.positional[]. = 
+[2025-10-18 23:22:54] DEBUG: Config: See the manpage for more options. = 
+[2025-10-18 23:22:54] SUCCESS: Configuration loaded from file
+[2025-10-18 23:22:54] DEBUG: Using argument: major-indicator = BREAKING CHANGE
+[2025-10-18 23:22:54] DEBUG: Using argument: minor-indicator = feat:
+[2025-10-18 23:22:54] DEBUG: Using argument: patch-indicator = fix:
+[2025-10-18 23:22:54] DEBUG: Using indicators:
+[2025-10-18 23:22:54] DEBUG:   Major: BREAKING CHANGE
+[2025-10-18 23:22:54] DEBUG:   Minor: feat:
+[2025-10-18 23:22:54] DEBUG:   Patch: fix:
+[2025-10-18 23:22:55] DEBUG: Last tag: v1.0.0
+[2025-10-18 23:22:55] DEBUG: Getting commits since v1.0.0
+[2025-10-18 23:22:55] DEBUG: Initializing configuration from defaults
+[2025-10-18 23:22:55] DEBUG: Configuration initialized with 44 values
+[2025-10-18 23:22:56] DEBUG: Config: usage: yq [options] <jq filter> [input file...] = 
+[2025-10-18 23:22:56] DEBUG: Config: [--indentless-lists] [--in-place] [--version] = 
+[2025-10-18 23:22:56] DEBUG: Config: [jq_filter] [files ...] = 
+[2025-10-18 23:22:56] DEBUG: Config: yq: Command-line YAML processor - jq wrapper for YAML documents = 
+[2025-10-18 23:22:56] DEBUG: Config: yq transcodes YAML documents to JSON and passes them to jq. = 
+[2025-10-18 23:22:56] DEBUG: Config: See https://github.com/kislyuk/yq for more information. = 
+[2025-10-18 23:22:56] DEBUG: Config: positional arguments: = 
+[2025-10-18 23:22:56] DEBUG: Config: jq_filter = 
+[2025-10-18 23:22:56] DEBUG: Config: files = 
+[2025-10-18 23:22:56] DEBUG: Config: options: = 
+[2025-10-18 23:22:56] DEBUG: Config: -h, --help show this help message and exit = 
+[2025-10-18 23:22:56] DEBUG: Config: --yaml-output, --yml-output, -y = 
+[2025-10-18 23:22:56] DEBUG: Config: Transcode jq JSON output back into YAML and emit it = 
+[2025-10-18 23:22:56] DEBUG: Config: --yaml-roundtrip, --yml-roundtrip, -Y = 
+[2025-10-18 23:22:56] DEBUG: Config: Transcode jq JSON output back into YAML and emit it. Preserve YAML tags and styles by representing them as extra items in their enclosing mappings and sequences while in JSON. This option is incompatible with jq filters that do not expect these extra items. = 
+[2025-10-18 23:22:56] DEBUG: Config: --yaml-output-grammar-version {1.1,1.2}, --yml-out-ver {1.1,1.2} = 
+[2025-10-18 23:22:56] DEBUG: Config: When using --yaml-output, specify output grammar (the default is 1.1 and will be changed to 1.2 in a future version). Setting this to 1.2 will cause strings like on and no to be emitted unquoted. = 
+[2025-10-18 23:22:56] DEBUG: Config: --width WIDTH, -w WIDTH = 
+[2025-10-18 23:22:56] DEBUG: Config: When using --yaml-output, specify string wrap width = 
+[2025-10-18 23:22:56] DEBUG: Config: --indentless-lists, --indentless = 
+[2025-10-18 23:22:56] DEBUG: Config: When using --yaml-output, indent block style lists (sequences) with 0 spaces instead of 2 = 
+[2025-10-18 23:22:56] DEBUG: Config: --in-place, -i Edit files in place (no backup - use caution) = 
+[2025-10-18 23:22:56] DEBUG: Config: --version show = 
+[2025-10-18 23:22:56] DEBUG: Config: jq - commandline JSON processor [version 1.6] = 
+[2025-10-18 23:22:56] DEBUG: Config: Usage: jq [options] <jq filter> [file...] = 
+[2025-10-18 23:22:56] DEBUG: Config: jq [options] --args <jq filter> [strings...] = 
+[2025-10-18 23:22:56] DEBUG: Config: jq [options] --jsonargs <jq filter> [JSON_TEXTS...] = 
+[2025-10-18 23:22:56] DEBUG: Config: jq is a tool for processing JSON inputs, applying the given filter to = 
+[2025-10-18 23:22:56] DEBUG: Config: its JSON text inputs and producing the = 
+[2025-10-18 23:22:56] DEBUG: Config: standard output. = 
+[2025-10-18 23:22:56] DEBUG: Config: The simplest filter is ., which copies = 
+[2025-10-18 23:22:56] DEBUG: Config: unmodified (except for formatting, but note that IEEE754 is used = 
+[2025-10-18 23:22:56] DEBUG: Config: for number representation internally, with all that that implies). = 
+[2025-10-18 23:22:56] DEBUG: Config: For more advanced filters see the jq(1) manpage (man jq) = 
+[2025-10-18 23:22:56] DEBUG: Config: and/or https://stedolan.github.io/jq = 
+[2025-10-18 23:22:56] DEBUG: Config: Example: = 
+[2025-10-18 23:22:56] DEBUG: Config: $ echo {"foo": 0} | jq . = 
+[2025-10-18 23:22:56] DEBUG: Config: { = 
+[2025-10-18 23:22:56] DEBUG: Config: foo: 0 = 
+[2025-10-18 23:22:56] DEBUG: Config: } = 
+[2025-10-18 23:22:56] DEBUG: Config: Some of the options include: = 
+[2025-10-18 23:22:56] DEBUG: Config: -c compact instead of pretty-printed output; = 
+[2025-10-18 23:22:56] DEBUG: Config: use `null` as the single input value; = 
+[2025-10-18 23:22:56] DEBUG: Config: set the exit status code based on the output; = 
+[2025-10-18 23:22:56] DEBUG: Config: -s read (slurp) all inputs into an array; apply filter to it; = 
+[2025-10-18 23:22:56] DEBUG: Config: -r output raw strings, not JSON texts; = 
+[2025-10-18 23:22:56] DEBUG: Config: -R read raw strings, not JSON texts; = 
+[2025-10-18 23:22:56] DEBUG: Config: -C colorize JSON; = 
+[2025-10-18 23:22:56] DEBUG: Config: -M monochrome = 
+[2025-10-18 23:22:56] DEBUG: Config: -S sort keys of objects on output; = 
+[2025-10-18 23:22:56] DEBUG: Config: --tab use tabs for indentation; = 
+[2025-10-18 23:22:56] DEBUG: Config: --arg a v set variable $a to value <v>; = 
+[2025-10-18 23:22:56] DEBUG: Config: --argjson a v set variable $a to JSON value <v>; = 
+[2025-10-18 23:22:56] DEBUG: Config: --slurpfile a f set variable $a to an array of JSON texts read from <f>; = 
+[2025-10-18 23:22:56] DEBUG: Config: --rawfile a f set variable $a to a string consisting of the contents of <f>; = 
+[2025-10-18 23:22:56] DEBUG: Config: --args remaining arguments are string arguments, not files; = 
+[2025-10-18 23:22:56] DEBUG: Config: --jsonargs remaining arguments are JSON arguments, not files; = 
+[2025-10-18 23:22:56] DEBUG: Config: -- terminates argument processing; = 
+[2025-10-18 23:22:56] DEBUG: Config: Named arguments are also available as $ARGS.named[], while = 
+[2025-10-18 23:22:56] DEBUG: Config: positional arguments are available as $ARGS.positional[]. = 
+[2025-10-18 23:22:56] DEBUG: Config: See the manpage for more options. = 
+[2025-10-18 23:22:56] SUCCESS: Configuration loaded from file
+[2025-10-18 23:22:56] DEBUG: Using argument: major-indicator = BREAKING CHANGE
+[2025-10-18 23:22:56] DEBUG: Using argument: minor-indicator = feat:
+[2025-10-18 23:22:56] DEBUG: Using argument: patch-indicator = fix:
+[2025-10-18 23:22:56] DEBUG: Using indicators:
+[2025-10-18 23:22:56] DEBUG:   Major: BREAKING CHANGE
+[2025-10-18 23:22:56] DEBUG:   Minor: feat:
+[2025-10-18 23:22:56] DEBUG:   Patch: fix:
+[2025-10-18 23:22:56] DEBUG: Last tag: v1.0.0
+[2025-10-18 23:22:56] DEBUG: Getting commits since v1.0.0
+[2025-10-18 23:22:58] DEBUG: Initializing configuration from defaults
+[2025-10-18 23:22:58] DEBUG: Configuration initialized with 44 values
+[2025-10-18 23:22:58] DEBUG: Config: usage: yq [options] <jq filter> [input file...] = 
+[2025-10-18 23:22:58] DEBUG: Config: [--indentless-lists] [--in-place] [--version] = 
+[2025-10-18 23:22:58] DEBUG: Config: [jq_filter] [files ...] = 
+[2025-10-18 23:22:58] DEBUG: Config: yq: Command-line YAML processor - jq wrapper for YAML documents = 
+[2025-10-18 23:22:58] DEBUG: Config: yq transcodes YAML documents to JSON and passes them to jq. = 
+[2025-10-18 23:22:58] DEBUG: Config: See https://github.com/kislyuk/yq for more information. = 
+[2025-10-18 23:22:58] DEBUG: Config: positional arguments: = 
+[2025-10-18 23:22:58] DEBUG: Config: jq_filter = 
+[2025-10-18 23:22:58] DEBUG: Config: files = 
+[2025-10-18 23:22:58] DEBUG: Config: options: = 
+[2025-10-18 23:22:58] DEBUG: Config: -h, --help show this help message and exit = 
+[2025-10-18 23:22:58] DEBUG: Config: --yaml-output, --yml-output, -y = 
+[2025-10-18 23:22:58] DEBUG: Config: Transcode jq JSON output back into YAML and emit it = 
+[2025-10-18 23:22:58] DEBUG: Config: --yaml-roundtrip, --yml-roundtrip, -Y = 
+[2025-10-18 23:22:58] DEBUG: Config: Transcode jq JSON output back into YAML and emit it. Preserve YAML tags and styles by representing them as extra items in their enclosing mappings and sequences while in JSON. This option is incompatible with jq filters that do not expect these extra items. = 
+[2025-10-18 23:22:58] DEBUG: Config: --yaml-output-grammar-version {1.1,1.2}, --yml-out-ver {1.1,1.2} = 
+[2025-10-18 23:22:58] DEBUG: Config: When using --yaml-output, specify output grammar (the default is 1.1 and will be changed to 1.2 in a future version). Setting this to 1.2 will cause strings like on and no to be emitted unquoted. = 
+[2025-10-18 23:22:58] DEBUG: Config: --width WIDTH, -w WIDTH = 
+[2025-10-18 23:22:58] DEBUG: Config: When using --yaml-output, specify string wrap width = 
+[2025-10-18 23:22:58] DEBUG: Config: --indentless-lists, --indentless = 
+[2025-10-18 23:22:58] DEBUG: Config: When using --yaml-output, indent block style lists (sequences) with 0 spaces instead of 2 = 
+[2025-10-18 23:22:58] DEBUG: Config: --in-place, -i Edit files in place (no backup - use caution) = 
+[2025-10-18 23:22:58] DEBUG: Config: --version show = 
+[2025-10-18 23:22:58] DEBUG: Config: jq - commandline JSON processor [version 1.6] = 
+[2025-10-18 23:22:58] DEBUG: Config: Usage: jq [options] <jq filter> [file...] = 
+[2025-10-18 23:22:58] DEBUG: Config: jq [options] --args <jq filter> [strings...] = 
+[2025-10-18 23:22:58] DEBUG: Config: jq [options] --jsonargs <jq filter> [JSON_TEXTS...] = 
+[2025-10-18 23:22:58] DEBUG: Config: jq is a tool for processing JSON inputs, applying the given filter to = 
+[2025-10-18 23:22:58] DEBUG: Config: its JSON text inputs and producing the = 
+[2025-10-18 23:22:58] DEBUG: Config: standard output. = 
+[2025-10-18 23:22:58] DEBUG: Config: The simplest filter is ., which copies = 
+[2025-10-18 23:22:58] DEBUG: Config: unmodified (except for formatting, but note that IEEE754 is used = 
+[2025-10-18 23:22:58] DEBUG: Config: for number representation internally, with all that that implies). = 
+[2025-10-18 23:22:58] DEBUG: Config: For more advanced filters see the jq(1) manpage (man jq) = 
+[2025-10-18 23:22:58] DEBUG: Config: and/or https://stedolan.github.io/jq = 
+[2025-10-18 23:22:58] DEBUG: Config: Example: = 
+[2025-10-18 23:22:58] DEBUG: Config: $ echo {"foo": 0} | jq . = 
+[2025-10-18 23:22:58] DEBUG: Config: { = 
+[2025-10-18 23:22:58] DEBUG: Config: foo: 0 = 
+[2025-10-18 23:22:58] DEBUG: Config: } = 
+[2025-10-18 23:22:58] DEBUG: Config: Some of the options include: = 
+[2025-10-18 23:22:58] DEBUG: Config: -c compact instead of pretty-printed output; = 
+[2025-10-18 23:22:58] DEBUG: Config: use `null` as the single input value; = 
+[2025-10-18 23:22:58] DEBUG: Config: set the exit status code based on the output; = 
+[2025-10-18 23:22:58] DEBUG: Config: -s read (slurp) all inputs into an array; apply filter to it; = 
+[2025-10-18 23:22:58] DEBUG: Config: -r output raw strings, not JSON texts; = 
+[2025-10-18 23:22:58] DEBUG: Config: -R read raw strings, not JSON texts; = 
+[2025-10-18 23:22:58] DEBUG: Config: -C colorize JSON; = 
+[2025-10-18 23:22:58] DEBUG: Config: -M monochrome = 
+[2025-10-18 23:22:58] DEBUG: Config: -S sort keys of objects on output; = 
+[2025-10-18 23:22:58] DEBUG: Config: --tab use tabs for indentation; = 
+[2025-10-18 23:22:58] DEBUG: Config: --arg a v set variable $a to value <v>; = 
+[2025-10-18 23:22:58] DEBUG: Config: --argjson a v set variable $a to JSON value <v>; = 
+[2025-10-18 23:22:58] DEBUG: Config: --slurpfile a f set variable $a to an array of JSON texts read from <f>; = 
+[2025-10-18 23:22:58] DEBUG: Config: --rawfile a f set variable $a to a string consisting of the contents of <f>; = 
+[2025-10-18 23:22:58] DEBUG: Config: --args remaining arguments are string arguments, not files; = 
+[2025-10-18 23:22:58] DEBUG: Config: --jsonargs remaining arguments are JSON arguments, not files; = 
+[2025-10-18 23:22:58] DEBUG: Config: -- terminates argument processing; = 
+[2025-10-18 23:22:58] DEBUG: Config: Named arguments are also available as $ARGS.named[], while = 
+[2025-10-18 23:22:58] DEBUG: Config: positional arguments are available as $ARGS.positional[]. = 
+[2025-10-18 23:22:58] DEBUG: Config: See the manpage for more options. = 
+[2025-10-18 23:22:58] SUCCESS: Configuration loaded from file
+[2025-10-18 23:22:58] DEBUG: Using argument: major-indicator = [BREAKING]
+[2025-10-18 23:22:58] DEBUG: Using argument: minor-indicator = [FEATURE]
+[2025-10-18 23:22:58] DEBUG: Using argument: patch-indicator = [FIX]
+[2025-10-18 23:22:58] DEBUG: Using indicators:
+[2025-10-18 23:22:58] DEBUG:   Major: [BREAKING]
+[2025-10-18 23:22:58] DEBUG:   Minor: [FEATURE]
+[2025-10-18 23:22:58] DEBUG:   Patch: [FIX]
+[2025-10-18 23:22:59] DEBUG: Last tag: v1.0.0
+[2025-10-18 23:22:59] DEBUG: Getting commits since v1.0.0

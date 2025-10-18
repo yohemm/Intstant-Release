@@ -1,585 +1,351 @@
-# THIS FILE NEED TO BE FULLY IN ENGLISH
-name: Semantic Versioning & Changelog
-author: Yohem VAXELAIRE
-description: Auto-versioning avec semantic commit, génération changelog et tags Git
-
-branding:
-  icon: tag
-  color: blue
-
+name: 'Instant Release - CI/CD Framework'
+description: 'Modular GitHub Action for complete CI/CD automation'
 
 inputs:
-  # Branches to trigger versioning
-  trigger-branches:
-    description: 'Branches on which to trigger versioning (comma-separated)'
-    required: false
-    default: main,develop
-  
-  # Breaking changes indicators
-  breaking-change-indicators:
-    description: Commit types indicating breaking changes (comma-separated)
-    required: false
-    default: 'BREAKING CHANGE,!:,\!:'
-
-  # Features commit types
-  feature-types:
-    description: Commit types considered as features (comma-separated)
-    required: false
-    default: feat,✨,🚀
-  
-  # Fixes commit types
-  fix-types:
-    description: Commit types considered as fixes (comma-separated)
-    required: false
-    default: fix,🐛
-  
-  # Refactors commit types
-  refactor-types:
-    description: Commit types considered as refactors/performance (comma-separated)
-    required: false
-    default: refactor,♻️,perf,⚡,🎨
-
-  # Configuration Git
+  # Git & Config (REQUIRED)
+  github-token:
+    description: 'GitHub token with contents:write permission'
+    required: true
   git-user-name:
-    description: Git username for commits
-    required: false
-    default: github-actions[bot]
-  
+    description: 'Git user name for commits'
+    default: 'github-actions[bot]'
   git-user-email:
-    description: Git email for commits
-    required: false
-    default: github-actions[bot]@users.noreply.github.com
+    description: 'Git user email'
+    default: 'github-actions[bot]@github.com'
   
-  # Configuration versioning
-  initial-version:
-    description: Initial version if no tags exist
-    required: false
-    default: v0.0.1
-  
-  # Configuration changelog
+  # Versioning
+  bump:
+    description: 'Version bump type: auto|major|minor|patch'
+    default: 'auto'
   generate-changelog:
-    description: Generate or update CHANGELOG.md
-    required: false
-    default: true
-  
-  # Path to changelog file (with name)
-  changelog-file:
-    description: Path(with name) to the changelog file
-    required: false
-    default: CHANGELOG.md
-  
-  # Auto commit changelog
-  auto-commit:
-    description: Auto-commit changelog updates
-    required: false
-    default: true
-  
-  # Create and push Git tags
-  create-tags:
-    description: Create and push Git tags
-    required: false
-    default: true
-  
-  # Create GitHub Release
+    description: 'Generate changelog'
+    default: 'true'
+  create-tag:
+    description: 'Create Git tag'
+    default: 'true'
   create-release:
-    description: Create a GitHub Release for the new version
-    required: false
-    default: false
+    description: 'Create GitHub Release'
+    default: 'true'
   
-  # Debug mode
+  # Build
+  build-enabled:
+    description: 'Enable build step'
+    default: 'true'
+  build-command:
+    description: 'Build command'
+    default: 'npm run build'
+  
+  # Tests
+  tests-enabled:
+    description: 'Enable tests'
+    default: 'true'
+  unit-tests-command:
+    description: 'Unit tests command'
+    default: 'npm test'
+  coverage-threshold:
+    description: 'Minimum coverage percentage'
+    default: '80'
+  
+  # Security
+  dependency-scan-enabled:
+    description: 'Enable dependency scanning'
+    default: 'true'
+  secret-scan-enabled:
+    description: 'Enable secret scanning'
+    default: 'false'
+  
+  # Deployment
+  deploy-enabled:
+    description: 'Enable deployment'
+    default: 'false'
+  deploy-command:
+    description: 'Deploy command'
+  
+  # Webhooks & Plugins
+  webhook-post-release-enabled:
+    description: 'Enable post-release webhook'
+    default: 'false'
+  webhook-post-release-url:
+    description: 'Post-release webhook URL'
+  plugin-post-release-enabled:
+    description: 'Enable post-release plugin'
+    default: 'false'
+  plugin-post-release-script:
+    description: 'Post-release plugin script path'
+  
+  # Debug & Dry-run
   debug:
-    description: Debug mode for detailed logs
-    required: false
-    default: false
-
+    description: 'Enable debug mode'
+    default: 'false'
+  dry-run:
+    description: 'Enable dry-run mode'
+    default: 'false'
 
 outputs:
   current-version:
-    description: New version created
-    value: ${{ steps.bump.outputs.current_version }}
-  
-  version-bump:
-    description: Bump type (major, minor, patch, none)
-    value: ${{ steps.bump.outputs.bump_type }}
-  
-  changelog-generated:
-    description: Inicates if changelog was generated/updated
-    value: ${{ steps.changelog.outputs.has_changes }}
-  
+    description: 'Current version created'
+    value: ${{ steps.version.outputs.current-version }}
+  bump-type:
+    description: 'Bump type applied'
+    value: ${{ steps.version.outputs.bump-type }}
   tag-created:
-    description: Indiques if a new tag was created
-    value: ${{ steps.tag.outputs.tag_created }}
-    
+    description: 'Whether tag was created'
+    value: ${{ steps.tag.outputs.tag-created }}
+  changelog-generated:
+    description: 'Whether changelog was generated'
+    value: ${{ steps.changelog.outputs.changelog-generated }}
+  release-url:
+    description: 'GitHub Release URL'
+    value: ${{ steps.release.outputs.release-url }}
+  deployment-status:
+    description: 'Deployment status'
+    value: ${{ steps.deploy.outputs.deployment-status }}
+
 runs:
   using: 'composite'
   steps:
-    - name: 'Setup Git & Checkout'
+    # Pre-flight
+    - name: Pre-flight checks
+      run: ${{ github.action_path }}/scripts/pre-flight.sh
       shell: bash
-      run: |
-        git config --global user.name "${{ inputs.git-user-name }}"
-        git config --global user.email "${{ inputs.git-user-email }}"
-        git fetch --tags --all
-        echo "✅ Git configured and ready"
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+        DEBUG: ${{ inputs.debug }}
+        DRY_RUN: ${{ inputs.dry-run }}
     
-    - name: 'Initialize Variables'
-      id: init
+    # Webhook pre-flight
+    - name: Webhook pre-flight
+      if: ${{ inputs.webhook-pre-flight-enabled == 'true' }}
+      run: ${{ github.action_path }}/scripts/webhook-call.sh
       shell: bash
+      env:
+        WEBHOOK_URL: ${{ inputs.webhook-pre-flight-url }}
+        WEBHOOK_EVENT: 'pre-flight'
+        WEBHOOK_TIMEOUT: ${{ inputs.webhook-timeout }}
+    
+    # Plugin pre-flight
+    - name: Plugin pre-flight
+      if: ${{ inputs.plugin-pre-flight-enabled == 'true' }}
       run: |
-        TRIGGER_BRANCHES="${{ inputs['trigger-branches'] }}"
-        BRANCH_PATTERN=$(echo "$TRIGGER_BRANCHES" | sed 's/,/|/g')
-        BREAKING_INDICATORS="${{ inputs.breaking-change-indicators }}"
-        BREAKING_PATTERN=$(echo "$BREAKING_INDICATORS" | sed 's/,/|/g')
-        FEATURE_TYPES="${{ inputs.feature-types }}"
-        FEATURE_PATTERN=$(echo "$FEATURE_TYPES" | sed 's/,/|/g')
-        FIX_TYPES="${{ inputs.fix-types }}"
-        FIX_PATTERN=$(echo "$FIX_TYPES" | sed 's/,/|/g')
-        REFACTOR_TYPES="${{ inputs.refactor-types }}"
-        REFACTOR_PATTERN=$(echo "$REFACTOR_TYPES" | sed 's/,/|/g')
-        
-        echo "branch_pattern=$BRANCH_PATTERN" >> $GITHUB_ENV
-        echo "breaking_pattern=$BREAKING_PATTERN" >> $GITHUB_ENV
-        echo "feature_pattern=$FEATURE_PATTERN" >> $GITHUB_ENV
-        echo "fix_pattern=$FIX_PATTERN" >> $GITHUB_ENV
-        echo "refactor_pattern=$REFACTOR_PATTERN" >> $GITHUB_ENV
-
-        if [ "${{ inputs.debug }}" = "true" ]; then
-          echo "🔍 [DEBUG] Trigger branches pattern: $BRANCH_PATTERN"
-          echo "🔍 [DEBUG] Breaking changes pattern: $BREAKING_PATTERN"
-          echo "🔍 [DEBUG] Feature types pattern: $FEATURE_PATTERN"
-          echo "🔍 [DEBUG] Fix types pattern: $FIX_PATTERN"
-          echo "🔍 [DEBUG] Refactor types pattern: $REFACTOR_PATTERN"
-        fi
-
-
-    - name: 'Get Latest Tag'
-      id: get_tag
+        bash "${{ inputs.plugin-pre-flight-script }}" \
+          "${{ inputs.github-token }}" \
+          "${{ inputs.config-path }}" \
+          "${{ inputs.debug }}"
       shell: bash
-      run: |
-        LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
-        
-        if [ -z "$LAST_TAG" ]; then
-          LAST_TAG="${{ inputs.initial-version }}"
-          IS_INITIAL="true"
-        else
-          IS_INITIAL="false"
-        fi
-        
-        echo "last_tag=$LAST_TAG" >> $GITHUB_OUTPUT
-        echo "is_initial=$IS_INITIAL" >> $GITHUB_OUTPUT
-        
-        if [ "${{ inputs.debug }}" = "true" ]; then
-          echo "🔍 [DEBUG] Last tag: $LAST_TAG (initial: $IS_INITIAL)"
-        fi
-
-    - name: 'Extract Commits'
-      id: commits
+      timeout-minutes: ${{ inputs.plugin-timeout }}
+    
+    # Build
+    - name: Build
+      if: ${{ inputs.build-enabled == 'true' }}
+      run: ${{ inputs.build-command }}
       shell: bash
-      run: |
-        LAST_TAG="${{ steps.get_tag.outputs.last_tag }}"
-        IS_INITIAL="${{ steps.get_tag.outputs.is_initial }}"
-        
-        if [ "$IS_INITIAL" = "false" ]; then
-          COMMITS=$(git log "${LAST_TAG}..HEAD" --pretty=format:"%s%n%b")
-        else
-          COMMITS=$(git log HEAD --pretty=format:"%s%n%b")
-        fi
-        
-        echo "commits<<EOF" >> $GITHUB_OUTPUT
-        echo "$COMMITS" >> $GITHUB_OUTPUT
-        echo "EOF" >> $GITHUB_OUTPUT
-        
-        if [ "${{ inputs.debug }}" = "true" ]; then
-          echo "🔍 [DEBUG] Commits found:"
-          echo "$COMMITS" | head -10
-        fi
-
-    - name: 'Determine Version'
-      id: bump
+    
+    # Tests
+    - name: Unit Tests
+      if: ${{ inputs.tests-enabled == 'true' }}
+      run: ${{ inputs.unit-tests-command }}
       shell: bash
-      run: |
-        LAST_TAG="${{ steps.get_tag.outputs.last_tag }}"
-        IS_INITIAL="${{ steps.get_tag.outputs.is_initial }}"
-        COMMITS="${{ steps.commits.outputs.commits }}"
-        
-        BUMP_TYPE="none"
-        NEW_VERSION="$LAST_TAG"
-        
-        # Si version initiale, skip le versioning
-        if [ "$IS_INITIAL" = "true" ]; then
-          NEW_VERSION="${{ inputs.initial-version }}"
-          echo "bump_type=initial" >> $GITHUB_OUTPUT
-          if [ "${{ inputs.debug }}" = "true" ]; then
-            echo "🧩 [DEBUG] Initial version, no bump needed"
-          fi
-          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
-          echo "🆕 Initial version: $NEW_VERSION"
-          exit 0
-        fi
-        
-        # Parser la version
-        MAJOR=$(echo "$LAST_TAG" | sed 's/[^0-9.]*//g' | cut -d. -f1)
-        MINOR=$(echo "$LAST_TAG" | sed 's/[^0-9.]*//g' | cut -d. -f2)
-        PATCH=$(echo "$LAST_TAG" | sed 's/[^0-9.]*//g' | cut -d. -f3)
-        
-        # Détecter le type de bump
-        if echo "$COMMITS" | grep -E -q "(${{ env.breaking_pattern }})"; then
-          BUMP_TYPE="major"
-          MAJOR=$((MAJOR + 1))
-          MINOR=0
-          PATCH=0
-        elif echo "$COMMITS" | grep -E -q "^(${{ env.feature_pattern }})"; then
-          BUMP_TYPE="minor"
-          MINOR=$((MINOR + 1))
-          PATCH=0
-        elif echo "$COMMITS" | grep -E -q "^((${{ env.fix_pattern }})|(${{ env.refactor_pattern }}))"; then
-          BUMP_TYPE="patch"
-          PATCH=$((PATCH + 1))
-        fi
-        
-        NEW_VERSION="v${MAJOR}.${MINOR}.${PATCH}"
-        
-        echo "bump_type=$BUMP_TYPE" >> $GITHUB_OUTPUT
-        if [ "${{ inputs.debug }}" = "true" ]; then
-          echo "🧩 [DEBUG] Version bump type: $BUMP_TYPE"
-        fi
-        echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
-        
-        if [ "$BUMP_TYPE" != "none" ]; then
-          echo "📈 Version bump: $BUMP_TYPE → $NEW_VERSION"
-        else
-          echo "⏭️ No version bump needed"
-        fi
-        
-        if [ "$BUMP_TYPE" = "none" ]; then
-          NEW_VERSION="$LAST_TAG"
-        fi
-
-        echo "current_version=$NEW_VERSION" >> $GITHUB_OUTPUT
-        if [ "${{ inputs.debug }}" = "true" ]; then
-          echo "🧩 [DEBUG] Final new version: $NEW_VERSION"
-        fi
-
-    - name: 'Generate Changelog'
-      id: changelog
+    
+    - name: Coverage Check
+      if: ${{ inputs.tests-enabled == 'true' }}
+      run: ${{ github.action_path }}/scripts/coverage-check.sh
+      shell: bash
+      env:
+        COVERAGE_THRESHOLD: ${{ inputs.coverage-threshold }}
+        COVERAGE_FILE: ${{ inputs.coverage-file-path }}
+    
+    - name: Lint
+      if: ${{ inputs.lint-enabled == 'true' }}
+      run: ${{ inputs.lint-command }}
+      shell: bash
+    
+    # Security
+    - name: Dependency Scan
+      if: ${{ inputs.dependency-scan-enabled == 'true' }}
+      run: ${{ github.action_path }}/scripts/dependency-scan.sh
+      shell: bash
+      env:
+        SCAN_TOOL: ${{ inputs.dependency-scan-tool }}
+        SEVERITY_THRESHOLD: ${{ inputs.dependency-severity-threshold }}
+    
+    - name: Secret Scan
+      if: ${{ inputs.secret-scan-enabled == 'true' }}
+      run: ${{ github.action_path }}/scripts/secret-scan.sh
+      shell: bash
+    
+    - name: SAST Analysis
+      if: ${{ inputs.sast-enabled == 'true' }}
+      run: ${{ github.action_path }}/scripts/sast-analysis.sh
+      shell: bash
+      env:
+        SAST_TOOL: ${{ inputs.sast-tool }}
+    
+    # Versioning
+    - name: Calculate Version
+      id: version
+      run: ${{ github.action_path }}/scripts/calculate-version.sh
+      shell: bash
+      env:
+        BUMP: ${{ inputs.bump }}
+        VERSION: ${{ inputs.version }}
+        INITIAL: ${{ inputs.initial }}
+        MAJOR_INDICATOR: ${{ inputs.major-indicator }}
+        MINOR_INDICATOR: ${{ inputs.minor-indicator }}
+        PATCH_INDICATOR: ${{ inputs.patch-indicator }}
+    
+    - name: Sync Version Files
+      if: ${{ inputs.sync-version != '' }}
+      run: ${{ github.action_path }}/scripts/sync-version.sh
+      shell: bash
+      env:
+        VERSION: ${{ steps.version.outputs.current-version }}
+        SYNC_PATHS: ${{ inputs.sync-version }}
+    
+    # Changelog
+    - name: Generate Changelog
       if: ${{ inputs.generate-changelog == 'true' }}
+      id: changelog
+      run: ${{ github.action_path }}/scripts/generate-changelog.sh
       shell: bash
-      run: |
-        LAST_TAG="${{ steps.get_tag.outputs.last_tag }}"
-        IS_INITIAL="${{ steps.get_tag.outputs.is_initial }}"
-        NEW_VERSION="${{ steps.bump.outputs.new_version }}"
-        CHANGELOG_FILE="${{ inputs.changelog-file }}"
-        REPO_URL="https://github.com/${{ github.repository }}"
-        FEATURE_PATTERN="${{ env.feature_pattern }}"
-        FIX_PATTERN="${{ env.fix_pattern }}"
-        REFACTOR_PATTERN="${{ env.refactor_pattern }}"
-        BREAKING_PATTERN="${{ env.breaking_pattern }}"
-        
-        TMP_FILE="${CHANGELOG_FILE}.tmp"
-        VERSION_TITLE="## $NEW_VERSION"
-
-        FEATURE_COUNT=0
-        FIX_COUNT=0
-        REFACTOR_COUNT=0
-        MISC_COUNT=0
-
-        extract_commits() {
-          local pattern="$1"
-          echo "$ALL_COMMITS_FORMATTED" | grep -E "^- ${pattern}" | while read -r line; do
-            # Si le commit commence par le pattern (type connu)
-            if [[ "$line" =~ ^-[[:space:]]$pattern(\(|\\|\!|:) ]]; then
-              # echo "New line matched pattern '$pattern': $line" >&2
-              echo "$line" | sed -E 's#(\\!:|!:)#:#g; s#^- (feat|fix|refactor|perf)(\(([^)]+)\)):#- \3:#; s#^- :#- #g'
-            else
-              # echo "Line not matching pattern '$pattern': $line" >&2
-              echo "$line"
-            fi
-          done
-        }
-
-        extract_misc_commits() {
-          # Tout ce qui n'est pas feat, fix, refactor, perf, BREAKING CHANGE
-          echo "$ALL_COMMITS_FORMATTED" \
-            | grep -Ev "^- ((feat|fix|refactor|perf)(\(|:)|((${FEATURE_PATTERN})|(${FIX_PATTERN})|(${REFACTOR_PATTERN})))|(${BREAKING_PATTERN})|Merge" | sed -E "s|//||g; s|\\?!:|:|g" || true
-        }
-        extract_merge_commits() {
-          # Tout ce qui n'est pas feat, fix, refactor, perf, BREAKING CHANGE
-          echo "$ALL_COMMITS_FORMATTED" \
-            | grep "Merge" || true
-        }
-        
-        # En-tête du changelog
-        echo "$VERSION_TITLE - $(date +'%Y-%m-%d')" > "$TMP_FILE"
-        echo "" >> "$TMP_FILE"
-        
-        HAS_CHANGES="false"
-        
-        if [ "$IS_INITIAL" = "false" ]; then
-          ALL_COMMITS_FORMATTED="$(git log "${LAST_TAG}..HEAD" --pretty=format:"- %s ([commit %h](${REPO_URL}/commit/%H)) by %an" || true)"
-          
-          if [ "${{ inputs.debug }}" = "true" ]; then
-            echo "🔍 [DEBUG] All formatted commits:"
-            echo "$ALL_COMMITS_FORMATTED" | head -20
-          fi
-
-          # Breaking Changes
-          BREAKING=$(echo "$ALL_COMMITS_FORMATTED" | grep -E "(${{ env.breaking_pattern }})" | sed -E "s|//||g; s|\\?!:|:|g" || true)
-          if [ -n "$BREAKING" ]; then
-            echo "### ⚠️ Breaking Changes" >> "$TMP_FILE"
-            echo "${BREAKING//!:/:}" >> "$TMP_FILE"
-            echo "" >> "$TMP_FILE"
-            HAS_CHANGES="true"
-            if [ "${{ inputs.debug }}" = "true" ]; then
-              echo "🔍 [DEBUG] Breaking changes found in commits:"
-              echo "$BREAKING"
-            fi
-          fi
-
-          
-          # Features
-          FEATURES=$(extract_commits "(${{ env.feature_pattern }})") || true
-          if [ -n "$FEATURES" ]; then
-            echo "### 🚀 Features" >> "$TMP_FILE"
-            echo "$FEATURES" >> "$TMP_FILE"
-            echo "" >> "$TMP_FILE"
-            FEATURE_COUNT=$(echo "$FEATURES" | wc -l)
-            echo "feature_count=$FEATURE_COUNT" >> $GITHUB_ENV
-            HAS_CHANGES="true"
-            if [ "${{ inputs.debug }}" = "true" ]; then
-              echo ""
-              echo "🔍 [DEBUG] Features found in commits:"
-              echo "$FEATURES"
-              echo "🔍 [DEBUG] Feature count: $FEATURE_COUNT"
-            fi
-          fi
-          # Fixes          
-          FIXES=$(extract_commits "(${{ env.fix_pattern }})") || true
-          if [ -n "$FIXES" ]; then
-            echo "### 🐛 Fixes" >> "$TMP_FILE"
-            echo "$FIXES" >> "$TMP_FILE"
-            echo "" >> "$TMP_FILE"
-            FIX_COUNT=$(echo "$FIXES" | wc -l)
-            echo "fix_count=$FIX_COUNT" >> $GITHUB_ENV
-            HAS_CHANGES="true"
-            if [ "${{ inputs.debug }}" = "true" ]; then
-              echo ""
-              echo "🔍 [DEBUG] Fixes found in commits:"
-              echo "$FIXES"
-              echo "🔍 [DEBUG] Fix count: $FIX_COUNT"
-            fi
-          fi
-          if [ "${{ inputs.debug }}" = "true" ]; then
-            echo "Before Refactors check, HAS_CHANGES=$HAS_CHANGES"
-          fi
-          # Refactors & Performance
-          REFACTORS=$(extract_commits "(${{ env.refactor_pattern }})") || true
-          if [ -n "$REFACTORS" ]; then
-            echo "### ♻️ Refactors / Performance" >> "$TMP_FILE"
-            echo "$REFACTORS" >> "$TMP_FILE"
-            echo "" >> "$TMP_FILE"
-            REFACTOR_COUNT=$(echo "$REFACTORS" | wc -l)
-            echo "refactor_count=$REFACTOR_COUNT" >> $GITHUB_ENV
-            HAS_CHANGES="true"
-            if [ "${{ inputs.debug }}" = "true" ]; then
-              echo ""
-              echo "🔍 [DEBUG] Refactors found in commits:"
-              echo "$REFACTORS"
-              echo "🔍 [DEBUG] Refactor count: $REFACTOR_COUNT"
-            fi
-          fi
-
-          if [ "${{ inputs.debug }}" = "true" ]; then
-            echo "Before Misc check, HAS_CHANGES=$HAS_CHANGES"
-          fi
-          
-          # Others / Misc
-          MISC=$(extract_misc_commits) || true
-          if [ -n "$MISC" ]; then
-            echo "### 📝 Autres changements" >> "$TMP_FILE"
-            echo "$MISC" >> "$TMP_FILE"
-            echo "" >> "$TMP_FILE"
-            MISC_COUNT=$(echo "$MISC" | wc -l)
-            echo "misc_count=$MISC_COUNT" >> $GITHUB_ENV
-            HAS_CHANGES="true"
-            if [ "${{ inputs.debug }}" = "true" ]; then
-              echo ""
-              echo "🔍 [DEBUG] Misc changes found in commits:"
-              echo "$MISC"
-              echo "🔍 [DEBUG] Misc count: $MISC_COUNT"
-            fi
-          fi
-
-          # --- 🔀 Merges & Pull Requests ---
-          MERGE=$(extract_merge_commits) || true
-          if [ -n "$MERGE" ]; then
-            echo "### 🔀 Merges" >> "$TMP_FILE"
-            echo "$MERGE" >> "$TMP_FILE"
-            echo "" >> "$TMP_FILE"
-            MERGE_COUNT=$(echo "$MERGE" | wc -l)
-            echo "merge_count=$MERGE_COUNT" >> $GITHUB_ENV
-            HAS_CHANGES="true"
-            if [ "${{ inputs.debug }}" = "true" ]; then
-              echo ""
-              echo "🔍 [DEBUG] Merge commits found:"
-              echo "$MERGE"
-              echo "🔍 [DEBUG] Merge count: $MERGE_COUNT"
-            fi
-          fi
-        fi
-        
-        if [ "$HAS_CHANGES" = "true" ]; then
-        
-          CONTRIBUTORS=$(git log "${LAST_TAG}..HEAD" --pretty=format:"%an" | sort -u | wc -l)
-          FILES_CHANGED=$(git log "${LAST_TAG}..HEAD" --name-only --pretty=format: | sort -u | wc -l)
-          START_DATE=$(git log "${LAST_TAG}" -1 --format=%cs)
-          END_DATE=$(date +'%Y-%m-%d')
-          IMPACT_SCORE=$(( FEATURE_COUNT*3 + FIX_COUNT*2 + REFACTOR_COUNT + MISC_COUNT/2 ))
-          echo "period=${START_DATE} → ${END_DATE}" >> $GITHUB_ENV
-          echo "contributors=$CONTRIBUTORS" >> $GITHUB_ENV
-          echo "files_changed=$FILES_CHANGED" >> $GITHUB_ENV
-          echo "impact_score=$IMPACT_SCORE" >> $GITHUB_ENV
-
-          echo "### 📊 Release Stats" >> "$TMP_FILE"
-          echo "- Commits: ${{ env.commit_count }}" >> "$TMP_FILE"
-          echo "- Contributors: $CONTRIBUTORS" >> "$TMP_FILE"
-          echo "- Files changed: $FILES_CHANGED" >> "$TMP_FILE"
-          echo "- Period: $START_DATE → $END_DATE" >> "$TMP_FILE"
-          echo "- Impact score: $IMPACT_SCORE 🚀" >> "$TMP_FILE"
-          echo "" >> "$TMP_FILE"
-          
-          CONTRIBUTORS_LIST=$(git log "${LAST_TAG}..HEAD" --pretty=format:"%an" | sort -u)
-          if [ -n "$CONTRIBUTORS_LIST" ]; then
-            echo "### 🤝 Contributors" >> "$TMP_FILE"
-            echo "$CONTRIBUTORS_LIST" | sed 's/^/- /' >> "$TMP_FILE"
-          fi
-
-          echo "" >> "$TMP_FILE"
-          if [ "${LAST_TAG}" != "${NEW_VERSION}" ]; then
-            echo "Compare changes: [${LAST_TAG}...${NEW_VERSION}](${REPO_URL}/compare/${LAST_TAG}...${NEW_VERSION})" >> $TMP_FILE
-          else
-            echo "---" >> "$TMP_FILE"
-          fi
-          echo "" >> "$TMP_FILE"
-
-          echo "📝 Changelog updated at $CHANGELOG_FILE"
-        else
-          echo "ℹ️ No changelog changes to add"
-        fi
-        
-        # Fusionner avec l'ancien changelog
-        if [ -f "$CHANGELOG_FILE" ] && [ "$HAS_CHANGES" = "true" ]; then
-          if [ "${{ inputs.debug }}" = "true" ]; then
-            echo "🔍 [DEBUG] Merging with existing changelog"
-          fi
-          
-          if [ -f "$CHANGELOG_FILE" ] && grep -q "^$VERSION_TITLE" "$CHANGELOG_FILE"; then
-            awk -v ver="$VERSION_TITLE" '
-              BEGIN {found=0}
-              {
-                if ($0 ~ ver && found==0) {found=1; next}
-                print
-              }' "$CHANGELOG_FILE" > CHANGELOG_OLD.tmp
-            cat "$TMP_FILE" CHANGELOG_OLD.tmp > "$CHANGELOG_FILE"
-            rm -f "CHANGELOG_OLD.tmp"
-          else
-            cat "$TMP_FILE" "$CHANGELOG_FILE" > CHANGELOG_NEW.tmp
-            mv "CHANGELOG_NEW.tmp" "$CHANGELOG_FILE"
-          fi
-          rm -f "$TMP_FILE"
-        # File not exit and not initial version
-        elif [ ! -f "$CHANGELOG_FILE" ] && [ "$IS_INITIAL" = "false" ]; then
-          mv "$TMP_FILE" "$CHANGELOG_FILE"
-          if [ "${{ inputs.debug }}" = "true" ]; then
-            echo "🔍 [DEBUG] Created new changelog file"
-          fi
-        else
-          rm -f "$TMP_FILE"
-          if [ "${{ inputs.debug }}" = "true" ]; then
-            echo "🔍 [DEBUG] No changelog file created or updated"
-          fi
-        fi
-
-        echo "has_changes=$HAS_CHANGES" >> $GITHUB_OUTPUT
-        
-        if [ "${{ inputs.debug }}" = "true" ]; then
-          echo "🧩 [DEBUG] has_changes i set to $HAS_CHANGES"
-          echo "🔍 [DEBUG] Changelog generated: $HAS_CHANGES"
-        fi
-
-    - name: 'Commit Changes'
-      id: commit
-      if: ${{ inputs.auto-commit == 'true' }}
-      shell: bash
-      run: |
-        CHANGELOG_FILE="${{ inputs.changelog-file }}"
-        NEW_VERSION="${{ steps.bump.outputs.new_version }}"
-        
-        if [ -f "$CHANGELOG_FILE" ]; then
-          if [ "${{ inputs.debug }}" = "true" ]; then
-            echo "🔍 [DEBUG] Preparing to commit changelog changes"
-          fi
-
-          git add "$CHANGELOG_FILE"
-          
-          if ! git diff --cached --quiet; then
-            git commit -m "docs(changelog): update for $NEW_VERSION"
-            git push origin HEAD
-            echo "✅ Changelog committed and pushed"
-          else
-            echo "ℹ️ No changelog changes to commit"
-          fi
-        fi
-
-    - name: 'Create Tag'
+      env:
+        CHANGELOG_FILE: ${{ inputs.changelog-file }}
+        CHANGELOG_TEMPLATE: ${{ inputs.changelog-template }}
+        VERSION: ${{ steps.version.outputs.current-version }}
+    
+    # Tagging & Release
+    - name: Create Tag
+      if: ${{ inputs.create-tag == 'true' }}
       id: tag
-      if: ${{ inputs.create-tags == 'true' }}
+      run: ${{ github.action_path }}/scripts/create-tag.sh
       shell: bash
-      run: |
-        NEW_VERSION="${{ steps.bump.outputs.new_version }}"
-        BUMP_TYPE="${{ steps.bump.outputs.bump_type }}"
-        # TAG_COMMIT=$(git rev-list -n 1 "$NEW_VERSION" 2>/dev/null || echo "")
-        LAST_TAG="${{ steps.get_tag.outputs.last_tag }}"
-        CURRENT_COMMIT=$(git rev-parse HEAD)
-        
-        TAG_CREATED="false"
-        
-        # Vérifie si le tag existe déjà
-        if git rev-parse "$NEW_VERSION" >/dev/null 2>&1; then
-          TAG_COMMIT=$(git rev-list -n 1 "$TAG")
-          if [ "$TAG_COMMIT" = "$CURRENT_COMMIT" ]; then
-            if [ "${{ inputs.debug }}" = "true" ]; then
-              echo "🔍 [DEBUG] Tag $NEW_VERSION already exists at the current commit $CURRENT_COMMIT"
-            fi
-          else
-            if [ "${{ inputs.debug }}" = "true" ]; then
-              echo "🔍 [DEBUG] Tag $NEW_VERSION exists but points to $NEW_VERSION, updating to $CURRENT_COMMIT"
-            fi
-            git tag -d "$NEW_VERSION"
-            git tag "$NEW_VERSION"
-            git push origin ":refs/tags/$NEW_VERSION"
-            git push origin "$NEW_VERSION"
-          fi
-        else
-          if [ "${{ inputs.debug }}" = "true" ]; then
-            echo "🔍 [DEBUG] Creating tag $NEW_VERSION at commit $CURRENT_COMMIT"
-          fi
-          git tag "$NEW_VERSION"
-          git push origin "$NEW_VERSION"
-          TAG_CREATED="true"
-        fi
-        
-        echo "Tags created: $TAG_CREATED"
-        echo "tag_created=$TAG_CREATED" >> $GITHUB_OUTPUT
-
-    # ========== 8. Résumé final ==========
-    - name: 'Summary'
-      id: summary
+      env:
+        VERSION: ${{ steps.version.outputs.current-version }}
+        VERSION_PREFIX: ${{ inputs.version-prefix }}
+        TAG_SIGNATURE: ${{ inputs.tag-signature }}
+        GPG_KEY: ${{ inputs.gpg-key }}
+        DRY_RUN: ${{ inputs.dry-run }}
+    
+    - name: Auto Commit
+      if: ${{ inputs.auto-commit == 'true' && inputs.create-tag == 'true' }}
+      run: ${{ github.action_path }}/scripts/auto-commit.sh
       shell: bash
+      env:
+        GIT_USER_NAME: ${{ inputs.git-user-name }}
+        GIT_USER_EMAIL: ${{ inputs.git-user-email }}
+        COMMIT_MESSAGE: ${{ inputs.auto-commit-message }}
+        VERSION: ${{ steps.version.outputs.current-version }}
+        DRY_RUN: ${{ inputs.dry-run }}
+    
+    - name: Auto Push
+      if: ${{ inputs.auto-push == 'true' && inputs.create-tag == 'true' }}
+      run: ${{ github.action_path }}/scripts/auto-push.sh
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+        TARGET_BRANCH: ${{ inputs.target-branch }}
+        DRY_RUN: ${{ inputs.dry-run }}
+    
+    - name: Create Release
+      if: ${{ inputs.create-release == 'true' && inputs.create-tag == 'true' }}
+      id: release
+      run: ${{ github.action_path }}/scripts/create-release.sh
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+        TAG: ${{ steps.tag.outputs.tag-name }}
+        RELEASE_NOTES: ${{ steps.changelog.outputs.release-notes }}
+        DRAFT: ${{ inputs.release-draft }}
+        PRERELEASE: ${{ inputs.release-prerelease }}
+        DRY_RUN: ${{ inputs.dry-run }}
+    
+    # Deployment
+    - name: Pre-Deploy Check
+      if: ${{ inputs.deploy-enabled == 'true' }}
+      run: ${{ github.action_path }}/scripts/pre-deploy-check.sh
+      shell: bash
+    
+    - name: Deploy
+      if: ${{ inputs.deploy-enabled == 'true' }}
+      id: deploy
+      run: ${{ inputs.deploy-command }}
+      shell: bash
+      env:
+        ENVIRONMENT: ${{ inputs.deploy-env }}
+        VERSION: ${{ steps.version.outputs.current-version }}
+        DRY_RUN: ${{ inputs.dry-run }}
+    
+    - name: Post-Deploy Validation
+      if: ${{ inputs.post-deploy-validation == 'true' && inputs.deploy-enabled == 'true' }}
+      run: ${{ github.action_path }}/scripts/post-deploy-validation.sh
+      shell: bash
+      env:
+        CHECK_URL: ${{ inputs.post-deploy-check-url }}
+        TIMEOUT: 300
+    
+    # Reporting
+    - name: Generate Reports
+      if: ${{ always() }}
+      run: ${{ github.action_path }}/scripts/generate-reports.sh
+      shell: bash
+      env:
+        GENERATE_COMPLIANCE: ${{ inputs.generate-compliance-report }}
+        GENERATE_DEPLOYMENT: ${{ inputs.generate-deployment-report }}
+        VERSION: ${{ steps.version.outputs.current-version }}
+    
+    # Webhook post-release
+    - name: Webhook post-release
+      if: ${{ success() && inputs.webhook-post-release-enabled == 'true' }}
+      run: ${{ github.action_path }}/scripts/webhook-call.sh
+      shell: bash
+      env:
+        WEBHOOK_URL: ${{ inputs.webhook-post-release-url }}
+        WEBHOOK_EVENT: 'post-release'
+        VERSION: ${{ steps.version.outputs.current-version }}
+        TAG: ${{ steps.tag.outputs.tag-name }}
+        RELEASE_URL: ${{ steps.release.outputs.release-url }}
+    
+    # Plugin post-release
+    - name: Plugin post-release
+      if: ${{ success() && inputs.plugin-post-release-enabled == 'true' }}
       run: |
-        echo "=========================================="
-        echo "✅ Semantic Versioning Complete"
-        echo "=========================================="
-        echo "📌 Version: ${{ steps.bump.outputs.new_version }}"
-        echo "📊 Bump Type: ${{ steps.bump.outputs.bump_type }}"
-        echo "📝 Changelog: ${{ steps.changelog.outputs.has_changes }}"
-        echo "🏷️ Tag Created: ${{ steps.tag.outputs.tag_created }}"
-        echo "=========================================="
+        bash "${{ inputs.plugin-post-release-script }}" \
+          "${{ steps.version.outputs.current-version }}" \
+          "${{ steps.tag.outputs.tag-name }}" \
+          "${{ steps.release.outputs.release-url }}" \
+          "${{ inputs.dry-run }}"
+      shell: bash
+      timeout-minutes: ${{ inputs.plugin-timeout }}
+    
+    # Error handling - Webhook on-failure
+    - name: Webhook on-failure
+      if: ${{ failure() && inputs.webhook-on-failure-enabled == 'true' }}
+      run: ${{ github.action_path }}/scripts/webhook-call.sh
+      shell: bash
+      env:
+        WEBHOOK_URL: ${{ inputs.webhook-on-failure-url }}
+        WEBHOOK_EVENT: 'on-failure'
+        ERROR_MESSAGE: ${{ job.status }}
+        PHASE: 'workflow'
+    
+    # Error handling - Plugin on-failure
+    - name: Plugin on-failure
+      if: ${{ failure() && inputs.plugin-on-failure-enabled == 'true' }}
+      run: |
+        bash "${{ inputs.plugin-on-failure-script }}" \
+          "${{ job.status }}" \
+          "workflow" \
+          "1"
+      shell: bash
+      timeout-minutes: ${{ inputs.plugin-timeout }}
+      continue-on-error: true
+    
+    # Cleanup
+    - name: Upload Artifacts
+      if: ${{ always() && inputs.upload-artifact == 'true' }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: release-artifacts
+        path: |
+          ${{ inputs.changelog-file }}
+          ${{ steps.version.outputs.version-file-path }}
+        retention-days: ${{ inputs.artifact-retention-days }}

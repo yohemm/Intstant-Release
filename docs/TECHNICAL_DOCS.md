@@ -1091,6 +1091,8 @@ outputs:
     description: 'Deployment status'
     value: ${{ steps.deploy.outputs.deployment-status }}
 
+
+
 runs:
   using: 'composite'
   steps:
@@ -1098,3 +1100,461 @@ runs:
     - name: Pre-flight checks
       run: ${{ github.action_path }}/scripts/pre-flight.sh
       shell: bash
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+        DEBUG: ${{ inputs.debug }}
+        DRY_RUN: ${{ inputs.dry-run }}
+    
+    # Webhook pre-flight
+    - name: Webhook pre-flight
+      if: ${{ inputs.webhook-pre-flight-enabled == 'true' }}
+      run: ${{ github.action_path }}/scripts/webhook-call.sh
+      shell: bash
+      env:
+        WEBHOOK_URL: ${{ inputs.webhook-pre-flight-url }}
+        WEBHOOK_EVENT: 'pre-flight'
+        WEBHOOK_TIMEOUT: ${{ inputs.webhook-timeout }}
+    
+    # Plugin pre-flight
+    - name: Plugin pre-flight
+      if: ${{ inputs.plugin-pre-flight-enabled == 'true' }}
+      run: |
+        bash "${{ inputs.plugin-pre-flight-script }}" \
+          "${{ inputs.github-token }}" \
+          "${{ inputs.config-path }}" \
+          "${{ inputs.debug }}"
+      shell: bash
+      timeout-minutes: ${{ inputs.plugin-timeout }}
+    
+    # Build
+    - name: Build
+      if: ${{ inputs.build-enabled == 'true' }}
+      run: ${{ inputs.build-command }}
+      shell: bash
+    
+    # Tests
+    - name: Unit Tests
+      if: ${{ inputs.tests-enabled == 'true' }}
+      run: ${{ inputs.unit-tests-command }}
+      shell: bash
+    
+    - name: Coverage Check
+      if: ${{ inputs.tests-enabled == 'true' }}
+      run: ${{ github.action_path }}/scripts/coverage-check.sh
+      shell: bash
+      env:
+        COVERAGE_THRESHOLD: ${{ inputs.coverage-threshold }}
+        COVERAGE_FILE: ${{ inputs.coverage-file-path }}
+    
+    - name: Lint
+      if: ${{ inputs.lint-enabled == 'true' }}
+      run: ${{ inputs.lint-command }}
+      shell: bash
+    
+    # Security
+    - name: Dependency Scan
+      if: ${{ inputs.dependency-scan-enabled == 'true' }}
+      run: ${{ github.action_path }}/scripts/dependency-scan.sh
+      shell: bash
+      env:
+        SCAN_TOOL: ${{ inputs.dependency-scan-tool }}
+        SEVERITY_THRESHOLD: ${{ inputs.dependency-severity-threshold }}
+    
+    - name: Secret Scan
+      if: ${{ inputs.secret-scan-enabled == 'true' }}
+      run: ${{ github.action_path }}/scripts/secret-scan.sh
+      shell: bash
+    
+    - name: SAST Analysis
+      if: ${{ inputs.sast-enabled == 'true' }}
+      run: ${{ github.action_path }}/scripts/sast-analysis.sh
+      shell: bash
+      env:
+        SAST_TOOL: ${{ inputs.sast-tool }}
+    
+    # Versioning
+    - name: Calculate Version
+      id: version
+      run: ${{ github.action_path }}/scripts/calculate-version.sh
+      shell: bash
+      env:
+        BUMP: ${{ inputs.bump }}
+        VERSION: ${{ inputs.version }}
+        INITIAL: ${{ inputs.initial }}
+        MAJOR_INDICATOR: ${{ inputs.major-indicator }}
+        MINOR_INDICATOR: ${{ inputs.minor-indicator }}
+        PATCH_INDICATOR: ${{ inputs.patch-indicator }}
+    
+    - name: Sync Version Files
+      if: ${{ inputs.sync-version != '' }}
+      run: ${{ github.action_path }}/scripts/sync-version.sh
+      shell: bash
+      env:
+        VERSION: ${{ steps.version.outputs.current-version }}
+        SYNC_PATHS: ${{ inputs.sync-version }}
+    
+    # Changelog
+    - name: Generate Changelog
+      if: ${{ inputs.generate-changelog == 'true' }}
+      id: changelog
+      run: ${{ github.action_path }}/scripts/generate-changelog.sh
+      shell: bash
+      env:
+        CHANGELOG_FILE: ${{ inputs.changelog-file }}
+        CHANGELOG_TEMPLATE: ${{ inputs.changelog-template }}
+        VERSION: ${{ steps.version.outputs.current-version }}
+    
+    # Tagging & Release
+    - name: Create Tag
+      if: ${{ inputs.create-tag == 'true' }}
+      id: tag
+      run: ${{ github.action_path }}/scripts/create-tag.sh
+      shell: bash
+      env:
+        VERSION: ${{ steps.version.outputs.current-version }}
+        VERSION_PREFIX: ${{ inputs.version-prefix }}
+        TAG_SIGNATURE: ${{ inputs.tag-signature }}
+        GPG_KEY: ${{ inputs.gpg-key }}
+        DRY_RUN: ${{ inputs.dry-run }}
+    
+    - name: Auto Commit
+      if: ${{ inputs.auto-commit == 'true' && inputs.create-tag == 'true' }}
+      run: ${{ github.action_path }}/scripts/auto-commit.sh
+      shell: bash
+      env:
+        GIT_USER_NAME: ${{ inputs.git-user-name }}
+        GIT_USER_EMAIL: ${{ inputs.git-user-email }}
+        COMMIT_MESSAGE: ${{ inputs.auto-commit-message }}
+        VERSION: ${{ steps.version.outputs.current-version }}
+        DRY_RUN: ${{ inputs.dry-run }}
+    
+    - name: Auto Push
+      if: ${{ inputs.auto-push == 'true' && inputs.create-tag == 'true' }}
+      run: ${{ github.action_path }}/scripts/auto-push.sh
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+        TARGET_BRANCH: ${{ inputs.target-branch }}
+        DRY_RUN: ${{ inputs.dry-run }}
+    
+    - name: Create Release
+      if: ${{ inputs.create-release == 'true' && inputs.create-tag == 'true' }}
+      id: release
+      run: ${{ github.action_path }}/scripts/create-release.sh
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+        TAG: ${{ steps.tag.outputs.tag-name }}
+        RELEASE_NOTES: ${{ steps.changelog.outputs.release-notes }}
+        DRAFT: ${{ inputs.release-draft }}
+        PRERELEASE: ${{ inputs.release-prerelease }}
+        DRY_RUN: ${{ inputs.dry-run }}
+    
+    # Deployment
+    - name: Pre-Deploy Check
+      if: ${{ inputs.deploy-enabled == 'true' }}
+      run: ${{ github.action_path }}/scripts/pre-deploy-check.sh
+      shell: bash
+    
+    - name: Deploy
+      if: ${{ inputs.deploy-enabled == 'true' }}
+      id: deploy
+      run: ${{ inputs.deploy-command }}
+      shell: bash
+      env:
+        ENVIRONMENT: ${{ inputs.deploy-env }}
+        VERSION: ${{ steps.version.outputs.current-version }}
+        DRY_RUN: ${{ inputs.dry-run }}
+    
+    - name: Post-Deploy Validation
+      if: ${{ inputs.post-deploy-validation == 'true' && inputs.deploy-enabled == 'true' }}
+      run: ${{ github.action_path }}/scripts/post-deploy-validation.sh
+      shell: bash
+      env:
+        CHECK_URL: ${{ inputs.post-deploy-check-url }}
+        TIMEOUT: 300
+    
+    # Reporting
+    - name: Generate Reports
+      if: ${{ always() }}
+      run: ${{ github.action_path }}/scripts/generate-reports.sh
+      shell: bash
+      env:
+        GENERATE_COMPLIANCE: ${{ inputs.generate-compliance-report }}
+        GENERATE_DEPLOYMENT: ${{ inputs.generate-deployment-report }}
+        VERSION: ${{ steps.version.outputs.current-version }}
+    
+    # Webhook post-release
+    - name: Webhook post-release
+      if: ${{ success() && inputs.webhook-post-release-enabled == 'true' }}
+      run: ${{ github.action_path }}/scripts/webhook-call.sh
+      shell: bash
+      env:
+        WEBHOOK_URL: ${{ inputs.webhook-post-release-url }}
+        WEBHOOK_EVENT: 'post-release'
+        VERSION: ${{ steps.version.outputs.current-version }}
+        TAG: ${{ steps.tag.outputs.tag-name }}
+        RELEASE_URL: ${{ steps.release.outputs.release-url }}
+    
+    # Plugin post-release
+    - name: Plugin post-release
+      if: ${{ success() && inputs.plugin-post-release-enabled == 'true' }}
+      run: |
+        bash "${{ inputs.plugin-post-release-script }}" \
+          "${{ steps.version.outputs.current-version }}" \
+          "${{ steps.tag.outputs.tag-name }}" \
+          "${{ steps.release.outputs.release-url }}" \
+          "${{ inputs.dry-run }}"
+      shell: bash
+      timeout-minutes: ${{ inputs.plugin-timeout }}
+    
+    # Error handling - Webhook on-failure
+    - name: Webhook on-failure
+      if: ${{ failure() && inputs.webhook-on-failure-enabled == 'true' }}
+      run: ${{ github.action_path }}/scripts/webhook-call.sh
+      shell: bash
+      env:
+        WEBHOOK_URL: ${{ inputs.webhook-on-failure-url }}
+        WEBHOOK_EVENT: 'on-failure'
+        ERROR_MESSAGE: ${{ job.status }}
+        PHASE: 'workflow'
+    
+    # Error handling - Plugin on-failure
+    - name: Plugin on-failure
+      if: ${{ failure() && inputs.plugin-on-failure-enabled == 'true' }}
+      run: |
+        bash "${{ inputs.plugin-on-failure-script }}" \
+          "${{ job.status }}" \
+          "workflow" \
+          "1"
+      shell: bash
+      timeout-minutes: ${{ inputs.plugin-timeout }}
+      continue-on-error: true
+    
+    # Cleanup
+    - name: Upload Artifacts
+      if: ${{ always() && inputs.upload-artifact == 'true' }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: release-artifacts
+        path: |
+          ${{ inputs.changelog-file }}
+          ${{ steps.version.outputs.version-file-path }}
+        retention-days: ${{ inputs.artifact-retention-days }}
+```
+
+---
+
+## 9. GUIDE D'INTÉGRATION DANS UN WORKFLOW
+
+### 9.1 Workflow Simple (Automatique)
+
+```yaml
+name: Release
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+    
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      
+      - name: Release
+        uses: ./
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          build-command: npm run build
+          unit-tests-command: npm test
+```
+
+### 9.2 Workflow Avancé (Avec Webhooks & Plugins)
+
+```yaml
+name: Advanced Release
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: 'Version bump'
+        required: false
+        default: 'auto'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+    
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      
+      - name: Release with Webhooks
+        uses: ./
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          bump: ${{ github.event.inputs.bump || 'auto' }}
+          
+          # Build & Tests
+          build-command: npm run build
+          unit-tests-command: npm test
+          coverage-threshold: 85
+          
+          # Security
+          dependency-scan-enabled: 'true'
+          secret-scan-enabled: 'true'
+          sast-enabled: 'true'
+          sast-tool: codeql
+          
+          # Deployment
+          deploy-enabled: 'true'
+          deploy-command: npm run deploy
+          deploy-env: production
+          post-deploy-validation: 'true'
+          post-deploy-check-url: https://api.example.com/health
+          
+          # Webhooks
+          webhook-post-release-enabled: 'true'
+          webhook-post-release-url: ${{ secrets.WEBHOOK_URL }}
+          
+          # Plugins
+          plugin-post-release-enabled: 'true'
+          plugin-post-release-script: ./scripts/post-release.sh
+          
+          # Reporting
+          generate-compliance-report: 'true'
+          generate-deployment-report: 'true'
+          audit-log-export: 'true'
+```
+
+---
+
+## 10. STRUCTURE DES FICHIERS DU PROJET
+
+```
+instantrelease/
+├── action.yml                          # Définition action
+├── README.md                           # Documentation principale
+├── SPECIFICATION.md                    # Cette documentation
+│
+├── scripts/
+│   ├── lib/                           # Librairies réutilisables
+│   │   ├── logger.sh                 # Logging avec [AUDIT], [DEBUG]
+│   │   ├── utils.sh                  # Fonctions utilitaires
+│   │   ├── git.sh                    # Opérations Git
+│   │   ├── github-api.sh             # Interactions GitHub API
+│   │   └── validators.sh             # Validations (semver, yaml, etc.)
+│   │
+│   ├── pre-flight.sh                 # Phase pré-vol
+│   ├── webhook-call.sh               # Appels webhooks
+│   │
+│   ├── build/
+│   │   ├── build.sh                  # Build application
+│   │   ├── generate-checksum.sh      # Génération checksums
+│   │   └── generate-version-file.sh  # Création VERSION file
+│   │
+│   ├── tests/
+│   │   ├── unit-tests.sh             # Tests unitaires
+│   │   ├── coverage-check.sh         # Vérification couverture
+│   │   ├── lint.sh                   # Linting
+│   │   └── performance-benchmark.sh  # Benchmarks
+│   │
+│   ├── security/
+│   │   ├── dependency-scan.sh        # Scan dépendances
+│   │   ├── secret-scan.sh            # Scan secrets
+│   │   ├── sast-analysis.sh          # Analyse SAST
+│   │   ├── commit-signature-check.sh # Vérification signatures
+│   │   └── supply-chain-check.sh     # Vérification supply chain
+│   │
+│   ├── versioning/
+│   │   ├── calculate-version.sh      # Calcul version
+│   │   ├── detect-bump-type.sh       # Détection bump
+│   │   ├── validate-semver.sh        # Validation semver
+│   │   └── sync-version.sh           # Sync fichiers version
+│   │
+│   ├── changelog/
+│   │   ├── generate-changelog.sh     # Génération changelog
+│   │   ├── extract-changelog.sh      # Extraction dernière entrée
+│   │   └── changelog-to-release-notes.sh # Conversion
+│   │
+│   ├── release/
+│   │   ├── create-tag.sh             # Création tag
+│   │   ├── verify-tag.sh             # Vérification tag
+│   │   ├── auto-commit.sh            # Commit auto
+│   │   ├── auto-push.sh              # Push auto
+│   │   └── create-release.sh         # Création GitHub Release
+│   │
+│   ├── deploy/
+│   │   ├── pre-deploy-check.sh       # Pré-déploiement
+│   │   ├── post-deploy-validation.sh # Post-déploiement
+│   │   └── rollback.sh               # Rollback
+│   │
+│   └── reporting/
+│       ├── generate-reports.sh       # Génération rapports
+│       ├── compliance-report.sh      # Rapport audit
+│       └── audit-log-export.sh       # Export logs audit
+│
+├── templates/
+│   ├── changelog-default.hbs         # Template changelog défaut
+│   ├── compliance-report.hbs         # Template rapport
+│   └── pre-flight-summary.hbs        # Template résumé pré-vol
+│
+└── tests/
+    ├── unit/                         # Tests unitaires des scripts
+    └── integration/                  # Tests d'intégration
+```
+
+---
+
+## 11. RÉSUMÉ EXÉCUTIF
+
+### Points Clés de l'Architecture
+
+✅ **Modularité** : Chaque scope est indépendant et can-disable  
+✅ **Robustesse** : Retry logic, timeout, error handling complets  
+✅ **Transparence** : Logs [AUDIT], [DEBUG], rapports détaillés  
+✅ **Extensibilité** : Webhooks + Plugins à 3 moments clés  
+✅ **Sécurité** : Scanning complet, signing, supply chain  
+✅ **Monorepo-Ready** : Support multi-packages avec versioning indépendant  
+✅ **Cloud-Native** : Conçu pour GitHub Actions, intégrable ailleurs  
+
+### Timeline d'Exécution Typique
+
+```
+PRE-FLIGHT (30s)
+  ↓
+BUILD (120s)
+  ↓
+TESTS + QUALITY (180s)
+  ↓
+SECURITY (120s)
+  ↓
+VERSIONING + CHANGELOG (30s)
+  ↓
+TAGGING + RELEASE (15s)
+  ↓
+DEPLOYMENT (300s, si enabled)
+  ↓
+REPORTING + WEBHOOKS (30s)
+  ↓
+TOTAL: 5-10 minutes
+```

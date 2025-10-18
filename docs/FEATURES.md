@@ -1,8 +1,24 @@
+# Actualy
+- get git user
+- auto commit
+- detect bump custom partns
+- detect bump
+- switch version
+- create full changelog (with a predifined template)
+- git repport and stats, since la push
+- create tag
+- tag conflits gestion
+- push
+
+
 # Inputs :
 
 ## Git
 - [x] git-user-name
 - [x] git-user-email
+- [x] major_indicator : indicateur personnalisé pour montée de version majeure
+- [x] minor_indicator : indicateur personnalisé pour montée de version mineure
+- [x] patch_indicator : indicateur personnalisé pour montée de version patch
 
 ## Base
 - [x] trigger-branches :
