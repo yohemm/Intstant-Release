@@ -1,0 +1,9 @@
+[2025-10-19 12:32:56] DEBUG: Version 'v1.0.0' is valid semver
+[2025-10-19 12:32:56] DEBUG: Version '1.0.0' is valid semver
+[2025-10-19 12:32:56] DEBUG: Version 'v0.1.0' is valid semver
+[2025-10-19 12:32:56] DEBUG: Version '2.3.4' is valid semver
+[2025-10-19 12:32:56] ERROR: Version '1.0' is not valid semver
+[2025-10-19 12:32:56] ERROR: Version 'v1' is not valid semver
+[2025-10-19 12:32:56] ERROR: Version 'not-a-version' is not valid semver
+[2025-10-19 12:32:56] ERROR: Version '1.0.0.0' is not valid semver
+[2025-10-19 12:32:56] DEBUG: Git repository is valid

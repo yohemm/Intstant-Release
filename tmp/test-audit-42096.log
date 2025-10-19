@@ -1,0 +1,17 @@
+[2025-10-19 12:32:20] DEBUG: Calculating version: v1.2.3 + major
+[2025-10-19 12:32:20] DEBUG: Version 'v1.2.3' is valid semver
+[2025-10-19 12:32:20] DEBUG: New version: v2.0.0
+[2025-10-19 12:32:20] DEBUG: Calculating version: v1.2.3 + minor
+[2025-10-19 12:32:20] DEBUG: Version 'v1.2.3' is valid semver
+[2025-10-19 12:32:20] DEBUG: New version: v1.3.0
+[2025-10-19 12:32:20] DEBUG: Calculating version: v1.2.3 + patch
+[2025-10-19 12:32:20] DEBUG: Version 'v1.2.3' is valid semver
+[2025-10-19 12:32:20] DEBUG: New version: v1.2.4
+[2025-10-19 12:32:20] DEBUG: Calculating version: v1.2.3 + none
+[2025-10-19 12:32:20] DEBUG: Version 'v1.2.3' is valid semver
+[2025-10-19 12:32:20] DEBUG: Calculating version: v1.2.3 + minor
+[2025-10-19 12:32:20] DEBUG: Version 'v1.2.3' is valid semver
+[2025-10-19 12:32:20] DEBUG: New version: v1.3.0-rc.1760869940
+[2025-10-19 12:32:20] DEBUG: Calculating version: 1.2.3 + patch
+[2025-10-19 12:32:20] DEBUG: Version '1.2.3' is valid semver
+[2025-10-19 12:32:20] DEBUG: New version: 1.2.4

@@ -129,14 +129,29 @@ assert_file_exists() {
 setup_temp_git_repo() {
     local repo_name="$1"
     local repo_dir="/tmp/test-repo-${repo_name}-$$"
-    local original_dir=$(pwd)
+    local git_dir="/tmp/test-git-${repo_name}-$$"
     
+    rm -rf "$repo_dir"
     mkdir -p "$repo_dir"
     cd "$repo_dir"
+    export GIT_CONFIG_GLOBAL=/tmp/git-global-$$
+    export GIT_CONFIG_SYSTEM=/tmp/git-system-$$
+    export GIT_CEILING_DIRECTORIES="$repo_dir"
+    export HOME="/tmp/test-home-$$"
     
-    git init --initial-branch=main
+    mkdir -p "$HOME"
+    
+    git init --initial-branch=main --separate-git-dir="$git_dir"
     git config user.email "test@example.com"
     git config user.name "Test User"
+    
+    local git_root=$(git rev-parse --show-toplevel)
+    
+    if [[ "$git_root" != "$repo_dir" ]]; then
+        echo "ERROR: Not in correct repo! Expected: $repo_dir, Got: $git_root" >&2
+        cd /
+        return 1
+    fi
     
     echo "$repo_dir"
 }
@@ -144,9 +159,28 @@ setup_temp_git_repo() {
 teardown_temp_git_repo() {
     local repo_dir="$1"
     local original_dir="${2:-.}"
+    local repo_name=$(basename "$repo_dir" | sed "s/-[0-9]*$//")
+    local pid="${repo_dir##*-}"
+    
+    # Nettoyer les exports
+    unset GIT_CONFIG_GLOBAL
+    unset GIT_CONFIG_SYSTEM
+    unset GIT_CEILING_DIRECTORIES
+    unset HOME
     
     cd "$original_dir"
-    rm -rf "$repo_dir"
+    rm -rf "$repo_dir" \
+           "/tmp/test-git-${repo_name}-${pid}" \
+           "/tmp/.gitconfig-${pid}" \
+           "/tmp/.gitconfig-sys-${pid}" \
+           "/tmp/test-home-${pid}"
+}
+
+cleanup_all_tags() {
+    # Nettoyer TOUS les tags v1.0.0 du repo principal
+    git tag -d v1.0.0 2>/dev/null || true
+    git tag -d v2.0.0 2>/dev/null || true
+    git tag -d v0.1.0 2>/dev/null || true
 }
 
 # ============================================================================

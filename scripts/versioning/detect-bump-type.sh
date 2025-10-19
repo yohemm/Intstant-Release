@@ -64,19 +64,24 @@ detect_bump_type() {
     major_indicator=$(escape_regex_parts "$major_indicator")
     minor_indicator=$(escape_regex_parts "$minor_indicator")
     patch_indicator=$(escape_regex_parts "$patch_indicator")
-    commits=$(escape_regex_parts "$commits")
+    # commits=$(escape_regex_parts "$commits")
+    log_debug "debug for custom"
+    log_debug "${commits}"
+    log_debug "${minor_indicator}"
+
     
-    if echo "$commits" | grep -Eq "$major_indicator" > /dev/null 2>&1; then
+    log_debug "  commits:"
+    if echo "$commits" | grep -Eq "${major_indicator}" > /dev/null 2>&1; then
         echo "major"
         return 0
     fi
     
-    if echo "$commits" | grep -Eq "^$minor_indicator" > /dev/null 2>&1; then
+    if echo "$commits" | grep -Eq "^${minor_indicator}" > /dev/null 2>&1; then
         echo "minor"
         return 0
     fi
     
-    if echo "$commits" | grep -Eq "^$patch_indicator" > /dev/null 2>&1; then
+    if echo "$commits" | grep -Eq "^${patch_indicator}" > /dev/null 2>&1; then
         echo "patch"
         return 0
     fi

@@ -17,11 +17,12 @@ source "${DETECT_BUMP_SCRIPT}"
 test_detect_major_breaking() {
     local original_dir=$(pwd)
     local repo=$(setup_temp_git_repo "major")
+    local tag="v1.0.0-test-$RANDOM"
     
     echo "initial" > file.txt
     git add file.txt
     git commit -m "Initial commit"
-    git tag v1.0.0
+    git tag "$tag"
     
     echo "change" >> file.txt
     git add file.txt
@@ -36,8 +37,7 @@ BREAKING CHANGE: removed old endpoint"
     
     assert_equals "major" "$bump" "Should detect MAJOR from BREAKING CHANGE"
     
-    teardown_temp_git_repo "$repo"
-    git tag -d v1.0.0
+    teardown_temp_git_repo "$repo" "$original_dir"
 }
 
 # ============================================================================
@@ -47,11 +47,12 @@ BREAKING CHANGE: removed old endpoint"
 test_detect_minor_feature() {
     local original_dir=$(pwd)
     local repo=$(setup_temp_git_repo "minor")
+    local tag="v1.0.0-test-$RANDOM"
     
     echo "initial" > file.txt
     git add file.txt
     git commit -m "Initial commit"
-    git tag v1.0.0
+    git tag "$tag"
     
     echo "change" >> file.txt
     git add file.txt
@@ -64,8 +65,7 @@ test_detect_minor_feature() {
     
     assert_equals "minor" "$bump" "Should detect MINOR from feat:"
     
-    teardown_temp_git_repo "$repo"
-    git tag -d v1.0.0
+    teardown_temp_git_repo "$repo" "$original_dir"
 }
 
 # ============================================================================
@@ -75,11 +75,12 @@ test_detect_minor_feature() {
 test_detect_patch_fix() {
     local original_dir=$(pwd)
     local repo=$(setup_temp_git_repo "patch")
+    local tag="v1.0.0-test-$RANDOM"
     
     echo "initial" > file.txt
     git add file.txt
     git commit -m "Initial commit"
-    git tag v1.0.0
+    git tag "$tag"
     
     echo "change" >> file.txt
     git add file.txt
@@ -92,8 +93,7 @@ test_detect_patch_fix() {
     
     assert_equals "patch" "$bump" "Should detect PATCH from fix:"
     
-    teardown_temp_git_repo "$repo"
-    git tag -d v1.0.0
+    teardown_temp_git_repo "$repo" "$original_dir"
 }
 
 # ============================================================================
@@ -103,11 +103,12 @@ test_detect_patch_fix() {
 test_detect_priority() {
     local original_dir=$(pwd)
     local repo=$(setup_temp_git_repo "priority")
+    local tag="v1.0.0-test-$RANDOM"
     
     echo "initial" > file.txt
     git add file.txt
     git commit -m "Initial commit"
-    git tag v1.0.0
+    git tag "$tag"
     
     echo "change1" >> file.txt
     git add file.txt
@@ -130,8 +131,7 @@ BREAKING CHANGE: removed API"
     
     assert_equals "major" "$bump" "BREAKING CHANGE should take priority"
     
-    teardown_temp_git_repo "$repo"
-    git tag -d v1.0.0
+    teardown_temp_git_repo "$repo" "$original_dir"
 }
 
 # ============================================================================
@@ -140,12 +140,13 @@ BREAKING CHANGE: removed API"
 
 test_detect_no_bump() {
     local original_dir=$(pwd)
-    local repo=$(setup_temp_git_repo "no-bump")
+    local repo=$(setup_temp_git_repo "no-bump
+    local tag="v1.0.0-test-$RANDOM"")
     
     echo "initial" > file.txt
     git add file.txt
     git commit -m "Initial commit"
-    git tag v1.0.0
+    git tag "$tag"
     
     local bump=$(detect_bump_type \
         --major-indicator "BREAKING CHANGE" \
@@ -154,8 +155,9 @@ test_detect_no_bump() {
     
     assert_equals "none" "$bump" "Should detect NONE when no relevant commits"
     
-    teardown_temp_git_repo "$repo"
-    git tag -d v1.0.0
+    git tag -d "$tag" 2>/dev/null || true
+    cd "$original_dir"
+    teardown_temp_git_repo "$repo" "$original_dir"
 }
 
 # ============================================================================
@@ -165,11 +167,12 @@ test_detect_no_bump() {
 test_detect_custom_indicators() {
     local original_dir=$(pwd)
     local repo=$(setup_temp_git_repo "auto")
+    local tag="v1.0.0-test-$RANDOM"
     
     echo "initial" > file.txt
     git add file.txt
     git commit -m "Initial commit"
-    git tag v1.0.0
+    git tag "$tag"
     
     echo "change" >> file.txt
     git add file.txt
@@ -184,7 +187,7 @@ test_detect_custom_indicators() {
     assert_equals "minor" "$bump" "Should work with custom indicators"
     
     cd "$original_dir"
-    teardown_temp_git_repo "$repo"
+    teardown_temp_git_repo "$repo" "$original_dir"
 }
 
 # ============================================================================

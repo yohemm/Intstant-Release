@@ -1,0 +1,78 @@
+[2025-10-19 12:32:18] DEBUG: Initializing configuration from defaults
+[2025-10-19 12:32:18] DEBUG: Configuration initialized with 44 values
+[2025-10-19 12:32:18] DEBUG: Config: usage: yq [options] <jq filter> [input file...] = 
+[2025-10-19 12:32:18] DEBUG: Config: [--indentless-lists] [--in-place] [--version] = 
+[2025-10-19 12:32:18] DEBUG: Config: [jq_filter] [files ...] = 
+[2025-10-19 12:32:18] DEBUG: Config: yq: Command-line YAML processor - jq wrapper for YAML documents = 
+[2025-10-19 12:32:18] DEBUG: Config: yq transcodes YAML documents to JSON and passes them to jq. = 
+[2025-10-19 12:32:18] DEBUG: Config: See https://github.com/kislyuk/yq for more information. = 
+[2025-10-19 12:32:18] DEBUG: Config: positional arguments: = 
+[2025-10-19 12:32:18] DEBUG: Config: jq_filter = 
+[2025-10-19 12:32:18] DEBUG: Config: files = 
+[2025-10-19 12:32:18] DEBUG: Config: options: = 
+[2025-10-19 12:32:18] DEBUG: Config: -h, --help show this help message and exit = 
+[2025-10-19 12:32:18] DEBUG: Config: --yaml-output, --yml-output, -y = 
+[2025-10-19 12:32:18] DEBUG: Config: Transcode jq JSON output back into YAML and emit it = 
+[2025-10-19 12:32:18] DEBUG: Config: --yaml-roundtrip, --yml-roundtrip, -Y = 
+[2025-10-19 12:32:18] DEBUG: Config: Transcode jq JSON output back into YAML and emit it. Preserve YAML tags and styles by representing them as extra items in their enclosing mappings and sequences while in JSON. This option is incompatible with jq filters that do not expect these extra items. = 
+[2025-10-19 12:32:18] DEBUG: Config: --yaml-output-grammar-version {1.1,1.2}, --yml-out-ver {1.1,1.2} = 
+[2025-10-19 12:32:18] DEBUG: Config: When using --yaml-output, specify output grammar (the default is 1.1 and will be changed to 1.2 in a future version). Setting this to 1.2 will cause strings like on and no to be emitted unquoted. = 
+[2025-10-19 12:32:18] DEBUG: Config: --width WIDTH, -w WIDTH = 
+[2025-10-19 12:32:18] DEBUG: Config: When using --yaml-output, specify string wrap width = 
+[2025-10-19 12:32:18] DEBUG: Config: --indentless-lists, --indentless = 
+[2025-10-19 12:32:18] DEBUG: Config: When using --yaml-output, indent block style lists (sequences) with 0 spaces instead of 2 = 
+[2025-10-19 12:32:18] DEBUG: Config: --in-place, -i Edit files in place (no backup - use caution) = 
+[2025-10-19 12:32:18] DEBUG: Config: --version show = 
+[2025-10-19 12:32:18] DEBUG: Config: jq - commandline JSON processor [version 1.6] = 
+[2025-10-19 12:32:18] DEBUG: Config: Usage: jq [options] <jq filter> [file...] = 
+[2025-10-19 12:32:18] DEBUG: Config: jq [options] --args <jq filter> [strings...] = 
+[2025-10-19 12:32:18] DEBUG: Config: jq [options] --jsonargs <jq filter> [JSON_TEXTS...] = 
+[2025-10-19 12:32:18] DEBUG: Config: jq is a tool for processing JSON inputs, applying the given filter to = 
+[2025-10-19 12:32:18] DEBUG: Config: its JSON text inputs and producing the = 
+[2025-10-19 12:32:18] DEBUG: Config: standard output. = 
+[2025-10-19 12:32:18] DEBUG: Config: The simplest filter is ., which copies = 
+[2025-10-19 12:32:18] DEBUG: Config: unmodified (except for formatting, but note that IEEE754 is used = 
+[2025-10-19 12:32:18] DEBUG: Config: for number representation internally, with all that that implies). = 
+[2025-10-19 12:32:18] DEBUG: Config: For more advanced filters see the jq(1) manpage (man jq) = 
+[2025-10-19 12:32:18] DEBUG: Config: and/or https://stedolan.github.io/jq = 
+[2025-10-19 12:32:18] DEBUG: Config: Example: = 
+[2025-10-19 12:32:18] DEBUG: Config: $ echo {"foo": 0} | jq . = 
+[2025-10-19 12:32:18] DEBUG: Config: { = 
+[2025-10-19 12:32:18] DEBUG: Config: foo: 0 = 
+[2025-10-19 12:32:18] DEBUG: Config: } = 
+[2025-10-19 12:32:18] DEBUG: Config: Some of the options include: = 
+[2025-10-19 12:32:18] DEBUG: Config: -c compact instead of pretty-printed output; = 
+[2025-10-19 12:32:18] DEBUG: Config: use `null` as the single input value; = 
+[2025-10-19 12:32:18] DEBUG: Config: set the exit status code based on the output; = 
+[2025-10-19 12:32:18] DEBUG: Config: -s read (slurp) all inputs into an array; apply filter to it; = 
+[2025-10-19 12:32:18] DEBUG: Config: -r output raw strings, not JSON texts; = 
+[2025-10-19 12:32:18] DEBUG: Config: -R read raw strings, not JSON texts; = 
+[2025-10-19 12:32:18] DEBUG: Config: -C colorize JSON; = 
+[2025-10-19 12:32:18] DEBUG: Config: -M monochrome = 
+[2025-10-19 12:32:18] DEBUG: Config: -S sort keys of objects on output; = 
+[2025-10-19 12:32:18] DEBUG: Config: --tab use tabs for indentation; = 
+[2025-10-19 12:32:18] DEBUG: Config: --arg a v set variable $a to value <v>; = 
+[2025-10-19 12:32:18] DEBUG: Config: --argjson a v set variable $a to JSON value <v>; = 
+[2025-10-19 12:32:18] DEBUG: Config: --slurpfile a f set variable $a to an array of JSON texts read from <f>; = 
+[2025-10-19 12:32:18] DEBUG: Config: --rawfile a f set variable $a to a string consisting of the contents of <f>; = 
+[2025-10-19 12:32:18] DEBUG: Config: --args remaining arguments are string arguments, not files; = 
+[2025-10-19 12:32:18] DEBUG: Config: --jsonargs remaining arguments are JSON arguments, not files; = 
+[2025-10-19 12:32:18] DEBUG: Config: -- terminates argument processing; = 
+[2025-10-19 12:32:18] DEBUG: Config: Named arguments are also available as $ARGS.named[], while = 
+[2025-10-19 12:32:18] DEBUG: Config: positional arguments are available as $ARGS.positional[]. = 
+[2025-10-19 12:32:18] DEBUG: Config: See the manpage for more options. = 
+[2025-10-19 12:32:18] SUCCESS: Configuration loaded from file
+[2025-10-19 12:32:18] DEBUG: Using argument: major-indicator = BREAKING CHANGE
+[2025-10-19 12:32:18] DEBUG: Using argument: minor-indicator = feat:
+[2025-10-19 12:32:18] DEBUG: Using argument: patch-indicator = fix:
+[2025-10-19 12:32:18] DEBUG: Using indicators:
+[2025-10-19 12:32:18] DEBUG:   Major: BREAKING CHANGE
+[2025-10-19 12:32:18] DEBUG:   Minor: feat:
+[2025-10-19 12:32:18] DEBUG:   Patch: fix:
+[2025-10-19 12:32:20] DEBUG: Last tag: v1.0.0-test-15757
+[2025-10-19 12:32:20] DEBUG: Getting commits since v1.0.0-test-15757
+[2025-10-19 12:32:20] DEBUG: debug for custom
+[2025-10-19 12:32:20] DEBUG: feat: new API
+BREAKING CHANGE: removed old endpoint
+[2025-10-19 12:32:20] DEBUG: feat:
+[2025-10-19 12:32:20] DEBUG:   commits:

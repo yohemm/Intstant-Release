@@ -1,19 +1,29 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
+# Chargement des chemins si nécessaire (inchangé)
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../lib/paths.sh"
 
+# ------------------------------------------------------------
+# Fonction : escape_regex_parts
+# Objectif : préparer une chaîne pour une utilisation dans un regex
+# - Garde les espaces
+# - Laisse les pipes '|' intacts
+# - Transforme les virgules en ' | '
+# - Échappe tous les autres caractères spéciaux regex
+# ------------------------------------------------------------
 escape_regex_parts() {
     local string="$1"
-    local IFS='|'
-    local parts=($string)
-    local escaped_parts=()
-    
-    for part in "${parts[@]}"; do
-        # Échapper tous les caractères spéciaux dans chaque partie
-        local escaped=$(echo "$part" | sed 's/\([\.^$*+?{}[\]\\()]\)/\\\1/g')
-        escaped_parts+=("$escaped")
-    done
-    
-    # Rejoindre avec | (sans l'échapper)
-    echo "${escaped_parts[*]}" | sed 's/ /|/g'
+
+    # Remplacer les virgules par " | " (avec espaces)
+    string="${string//,/ | }"
+
+    # Liste : . ^ $ * + ? ( ) [ ] { } \
+    local escaped
+    escaped=$(echo "$string" | sed -E \
+        -e 's/\\/\\\\/g' \
+        -e 's/([][(){}.^$*+?])/\\\1/g'
+    )
+
+    echo "$escaped"
 }
