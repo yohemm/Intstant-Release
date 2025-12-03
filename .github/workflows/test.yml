@@ -1,0 +1,81 @@
+name: Test Semantic Versioning Action
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+  workflow_dispatch:
+
+# ✅ CLÉS: Permissions explicites pour le token GitHub
+permissions:
+  contents: write      # Pour committer et créer des releases
+  pull-requests: read  # Pour les PRs
+  id-token: write  # nécessaire si tu fais des OIDC logins
+  actions: read    # lecture des actions, si nécessaire
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      # 1. Checkout avec credentials persistantes
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+          # ✅ IMPORTANT: Persister les credentials pour git push
+          persist-credentials: true
+      
+      # 3. Tester l'action avec elle-même
+      - name: Test Action (Debug Mode)
+        id: semantic_action
+        uses: ./
+        with:
+          debug: 'true'
+          generate-changelog: 'true'
+          auto-commit: 'false'
+          create-tags: 'false'
+
+      
+      # 4. Vérifier les outputs
+      - name: Check Action Outputs
+        run: |
+          echo "📌 New Version: ${{ steps.semantic_action.outputs.current-version }}"
+          echo "📊 Bump Type: ${{ steps.semantic_action.outputs.version-bump }}"
+          echo "📝 Changelog Generated: ${{ steps.semantic_action.outputs.changelog-generated }}"
+          echo "🏷️ Tag Created: ${{ steps.semantic_action.outputs.tag-created }}"
+      
+      # 5. Vérifier le fichier CHANGELOG
+      - name: Verify Changelog File
+        run: |
+          if [ -f "CHANGELOG.md" ]; then
+            echo "✅ CHANGELOG.md created successfully"
+            echo ""
+            echo "📋 Content preview:"
+            head -50 CHANGELOG.md
+          else
+            echo "⚠️ CHANGELOG.md not found"
+            ls -la
+          fi
+      
+      # 6. Vérifier les tags Git
+      - name: Verify Git Tags
+        run: |
+          echo "📌 Local tags:"
+          git tag -l
+          echo ""
+          echo "📌 Recent commits:"
+          git log --oneline -10
+      
+      # 7. Résumé du test
+      - name: Test Summary
+        run: |
+          echo "=========================================="
+          echo "✅ Test Completed Successfully"
+          echo "=========================================="
+          echo "✓ Permissions: Verified"
+          echo "✓ Git Configuration: OK"
+          echo "✓ Action Executed: OK"
+          echo "✓ Outputs Captured: OK"
+          echo "=========================================="

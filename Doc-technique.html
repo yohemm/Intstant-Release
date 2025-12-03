@@ -1,0 +1,3448 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="https://unpkg.com/mvp.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script>
+      hljs.highlightAll();
+    </script>
+    <title>Documentation Technique</title>
+    <meta name="description" content="" />
+    <style>
+      @media print {
+        *,
+        *:before,
+        *:after {
+          background: transparent !important;
+          color: #000 !important;
+          box-shadow: none !important;
+          text-shadow: none !important;
+        }
+
+        a,
+        a:visited {
+          text-decoration: underline;
+        }
+
+        a[href]:after {
+          content: " (" attr(href) ")";
+        }
+
+        abbr[title]:after {
+          content: " (" attr(title) ")";
+        }
+
+        a[href^="#"]:after,
+        a[href^="javascript:"]:after {
+          content: "";
+        }
+
+        pre,
+        blockquote {
+          border: 1px solid #999;
+          page-break-inside: avoid;
+        }
+
+        thead {
+          display: table-header-group;
+        }
+
+        tr,
+        img {
+          page-break-inside: avoid;
+        }
+
+        img {
+          max-width: 100% !important;
+        }
+
+        p,
+        h2,
+        h3 {
+          orphans: 3;
+          widows: 3;
+        }
+
+        h2,
+        h3 {
+          page-break-after: avoid;
+        }
+      }
+
+      pre,
+      code {
+        font-family: Menlo, Monaco, "Courier New", monospace;
+      }
+
+      pre {
+        padding: 0.5rem;
+        line-height: 1.25;
+        overflow-x: scroll;
+      }
+
+      a,
+      a:visited {
+        color: #3498db;
+      }
+
+      a:hover,
+      a:focus,
+      a:active {
+        color: #2980b9;
+      }
+
+      .modest-no-decoration {
+        text-decoration: none;
+      }
+
+      html {
+        font-size: 12px;
+      }
+
+      @media screen and (min-width: 32rem) and (max-width: 48rem) {
+        html {
+          font-size: 15px;
+        }
+      }
+
+      @media screen and (min-width: 48rem) {
+        html {
+          font-size: 16px;
+        }
+      }
+
+      body {
+        line-height: 1.85;
+      }
+
+      p,
+      .modest-p {
+        font-size: 1rem;
+        margin-bottom: 1.3rem;
+      }
+
+      h1,
+      .modest-h1,
+      h2,
+      .modest-h2,
+      h3,
+      .modest-h3,
+      h4,
+      .modest-h4 {
+        margin: 1.414rem 0 0.5rem;
+        font-weight: inherit;
+        line-height: 1.42;
+      }
+
+      h1,
+      .modest-h1 {
+        margin-top: 0;
+        font-size: 3.998rem;
+      }
+
+      h2,
+      .modest-h2 {
+        font-size: 2.827rem;
+      }
+
+      h3,
+      .modest-h3 {
+        font-size: 1.999rem;
+      }
+
+      h4,
+      .modest-h4 {
+        font-size: 1.414rem;
+      }
+
+      h5,
+      .modest-h5 {
+        font-size: 1.121rem;
+      }
+
+      h6,
+      .modest-h6 {
+        font-size: 0.88rem;
+      }
+
+      small,
+      .modest-small {
+        font-size: 0.707em;
+      }
+
+      /* https://github.com/mrmrs/fluidity */
+
+      img,
+      canvas,
+      iframe,
+      video,
+      svg,
+      select,
+      textarea {
+        max-width: 100%;
+      }
+
+      @import url(http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,300italic,700);
+
+      @import url(http://fonts.googleapis.com/css?family=Arimo:700,700italic);
+
+      html {
+        font-size: 18px;
+        max-width: 100%;
+      }
+
+      body {
+        color: #444;
+        font-family: "Open Sans Condensed", sans-serif;
+        font-weight: 300;
+        margin: 0 auto;
+        max-width: 48rem;
+        line-height: 1.45;
+        padding: 0.25rem;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        font-family: Arimo, Helvetica, sans-serif;
+      }
+
+      h1,
+      h2,
+      h3 {
+        border-bottom: 2px solid #fafafa;
+        margin-bottom: 1.15rem;
+        padding-bottom: 0.5rem;
+        text-align: center;
+      }
+
+      blockquote {
+        border-left: 8px solid #fafafa;
+        padding: 1rem;
+      }
+
+      pre,
+      code {
+        background-color: #fafafa;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <article>
+        <h1 id="github-action-ci-cd-framework-documentation-technique">GitHub Action CI/CD Framework - Documentation Technique</h1>
+<h2 id="1-architecture-g-n-rale-flux-principal">1. Architecture Générale &amp; Flux Principal</h2>
+<h3 id="1-1-flux-d-ex-cution-principal">1.1 Flux d&#39;Exécution Principal</h3>
+<pre><code>┌─────────────────────────────────────────────────────────────────┐
+│                     GITHUB ACTION TRIGGER                        │
+└────────────────────────┬────────────────────────────────────────┘
+                         │
+         ┌───────────────┴───────────────┐
+         │                               │
+    [PRE-FLIGHT]                    [MAIN WORKFLOW]
+         │                               │
+    ├─ <span class="hljs-keyword">Load</span> Config               ├─ Checkout Code
+    ├─ <span class="hljs-keyword">Validate</span> Token            ├─ Setup Environment
+    ├─ <span class="hljs-keyword">Security</span> Checks           ├─ PRE-HOOK (Webhook)
+    ├─ Environment <span class="hljs-keyword">Lock</span>          │
+    └─ <span class="hljs-keyword">Release</span> Blockers          ├─ PRE-<span class="hljs-keyword">PLUGIN</span> (Script)
+                                 │
+                         ┌───────┴────────┐
+                         │                │
+                    [<span class="hljs-keyword">EXECUTE</span> MODULES]    │
+                         │                │
+         ┌───────────────┼────────────┬───┴────────┐
+         │               │            │            │
+      [<span class="hljs-keyword">BUILD</span>]       [TESTS]      [<span class="hljs-keyword">SECURITY</span>]   [<span class="hljs-keyword">RELEASE</span>]
+         │               │            │            │
+    ├─ <span class="hljs-keyword">Build</span> App    ├─ Unit Tests ├─ Lint   ├─ Detect Changes
+    ├─ Artifacts    ├─ Integration├─ <span class="hljs-keyword">Scan</span>   ├─ Bump <span class="hljs-keyword">Version</span>
+    └─ <span class="hljs-keyword">Checksum</span>     ├─ Coverage   ├─ SAST   ├─ Generate Changelog
+                    └─ Bench      └─ Deps   ├─ <span class="hljs-keyword">Create</span> Tag
+                                           ├─ <span class="hljs-keyword">Create</span> <span class="hljs-keyword">Release</span>
+                                           └─ Deploy
+         │               │            │            │
+         └───────────────┴────────────┴────────────┘
+                         │
+                  [POST-HOOK] (Webhook)
+                         │
+                  [POST-<span class="hljs-keyword">PLUGIN</span>] (Script)
+                         │
+                 [GENERATE REPORTS]
+                         │
+              ├─ Compliance Report
+              ├─ Deployment Report
+              ├─ <span class="hljs-keyword">Audit</span> <span class="hljs-keyword">Log</span> <span class="hljs-keyword">Export</span>
+              └─ Artifacts Upload
+                         │
+                  [<span class="hljs-keyword">COMPLETE</span> / <span class="hljs-keyword">ROLLBACK</span>]
+</code></pre><hr>
+<h2 id="2-inputs-de-l-action">2. INPUTS DE L&#39;ACTION</h2>
+<h3 id="2-1-configuration-g-n-rale">2.1 Configuration Générale</h3>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Type</th>
+<th>Défaut</th>
+<th>Description</th>
+<th>Exemple</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>config-source</code></td>
+<td>choice</td>
+<td><code>file</code></td>
+<td>Source de configuration : <code>file</code> / <code>input</code> / <code>default</code></td>
+<td><code>file</code></td>
+</tr>
+<tr>
+<td><code>config-path</code></td>
+<td>string</td>
+<td><code>.instantrelease.yml</code></td>
+<td>Chemin du fichier de configuration</td>
+<td><code>.github/instantrelease.yml</code></td>
+</tr>
+<tr>
+<td><code>config-schema-check</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Valider le YAML contre schéma interne</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>debug</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Activer logs détaillés</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>dry-run</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Mode simulation (pas de push/tag)</td>
+<td><code>true</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="2-2-authentification-s-curit-">2.2 Authentification &amp; Sécurité</h3>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Type</th>
+<th>Défaut</th>
+<th>Description</th>
+<th>Exemple</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>github-token</code></td>
+<td>string</td>
+<td><code>secrets.GITHUB_TOKEN</code></td>
+<td>Token GitHub avec <code>contents: write</code></td>
+<td><code>${{ secrets.GITHUB_TOKEN }}</code></td>
+</tr>
+<tr>
+<td><code>git-user-name</code></td>
+<td>string</td>
+<td><code>github-actions[bot]</code></td>
+<td>Nom utilisateur Git pour commits</td>
+<td><code>Release Bot</code></td>
+</tr>
+<tr>
+<td><code>git-user-email</code></td>
+<td>string</td>
+<td><code>github-actions[bot]@github.com</code></td>
+<td>Email utilisateur Git</td>
+<td><code>bot@example.com</code></td>
+</tr>
+<tr>
+<td><code>ssh-key</code></td>
+<td>string</td>
+<td>-</td>
+<td>Clé SSH pour operations Git avancées</td>
+<td><code>${{ secrets.SSH_KEY }}</code></td>
+</tr>
+<tr>
+<td><code>gpg-key</code></td>
+<td>string</td>
+<td>-</td>
+<td>Clé GPG pour signer tags/commits</td>
+<td><code>${{ secrets.GPG_KEY }}</code></td>
+</tr>
+<tr>
+<td><code>gpg-passphrase</code></td>
+<td>string</td>
+<td>-</td>
+<td>Passphrase pour clé GPG</td>
+<td><code>${{ secrets.GPG_PASSPHRASE }}</code></td>
+</tr>
+<tr>
+<td><code>validate-token</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Valider permissions du token</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>token-scope-check</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Vérifier scopes du token (repo, workflow, etc.)</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>secret-scan-enabled</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Activer scan de secrets avec trufflehog</td>
+<td><code>true</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="2-3-git-branching">2.3 Git &amp; Branching</h3>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Type</th>
+<th>Défaut</th>
+<th>Description</th>
+<th>Exemple</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>trigger-branches</code></td>
+<td>string</td>
+<td><code>main,develop</code></td>
+<td>Branches d&#39;origine (comma-separated)</td>
+<td><code>main,staging,develop</code></td>
+</tr>
+<tr>
+<td><code>target-branch</code></td>
+<td>string</td>
+<td><code>main</code></td>
+<td>Branche cible pour commits auto</td>
+<td><code>main</code></td>
+</tr>
+<tr>
+<td><code>auto-commit</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Effectuer commit automatique</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>auto-commit-message</code></td>
+<td>string</td>
+<td><code>chore: release version {version}</code></td>
+<td>Template message commit</td>
+<td><code>release: {version}</code></td>
+</tr>
+<tr>
+<td><code>auto-push</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Push automatique après commit</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>branch-protection-aware</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Créer PR si push impossible</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>branch-policy-check</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Vérifier stratégie merge (squash/merge/ff)</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>review-enforcement</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Bloquer si PR non approuvée</td>
+<td><code>true</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="2-4-versioning">2.4 Versioning</h3>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Type</th>
+<th>Défaut</th>
+<th>Description</th>
+<th>Exemple</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bump</code></td>
+<td>choice</td>
+<td><code>auto</code></td>
+<td>Type bump : <code>major</code> / <code>minor</code> / <code>patch</code> / <code>auto</code></td>
+<td><code>auto</code></td>
+</tr>
+<tr>
+<td><code>version</code></td>
+<td>string</td>
+<td>-</td>
+<td>Version spécifique à forcer (override bump)</td>
+<td><code>1.2.3</code></td>
+</tr>
+<tr>
+<td><code>initial</code></td>
+<td>string</td>
+<td><code>0.1.0</code></td>
+<td>Version initiale si aucune trouvée</td>
+<td><code>1.0.0</code></td>
+</tr>
+<tr>
+<td><code>detect-bump-type</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Scanner commits pour bump auto</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>major-indicator</code></td>
+<td>string</td>
+<td><code>BREAKING CHANGE</code></td>
+<td>Pattern pour major bump</td>
+<td><code>[BREAKING]</code></td>
+</tr>
+<tr>
+<td><code>minor-indicator</code></td>
+<td>string</td>
+<td><code>feat:</code></td>
+<td>Pattern pour minor bump</td>
+<td><code>feature:</code></td>
+</tr>
+<tr>
+<td><code>patch-indicator</code></td>
+<td>string</td>
+<td><code>fix:</code></td>
+<td>Pattern pour patch bump</td>
+<td><code>bugfix:</code></td>
+</tr>
+<tr>
+<td><code>version-prefix</code></td>
+<td>string</td>
+<td><code>v</code></td>
+<td>Préfixe tag version</td>
+<td><code>v</code></td>
+</tr>
+<tr>
+<td><code>semantic-convention</code></td>
+<td>choice</td>
+<td><code>angular</code></td>
+<td>Convention commits : <code>angular</code> / <code>conventional</code> / <code>custom</code></td>
+<td><code>angular</code></td>
+</tr>
+<tr>
+<td><code>verify-tag</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Vérifier si tag existe déjà</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>idempotent-check</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Arrêter si tag existe</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>sync-version</code></td>
+<td>string</td>
+<td>-</td>
+<td>Fichiers version à synchroniser (comma-separated)</td>
+<td><code>package.json,Chart.yaml,VERSION</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="2-5-changelog-release-notes">2.5 Changelog &amp; Release Notes</h3>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Type</th>
+<th>Défaut</th>
+<th>Description</th>
+<th>Exemple</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>generate-changelog</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Générer changelog</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>changelog-file</code></td>
+<td>string</td>
+<td><code>CHANGELOG.md</code></td>
+<td>Chemin fichier changelog</td>
+<td><code>docs/CHANGELOG.md</code></td>
+</tr>
+<tr>
+<td><code>changelog-template</code></td>
+<td>string</td>
+<td>-</td>
+<td>Template custom Markdown pour changelog</td>
+<td><code>./templates/changelog.hbs</code></td>
+</tr>
+<tr>
+<td><code>append-changelog</code></td>
+<td>choice</td>
+<td><code>prepend</code></td>
+<td>Mode ajout : <code>prepend</code> / <code>append</code> / <code>replace</code></td>
+<td><code>prepend</code></td>
+</tr>
+<tr>
+<td><code>extract-changelog</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Retourner uniquement dernière entrée</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>changelog-to-release-notes</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Convertir changelog en notes GitHub Release</td>
+<td><code>true</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="2-6-tagging-releases">2.6 Tagging &amp; Releases</h3>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Type</th>
+<th>Défaut</th>
+<th>Description</th>
+<th>Exemple</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>create-tag</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Créer tag Git</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>create-release</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Créer GitHub Release</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>release-draft</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Release en mode brouillon</td>
+<td><code>false</code></td>
+</tr>
+<tr>
+<td><code>release-prerelease</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Marquer comme pré-release (alpha/beta)</td>
+<td><code>false</code></td>
+</tr>
+<tr>
+<td><code>prerelease-suffix</code></td>
+<td>string</td>
+<td>-</td>
+<td>Suffixe pré-release (<code>alpha</code>,<code>beta</code>,<code>rc</code>)</td>
+<td><code>rc</code></td>
+</tr>
+<tr>
+<td><code>tag-delete-on-failure</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Supprimer tag en cas d&#39;échec</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>package-release</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Créer changelog/tag/release par package</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>monorepo-mode</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Mode monorepo (packages multiples)</td>
+<td><code>true</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="2-7-build-artifacts">2.7 Build &amp; Artifacts</h3>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Type</th>
+<th>Défaut</th>
+<th>Description</th>
+<th>Exemple</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>build-enabled</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Activer étape build</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>build-command</code></td>
+<td>string</td>
+<td><code>npm run build</code></td>
+<td>Commande build personnalisée</td>
+<td><code>make build</code></td>
+</tr>
+<tr>
+<td><code>build-artifact-path</code></td>
+<td>string</td>
+<td><code>dist</code></td>
+<td>Chemin artefacts après build</td>
+<td><code>build/</code></td>
+</tr>
+<tr>
+<td><code>upload-artifact</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Upload changelog/version.json en artifact</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>artifact-retention-days</code></td>
+<td>number</td>
+<td><code>30</code></td>
+<td>Durée conservation artefacts</td>
+<td><code>60</code></td>
+</tr>
+<tr>
+<td><code>generate-version-file</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Créer fichier VERSION ou .version</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>generate-checksum</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Générer fichiers .sha256</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>generate-sbom</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Générer Software Bill of Materials (SPDX)</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>artifact-signing</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Signer cryptographiquement artefacts</td>
+<td><code>true</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="2-8-tests-qualit-">2.8 Tests &amp; Qualité</h3>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Type</th>
+<th>Défaut</th>
+<th>Description</th>
+<th>Exemple</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tests-enabled</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Activer étape tests</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>unit-tests-command</code></td>
+<td>string</td>
+<td><code>npm test</code></td>
+<td>Commande tests unitaires</td>
+<td><code>pytest tests/</code></td>
+</tr>
+<tr>
+<td><code>integration-tests-command</code></td>
+<td>string</td>
+<td>-</td>
+<td>Commande tests d&#39;intégration</td>
+<td><code>npm run test:integration</code></td>
+</tr>
+<tr>
+<td><code>coverage-threshold</code></td>
+<td>number</td>
+<td><code>80</code></td>
+<td>Seuil minimum couverture (%)</td>
+<td><code>90</code></td>
+</tr>
+<tr>
+<td><code>coverage-file-path</code></td>
+<td>string</td>
+<td><code>.coverage-summary.json</code></td>
+<td>Chemin rapport couverture</td>
+<td><code>coverage/coverage-summary.json</code></td>
+</tr>
+<tr>
+<td><code>performance-benchmark-enabled</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Comparer perfs vs release précédente</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>performance-benchmark-file</code></td>
+<td>string</td>
+<td><code>benchmark.json</code></td>
+<td>Fichier benchmark</td>
+<td><code>perf/results.json</code></td>
+</tr>
+<tr>
+<td><code>lint-enabled</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Activer linting</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>lint-command</code></td>
+<td>string</td>
+<td><code>npm run lint</code></td>
+<td>Commande lint</td>
+<td><code>eslint src/</code></td>
+</tr>
+<tr>
+<td><code>lint-report-parse</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Parser rapport lint/sonar</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>lint-report-path</code></td>
+<td>string</td>
+<td>-</td>
+<td>Chemin rapport lint</td>
+<td><code>reports/lint.json</code></td>
+</tr>
+<tr>
+<td><code>lint-score-threshold</code></td>
+<td>number</td>
+<td><code>80</code></td>
+<td>Score lint minimum</td>
+<td><code>85</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="2-9-security-scanning">2.9 Security &amp; Scanning</h3>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Type</th>
+<th>Défalt</th>
+<th>Description</th>
+<th>Exemple</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>security-checks-enabled</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Activer contrôles sécurité</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>dependency-scan-enabled</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Scan dépendances (npm audit, pip-audit)</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>dependency-scan-tool</code></td>
+<td>choice</td>
+<td><code>auto</code></td>
+<td>Outil : <code>auto</code> / <code>npm</code> / <code>pip</code> / <code>snyk</code> / <code>osv-scanner</code></td>
+<td><code>snyk</code></td>
+</tr>
+<tr>
+<td><code>dependency-severity-threshold</code></td>
+<td>choice</td>
+<td><code>high</code></td>
+<td>Niveau minimum alert : <code>low</code> / <code>medium</code> / <code>high</code> / <code>critical</code></td>
+<td><code>high</code></td>
+</tr>
+<tr>
+<td><code>sast-enabled</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Activer analyse statique (SAST)</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>sast-tool</code></td>
+<td>choice</td>
+<td>-</td>
+<td>Outil SAST : <code>sonarqube</code> / <code>semgrep</code> / <code>codeql</code></td>
+<td><code>codeql</code></td>
+</tr>
+<tr>
+<td><code>commit-signature-check</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Valider signatures GPG commits</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>tag-signature</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Signer tags cryptographiquement</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>supply-chain-check</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Vérifier dépendances (hash, provenance)</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>sbom-format</code></td>
+<td>choice</td>
+<td><code>spdx</code></td>
+<td>Format SBOM : <code>spdx</code> / <code>cyclonedx</code></td>
+<td><code>cyclonedx</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="2-10-d-ploiement-validation">2.10 Déploiement &amp; Validation</h3>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Type</th>
+<th>Défaut</th>
+<th>Description</th>
+<th>Exemple</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>deploy-enabled</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Activer déploiement</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>deploy-env</code></td>
+<td>choice</td>
+<td>-</td>
+<td>Environnement : <code>dev</code> / <code>staging</code> / <code>prod</code></td>
+<td><code>prod</code></td>
+</tr>
+<tr>
+<td><code>deploy-command</code></td>
+<td>string</td>
+<td>-</td>
+<td>Commande déploiement personnalisée</td>
+<td><code>./scripts/deploy.sh</code></td>
+</tr>
+<tr>
+<td><code>deploy-matrix</code></td>
+<td>string</td>
+<td>-</td>
+<td>Mapping env → version-suffix (JSON)</td>
+<td><code>{&quot;dev&quot;:&quot;-dev&quot;,&quot;staging&quot;:&quot;-rc&quot;}</code></td>
+</tr>
+<tr>
+<td><code>pre-deploy-check</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Vérifier état repo (commits, tags)</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>artifact-verification</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Vérifier intégrité artefacts (checksum)</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>post-deploy-validation</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Valider déploiement (ping, logs)</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>post-deploy-check-url</code></td>
+<td>string</td>
+<td>-</td>
+<td>URL à checker post-déploiement</td>
+<td><code>https://api.example.com/health</code></td>
+</tr>
+<tr>
+<td><code>rollback-support</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Support auto-rollback en cas d&#39;échec</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>rollback-on-health-check-failure</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Rollback si health check échoue</td>
+<td><code>true</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="2-11-hooks-plugins">2.11 Hooks &amp; Plugins</h3>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Type</th>
+<th>Défaut</th>
+<th>Description</th>
+<th>Exemple</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>webhook-pre-flight-url</code></td>
+<td>string</td>
+<td>-</td>
+<td>Webhook appelé avant toute action</td>
+<td><code>https://hooks.example.com/pre-flight</code></td>
+</tr>
+<tr>
+<td><code>webhook-pre-flight-enabled</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Activer webhook pré-vol</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>webhook-post-release-url</code></td>
+<td>string</td>
+<td>-</td>
+<td>Webhook après release complète</td>
+<td><code>https://hooks.example.com/release</code></td>
+</tr>
+<tr>
+<td><code>webhook-post-release-enabled</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Activer webhook post-release</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>webhook-on-failure-url</code></td>
+<td>string</td>
+<td>-</td>
+<td>Webhook en cas d&#39;erreur</td>
+<td><code>https://hooks.example.com/error</code></td>
+</tr>
+<tr>
+<td><code>webhook-on-failure-enabled</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Activer webhook d&#39;erreur</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>webhook-retry-attempts</code></td>
+<td>number</td>
+<td><code>3</code></td>
+<td>Tentatives webhook avant abandon</td>
+<td><code>5</code></td>
+</tr>
+<tr>
+<td><code>webhook-timeout</code></td>
+<td>number</td>
+<td><code>30</code></td>
+<td>Timeout webhook (secondes)</td>
+<td><code>60</code></td>
+</tr>
+<tr>
+<td><code>plugin-pre-flight-script</code></td>
+<td>string</td>
+<td>-</td>
+<td>Script shell exécuté avant actions</td>
+<td><code>./scripts/pre-flight.sh</code></td>
+</tr>
+<tr>
+<td><code>plugin-pre-flight-enabled</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Activer script pré-vol</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>plugin-post-release-script</code></td>
+<td>string</td>
+<td>-</td>
+<td>Script shell après release</td>
+<td><code>./scripts/post-release.sh</code></td>
+</tr>
+<tr>
+<td><code>plugin-post-release-enabled</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Activer script post-release</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>plugin-on-failure-script</code></td>
+<td>string</td>
+<td>-</td>
+<td>Script shell en cas d&#39;erreur</td>
+<td><code>./scripts/on-error.sh</code></td>
+</tr>
+<tr>
+<td><code>plugin-on-failure-enabled</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Activer script d&#39;erreur</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>plugin-timeout</code></td>
+<td>number</td>
+<td><code>300</code></td>
+<td>Timeout plugin (secondes)</td>
+<td><code>600</code></td>
+</tr>
+<tr>
+<td><code>plugin-error-strategy</code></td>
+<td>choice</td>
+<td><code>warn</code></td>
+<td>Stratégie erreur plugin : <code>warn</code> / <code>error</code> / <code>ignore</code></td>
+<td><code>error</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="2-12-rapports-audit">2.12 Rapports &amp; Audit</h3>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Type</th>
+<th>Défaut</th>
+<th>Description</th>
+<th>Exemple</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>generate-compliance-report</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Générer rapport audit complet</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>generate-deployment-report</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Générer rapport post-déploiement</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>generate-pre-flight-summary</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Générer résumé Markdown pre-flight</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>audit-log-export</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Exporter logs [AUDIT] en JSON</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>audit-log-path</code></td>
+<td>string</td>
+<td><code>audit.json</code></td>
+<td>Chemin fichier audit</td>
+<td><code>logs/audit.json</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="2-13-gestion-d-erreurs-retry">2.13 Gestion d&#39;Erreurs &amp; Retry</h3>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Type</th>
+<th>Défaut</th>
+<th>Description</th>
+<th>Exemple</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>retry-on-failure</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Réessayer en cas d&#39;échec</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>retry-attempts</code></td>
+<td>number</td>
+<td><code>3</code></td>
+<td>Nombre max de tentatives</td>
+<td><code>5</code></td>
+</tr>
+<tr>
+<td><code>retry-delay</code></td>
+<td>number</td>
+<td><code>5</code></td>
+<td>Délai entre tentatives (secondes)</td>
+<td><code>10</code></td>
+</tr>
+<tr>
+<td><code>timeout-on-failure</code></td>
+<td>number</td>
+<td><code>0</code></td>
+<td>Timeout global (secondes, 0=illimité)</td>
+<td><code>1800</code></td>
+</tr>
+<tr>
+<td><code>environment-lock</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Empêcher releases simultanées</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>release-blockers-file</code></td>
+<td>string</td>
+<td><code>.release-blockers.yml</code></td>
+<td>Fichier conditions bloquantes</td>
+<td><code>config/blockers.yml</code></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="3-outputs-de-l-action">3. OUTPUTS DE L&#39;ACTION</h2>
+<h3 id="3-1-versioning-tags">3.1 Versioning &amp; Tags</h3>
+<table>
+<thead>
+<tr>
+<th>Output</th>
+<th>Type</th>
+<th>Description</th>
+<th>Exemple</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>current-version</code></td>
+<td>string</td>
+<td>Version actuelle détectée/créée</td>
+<td><code>1.2.3</code></td>
+</tr>
+<tr>
+<td><code>previous-version</code></td>
+<td>string</td>
+<td>Version antérieure</td>
+<td><code>1.2.2</code></td>
+</tr>
+<tr>
+<td><code>bump-type</code></td>
+<td>string</td>
+<td>Type bump appliqué : <code>major</code> / <code>minor</code> / <code>patch</code> / <code>none</code></td>
+<td><code>minor</code></td>
+</tr>
+<tr>
+<td><code>tag-created</code></td>
+<td>boolean</td>
+<td>Tag créé avec succès</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>tag-name</code></td>
+<td>string</td>
+<td>Nom complet du tag</td>
+<td><code>v1.2.3</code></td>
+</tr>
+<tr>
+<td><code>tag-already-exists</code></td>
+<td>boolean</td>
+<td>Tag existe déjà</td>
+<td><code>false</code></td>
+</tr>
+<tr>
+<td><code>commits-since-last-tag</code></td>
+<td>number</td>
+<td>Commits depuis dernier tag</td>
+<td><code>12</code></td>
+</tr>
+<tr>
+<td><code>release-created</code></td>
+<td>boolean</td>
+<td>GitHub Release créée</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>release-url</code></td>
+<td>string</td>
+<td>URL de la release GitHub</td>
+<td><code>https://github.com/.../releases/tag/v1.2.3</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="3-2-changelog-release-notes">3.2 Changelog &amp; Release Notes</h3>
+<table>
+<thead>
+<tr>
+<th>Output</th>
+<th>Type</th>
+<th>Description</th>
+<th>Exemple</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>changelog-generated</code></td>
+<td>boolean</td>
+<td>Changelog généré/mis à jour</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>changelog-content</code></td>
+<td>string</td>
+<td>Contenu généré du changelog</td>
+<td><code>## [1.2.3] - 2024-01-15...</code></td>
+</tr>
+<tr>
+<td><code>changelog-file-path</code></td>
+<td>string</td>
+<td>Chemin fichier changelog</td>
+<td><code>CHANGELOG.md</code></td>
+</tr>
+<tr>
+<td><code>release-notes</code></td>
+<td>string</td>
+<td>Notes de release (dernière entrée)</td>
+<td><code>### Features\n- New API endpoint</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="3-3-build-artifacts">3.3 Build &amp; Artifacts</h3>
+<table>
+<thead>
+<tr>
+<th>Output</th>
+<th>Type</th>
+<th>Description</th>
+<th>Exemple</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>build-success</code></td>
+<td>boolean</td>
+<td>Build réussi</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>artifact-path</code></td>
+<td>string</td>
+<td>Chemin artefacts générés</td>
+<td><code>dist/</code></td>
+</tr>
+<tr>
+<td><code>checksum-file</code></td>
+<td>string</td>
+<td>Chemin fichier checksum SHA256</td>
+<td><code>dist/release.sha256</code></td>
+</tr>
+<tr>
+<td><code>version-file-path</code></td>
+<td>string</td>
+<td>Chemin fichier VERSION créé</td>
+<td><code>VERSION</code></td>
+</tr>
+<tr>
+<td><code>sbom-file-path</code></td>
+<td>string</td>
+<td>Chemin fichier SBOM généré</td>
+<td><code>sbom.spdx.json</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="3-4-tests-qualit-">3.4 Tests &amp; Qualité</h3>
+<table>
+<thead>
+<tr>
+<th>Output</th>
+<th>Type</th>
+<th>Description</th>
+<th>Exemple</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tests-passed</code></td>
+<td>boolean</td>
+<td>Tous les tests réussis</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>coverage-percentage</code></td>
+<td>number</td>
+<td>Couverture de code (%)</td>
+<td><code>92.5</code></td>
+</tr>
+<tr>
+<td><code>coverage-meets-threshold</code></td>
+<td>boolean</td>
+<td>Couverture ≥ seuil</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>lint-passed</code></td>
+<td>boolean</td>
+<td>Linting réussi</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>lint-score</code></td>
+<td>number</td>
+<td>Score lint (0-100)</td>
+<td><code>85</code></td>
+</tr>
+<tr>
+<td><code>performance-regression-detected</code></td>
+<td>boolean</td>
+<td>Régression perf détectée</td>
+<td><code>false</code></td>
+</tr>
+<tr>
+<td><code>performance-comparison</code></td>
+<td>string</td>
+<td>Comparaison perf vs version précédente</td>
+<td><code>2.3% faster</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="3-5-security-scanning">3.5 Security &amp; Scanning</h3>
+<table>
+<thead>
+<tr>
+<th>Output</th>
+<th>Type</th>
+<th>Description</th>
+<th>Exemple</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>security-checks-passed</code></td>
+<td>boolean</td>
+<td>Tous contrôles sécurité OK</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>dependencies-vulnerable</code></td>
+<td>number</td>
+<td>Dépendances vulnérables trouvées</td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>vulnerable-packages</code></td>
+<td>string</td>
+<td>Liste packages vulnérables (JSON)</td>
+<td><code>[{&quot;name&quot;:&quot;lodash&quot;,&quot;severity&quot;:&quot;high&quot;}]</code></td>
+</tr>
+<tr>
+<td><code>sast-issues</code></td>
+<td>number</td>
+<td>Problèmes SAST détectés</td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>secrets-found</code></td>
+<td>number</td>
+<td>Secrets détectés</td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>commit-signatures-valid</code></td>
+<td>boolean</td>
+<td>Toutes signatures commits OK</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>supply-chain-score</code></td>
+<td>number</td>
+<td>Score supply chain (0-100)</td>
+<td><code>85</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="3-6-d-ploiement">3.6 Déploiement</h3>
+<table>
+<thead>
+<tr>
+<th>Output</th>
+<th>Type</th>
+<th>Description</th>
+<th>Exemple</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>deployment-status</code></td>
+<td>string</td>
+<td>Statut : <code>success</code> / <code>failure</code> / <code>pending</code></td>
+<td><code>success</code></td>
+</tr>
+<tr>
+<td><code>deployment-environment</code></td>
+<td>string</td>
+<td>Environnement déployé</td>
+<td><code>prod</code></td>
+</tr>
+<tr>
+<td><code>deployment-duration</code></td>
+<td>number</td>
+<td>Durée déploiement (secondes)</td>
+<td><code>120</code></td>
+</tr>
+<tr>
+<td><code>post-deploy-validation-passed</code></td>
+<td>boolean</td>
+<td>Health check post-déploiement OK</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>rollback-performed</code></td>
+<td>boolean</td>
+<td>Rollback exécuté</td>
+<td><code>false</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="3-7-rapports-audit">3.7 Rapports &amp; Audit</h3>
+<table>
+<thead>
+<tr>
+<th>Output</th>
+<th>Type</th>
+<th>Description</th>
+<th>Exemple</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>compliance-report-path</code></td>
+<td>string</td>
+<td>Chemin rapport audit</td>
+<td><code>reports/compliance.json</code></td>
+</tr>
+<tr>
+<td><code>deployment-report-path</code></td>
+<td>string</td>
+<td>Chemin rapport déploiement</td>
+<td><code>reports/deployment.json</code></td>
+</tr>
+<tr>
+<td><code>audit-log-path</code></td>
+<td>string</td>
+<td>Chemin export logs audit</td>
+<td><code>audit.json</code></td>
+</tr>
+<tr>
+<td><code>pre-flight-summary-path</code></td>
+<td>string</td>
+<td>Chemin résumé pre-flight</td>
+<td><code>artifacts/pre-flight.md</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="3-8-statuts-globaux">3.8 Statuts Globaux</h3>
+<table>
+<thead>
+<tr>
+<th>Output</th>
+<th>Type</th>
+<th>Description</th>
+<th>Exemple</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>workflow-status</code></td>
+<td>string</td>
+<td>Statut final : <code>success</code> / <code>failure</code> / <code>partial</code></td>
+<td><code>success</code></td>
+</tr>
+<tr>
+<td><code>dryrun-mode</code></td>
+<td>boolean</td>
+<td>Exécution en mode simulation</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>execution-duration</code></td>
+<td>number</td>
+<td>Durée exécution totale (secondes)</td>
+<td><code>420</code></td>
+</tr>
+<tr>
+<td><code>commits-validated</code></td>
+<td>boolean</td>
+<td>Commits respectent convention</td>
+<td><code>true</code></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="4-scopes-modules-group-s-par-type-">4. SCOPES &amp; MODULES (Groupés par Type)</h2>
+<h3 id="4-1-scope-git-config">4.1 Scope: GIT &amp; CONFIG</h3>
+<p><strong>Module: Git Configuration</strong></p>
+<ul>
+<li><code>git-user-name</code> (input: string)</li>
+<li><code>git-user-email</code> (input: string)</li>
+<li><code>auto-commit</code> (input: boolean)</li>
+<li><code>auto-commit-message</code> (input: string)</li>
+<li><code>auto-push</code> (input: boolean)</li>
+<li><code>target-branch</code> (input: string)</li>
+</ul>
+<p><strong>Module: Config Management</strong></p>
+<ul>
+<li><code>config-source</code> (input: choice)</li>
+<li><code>config-path</code> (input: string)</li>
+<li><code>config-schema-check</code> (input: boolean)</li>
+<li><code>load-config</code> (function)</li>
+<li><code>config-lint</code> (function)</li>
+</ul>
+<p><strong>Module: Branching Strategy</strong></p>
+<ul>
+<li><code>trigger-branches</code> (input: string)</li>
+<li><code>branch-protection-aware</code> (input: boolean)<!-- ? --></li>
+<li><code>branch-policy-check</code> (input: boolean)</li>
+<li><code>review-enforcement</code> (input: boolean)</li>
+</ul>
+<hr>
+<h3 id="4-2-scope-versioning">4.2 Scope: VERSIONING</h3>
+<p><strong>Module: Version Detection &amp; Bumping</strong></p>
+<ul>
+<li><code>detect-bump-type</code> (function)</li>
+<li><code>bump</code> (input: choice)</li>
+<li><code>version</code> (input: string - override)</li>
+<li><code>initial</code> (input: string)</li>
+<li><code>bump-type</code> (output)</li>
+<li><code>current-version</code> (output)</li>
+<li><code>previous-version</code> (output)</li>
+<li><code>major-indicator</code> (input: pattern)</li>
+<li><code>minor-indicator</code> (input: pattern)</li>
+<li><code>patch-indicator</code> (input: pattern)</li>
+</ul>
+<p><strong>Module: Semantic Versioning</strong></p>
+<ul>
+<li><code>semantic-convention</code> (input: choice)</li>
+<li><code>validate-semver</code> (function)</li>
+<li><code>compare-versions</code> (function)</li>
+<li><code>version-prefix</code> (input: string)</li>
+<li><code>sync-version</code> (input: string - paths)</li>
+</ul>
+<p><strong>Module: Tag Management</strong></p>
+<ul>
+<li><code>create-tag</code> (function)</li>
+<li><code>verify-tag</code> (function)</li>
+<li><code>idempotent-check</code> (function)</li>
+<li><code>tag-signature</code> (input: boolean)</li>
+<li><code>tag-delete-on-failure</code> (input: boolean)</li>
+<li><code>tag-name</code> (output)</li>
+<li><code>tag-created</code> (output)</li>
+</ul>
+<hr>
+<h3 id="4-3-scope-changelog-release">4.3 Scope: CHANGELOG &amp; RELEASE</h3>
+<p><strong>Module: Changelog Generation</strong></p>
+<ul>
+<li><code>generate-changelog</code> (function)</li>
+<li><code>changelog-file</code> (input: path)</li>
+<li><code>changelog-template</code> (input: path)</li>
+<li><code>append-changelog</code> (input: choice)</li>
+<li><code>extract-changelog</code> (function)</li>
+<li><code>changelog-generated</code> (output)</li>
+<li><code>changelog-content</code> (output)</li>
+</ul>
+<p><strong>Module: Release Notes</strong></p>
+<ul>
+<li><code>changelog-to-release-notes</code> (function)</li>
+<li><code>release-notes</code> (output)</li>
+<li><code>extract-changelog</code> (function)</li>
+</ul>
+<p><strong>Module: Release Creation</strong></p>
+<ul>
+<li><code>create-release</code> (function)</li>
+<li><code>release-draft</code> (input: boolean)</li>
+<li><code>release-prerelease</code> (input: boolean)</li>
+<li><code>prerelease-suffix</code> (input: string)</li>
+<li><code>release-created</code> (output)</li>
+<li><code>release-url</code> (output)</li>
+</ul>
+<p><strong>Module: Multi-Package Release</strong></p>
+<ul>
+<li><code>package-release</code> (function)</li>
+<li><code>monorepo-mode</code> (input: boolean)</li>
+<li><code>detect-changed-packages</code> (function)</li>
+</ul>
+<hr>
+<h3 id="4-4-scope-build-artifacts">4.4 Scope: BUILD &amp; ARTIFACTS</h3>
+<p><strong>Module: Build Process</strong></p>
+<ul>
+<li><code>build-enabled</code> (input: boolean)</li>
+<li><code>build-command</code> (input: string)</li>
+<li><code>build-artifact-path</code> (input: path)</li>
+<li><code>build-success</code> (output)</li>
+<li><code>artifact-path</code> (output)</li>
+</ul>
+<p><strong>Module: Artifact Management</strong></p>
+<ul>
+<li><code>upload-artifact</code> (input: boolean)</li>
+<li><code>artifact-retention-days</code> (input: number)</li>
+<li><code>generate-version-file</code> (function)</li>
+<li><code>generate-checksum</code> (function)</li>
+<li><code>generate-sbom</code> (function)</li>
+<li><code>artifact-signing</code> (function)</li>
+<li><code>version-file-path</code> (output)</li>
+<li><code>checksum-file</code> (output)</li>
+<li><code>sbom-file-path</code> (output)</li>
+</ul>
+<p><strong>Module: Artifact Verification</strong></p>
+<ul>
+<li><code>artifact-verification</code> (input: boolean)</li>
+<li><code>pre-deploy-check</code> (function)</li>
+<li><code>pre-deploy-check-url</code> (input: string)</li>
+</ul>
+<hr>
+<h3 id="4-5-scope-testing">4.5 Scope: TESTING</h3>
+<p><strong>Module: Unit &amp; Integration Tests</strong></p>
+<ul>
+<li><code>tests-enabled</code> (input: boolean)</li>
+<li><code>unit-tests-command</code> (input: string)</li>
+<li><code>integration-tests-command</code> (input: string)</li>
+<li><code>tests-passed</code> (output)</li>
+</ul>
+<p><strong>Module: Coverage Analysis</strong></p>
+<ul>
+<li><code>coverage-threshold</code> (input: number)</li>
+<li><code>coverage-file-path</code> (input: path)</li>
+<li><code>coverage-percentage</code> (output)</li>
+<li><code>coverage-meets-threshold</code> (output)</li>
+</ul>
+<p><strong>Module: Code Quality</strong></p>
+<ul>
+<li><code>lint-enabled</code> (input: boolean)</li>
+<li><code>lint-command</code> (input: string)</li>
+<li><code>lint-report-parse</code> (function)</li>
+<li><code>lint-report-path</code> (input: path)</li>
+<li><code>lint-score-threshold</code> (input: number)</li>
+<li><code>lint-passed</code> (output)</li>
+<li><code>lint-score</code> (output)</li>
+</ul>
+<p><strong>Module: Performance Benchmarking</strong></p>
+<ul>
+<li><code>performance-benchmark-enabled</code> (input: boolean)</li>
+<li><code>performance-benchmark-file</code> (input: path)</li>
+<li><code>performance-regression-detected</code> (output)</li>
+<li><code>performance-comparison</code> (output)</li>
+</ul>
+<hr>
+<h3 id="4-6-scope-security">4.6 Scope: SECURITY</h3>
+<p><strong>Module: Dependency Scanning</strong></p>
+<ul>
+<li><code>dependency-scan-enabled</code> (input: boolean)</li>
+<li><code>dependency-scan-tool</code> (input: choice)</li>
+<li><code>dependency-severity-threshold</code> (input: choice)</li>
+<li><code>dependencies-vulnerable</code> (output)</li>
+<li><code>vulnerable-packages</code> (output)</li>
+</ul>
+<p><strong>Module: Static Analysis (SAST)</strong></p>
+<ul>
+<li><code>sast-enabled</code> (input: boolean)</li>
+<li><code>sast-tool</code> (input: choice)</li>
+<li><code>sast-issues</code> (output)</li>
+</ul>
+<p><strong>Module: Secret Scanning</strong></p>
+<ul>
+<li><code>secret-scan-enabled</code> (input: boolean)</li>
+<li><code>secrets-found</code> (output)</li>
+</ul>
+<p><strong>Module: Code Signing &amp; Verification</strong></p>
+<ul>
+<li><code>commit-signature-check</code> (function)</li>
+<li><code>commit-signature-check</code> (input: boolean)</li>
+<li><code>tag-signature</code> (input: boolean)</li>
+<li><code>gpg-key</code> (input: string - secret)</li>
+<li><code>gpg-passphrase</code> (input: string - secret)</li>
+<li><code>commit-signatures-valid</code> (output)</li>
+</ul>
+<p><strong>Module: Supply Chain Security</strong></p>
+<ul>
+<li><code>supply-chain-check</code> (function)</li>
+<li><code>generate-sbom</code> (function)</li>
+<li><code>sbom-format</code> (input: choice)</li>
+<li><code>supply-chain-score</code> (output)</li>
+</ul>
+<p><strong>Module: Token &amp; Authentication</strong></p>
+<ul>
+<li><code>github-token</code> (input: string - secret)</li>
+<li><code>validate-token</code> (function)</li>
+<li><code>token-scope-check</code> (function)</li>
+<li><code>ssh-key</code> (input: string - secret)</li>
+</ul>
+<hr>
+<h3 id="4-7-scope-deployment">4.7 Scope: DEPLOYMENT</h3>
+<p><strong>Module: Deployment Execution</strong></p>
+<ul>
+<li><code>deploy-enabled</code> (input: boolean)</li>
+<li><code>deploy-env</code> (input: choice)</li>
+<li><code>deploy-command</code> (input: string)</li>
+<li><code>deploy-matrix</code> (input: string - JSON)</li>
+<li><code>deployment-status</code> (output)</li>
+<li><code>deployment-environment</code> (output)</li>
+<li><code>deployment-duration</code> (output)</li>
+</ul>
+<p><strong>Module: Post-Deployment Validation</strong></p>
+<ul>
+<li><code>post-deploy-validation</code> (input: boolean)</li>
+<li><code>post-deploy-check-url</code> (input: string)</li>
+<li><code>post-deploy-validation-passed</code> (output)</li>
+</ul>
+<p><strong>Module: Rollback Strategy</strong></p>
+<ul>
+<li><code>rollback-support</code> (input: boolean)</li>
+<li><code>rollback-on-health-check-failure</code> (input: boolean)</li>
+<li><code>rollback-performed</code> (output)</li>
+</ul>
+<hr>
+<h3 id="4-8-scope-hooks-plugins">4.8 Scope: HOOKS &amp; PLUGINS</h3>
+<p><strong>Module: Webhooks</strong></p>
+<ul>
+<li><code>webhook-pre-flight-url</code> (input: string)</li>
+<li><code>webhook-pre-flight-enabled</code> (input: boolean)</li>
+<li><code>webhook-post-release-url</code> (input: string)</li>
+<li><code>webhook-post-release-enabled</code> (input: boolean)</li>
+<li><code>webhook-on-failure-url</code> (input: string)</li>
+<li><code>webhook-on-failure-enabled</code> (input: boolean)</li>
+<li><code>webhook-retry-attempts</code> (input: number)</li>
+<li><code>webhook-timeout</code> (input: number)</li>
+</ul>
+<p><strong>Module: Plugin Scripts</strong></p>
+<ul>
+<li><code>plugin-pre-flight-script</code> (input: path)</li>
+<li><code>plugin-pre-flight-enabled</code> (input: boolean)</li>
+<li><code>plugin-post-release-script</code> (input: path)</li>
+<li><code>plugin-post-release-enabled</code> (input: boolean)</li>
+<li><code>plugin-on-failure-script</code> (input: path)</li>
+<li><code>plugin-on-failure-enabled</code> (input: boolean)</li>
+<li><code>plugin-timeout</code> (input: number)</li>
+<li><code>plugin-error-strategy</code> (input: choice)</li>
+</ul>
+<hr>
+<h3 id="4-9-scope-reporting-audit">4.9 Scope: REPORTING &amp; AUDIT</h3>
+<p><strong>Module: Report Generation</strong></p>
+<ul>
+<li><code>generate-compliance-report</code> (function)</li>
+<li><code>generate-deployment-report</code> (function)</li>
+<li><code>generate-pre-flight-summary</code> (function)</li>
+<li><code>compliance-report-path</code> (output)</li>
+<li><code>deployment-report-path</code> (output)</li>
+<li><code>pre-flight-summary-path</code> (output)</li>
+</ul>
+<p><strong>Module: Audit Logging</strong></p>
+<ul>
+<li><code>audit-log-export</code> (function)</li>
+<li><code>audit-log-path</code> (input: path)</li>
+<li><code>audit-log-path</code> (output)</li>
+</ul>
+<hr>
+<h3 id="4-10-scope-error-handling-validation">4.10 Scope: ERROR HANDLING &amp; VALIDATION</h3>
+<p><strong>Module: Retry &amp; Timeout</strong></p>
+<ul>
+<li><code>retry-on-failure</code> (input: boolean)</li>
+<li><code>retry-attempts</code> (input: number)</li>
+<li><code>retry-delay</code> (input: number)</li>
+<li><code>timeout-on-failure</code> (input: number)</li>
+</ul>
+<p><strong>Module: Release Validation</strong></p>
+<ul>
+<li><code>ci-status-check</code> (function)</li>
+<li><code>release-blockers-file</code> (input: path)</li>
+<li><code>environment-lock</code> (input: boolean)</li>
+</ul>
+<p><strong>Module: Commit Validation</strong></p>
+<ul>
+<li><code>semantic-guard</code> (function)</li>
+<li><code>commit-policy</code> (function)</li>
+<li><code>commits-validated</code> (output)</li>
+</ul>
+<hr>
+<h2 id="5-functions-scripts-ordre-d-ex-cution-">5. FUNCTIONS &amp; SCRIPTS (Ordre d&#39;Exécution)</h2>
+<h3 id="5-1-phase-pre-flight-avant-tout-">5.1 Phase: PRE-FLIGHT (Avant tout)</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Fonction</th>
+<th>Scope</th>
+<th>Description</th>
+<th>Inputs</th>
+<th>Outputs</th>
+<th>Condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>load-config</code></td>
+<td>GIT &amp; CONFIG</td>
+<td>Charger fichier config</td>
+<td><code>config-source</code>, <code>config-path</code></td>
+<td>config_object</td>
+<td><code>config-source != default</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>config-lint</code></td>
+<td>GIT &amp; CONFIG</td>
+<td>Valider YAML config</td>
+<td>config_object</td>
+<td><code>is_valid</code></td>
+<td><code>config-schema-check == true</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>validate-token</code></td>
+<td>SECURITY</td>
+<td>Vérifier token GitHub</td>
+<td><code>github-token</code></td>
+<td><code>is_valid</code>, <code>scopes</code></td>
+<td><code>validate-token == true</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>token-scope-check</code></td>
+<td>SECURITY</td>
+<td>Contrôler permissions token</td>
+<td><code>github-token</code></td>
+<td><code>has_permissions</code></td>
+<td><code>token-scope-check == true</code></td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>environment-lock</code></td>
+<td>ERROR HANDLING</td>
+<td>Bloquer si release en cours</td>
+<td><code>.release.lock</code></td>
+<td><code>is_locked</code></td>
+<td><code>environment-lock == true</code></td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>ci-status-check</code></td>
+<td>ERROR HANDLING</td>
+<td>Vérifier CI jobs précédents</td>
+<td>GitHub API</td>
+<td><code>all_success</code></td>
+<td><code>ci-status-check == true</code></td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>release-blockers</code></td>
+<td>ERROR HANDLING</td>
+<td>Charger conditions bloquantes</td>
+<td><code>release-blockers-file</code></td>
+<td><code>blockers_list</code></td>
+<td>-</td>
+</tr>
+<tr>
+<td>8</td>
+<td><strong>[WEBHOOK: pre-flight]</strong></td>
+<td>HOOKS</td>
+<td>Appeler webhook pré-vol</td>
+<td><code>webhook-pre-flight-url</code></td>
+<td>webhook_response</td>
+<td><code>webhook-pre-flight-enabled == true</code></td>
+</tr>
+<tr>
+<td>9</td>
+<td><strong>[PLUGIN: pre-flight]</strong></td>
+<td>HOOKS</td>
+<td>Exécuter script pré-vol</td>
+<td><code>plugin-pre-flight-script</code></td>
+<td>script_output</td>
+<td><code>plugin-pre-flight-enabled == true</code></td>
+</tr>
+<tr>
+<td>10</td>
+<td><code>generate-pre-flight-summary</code></td>
+<td>REPORTING</td>
+<td>Générer résumé pré-vol</td>
+<td>all_config</td>
+<td><code>pre-flight-summary-path</code></td>
+<td><code>generate-pre-flight-summary == true</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="5-2-phase-config-git-setup">5.2 Phase: CONFIG &amp; GIT SETUP</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Fonction</th>
+<th>Scope</th>
+<th>Description</th>
+<th>Inputs</th>
+<th>Outputs</th>
+<th>Condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>11</td>
+<td><code>git-config-user</code></td>
+<td>GIT &amp; CONFIG</td>
+<td>Configurer git user.name / user.email</td>
+<td><code>git-user-name</code>, <code>git-user-email</code></td>
+<td>git_configured</td>
+<td>-</td>
+</tr>
+<tr>
+<td>12</td>
+<td><code>checkout-code</code></td>
+<td>GIT &amp; CONFIG</td>
+<td>Checkout du code source</td>
+<td>branch</td>
+<td>code_ready</td>
+<td>-</td>
+</tr>
+<tr>
+<td>13</td>
+<td><code>branch-policy-check</code></td>
+<td>GIT &amp; CONFIG</td>
+<td>Vérifier stratégie merge</td>
+<td>trigger branch</td>
+<td><code>policy_compliant</code></td>
+<td><code>branch-policy-check == true</code></td>
+</tr>
+<tr>
+<td>14</td>
+<td><code>review-enforcement</code></td>
+<td>GIT &amp; CONFIG</td>
+<td>Bloquer si PR non approuvée</td>
+<td>GitHub API</td>
+<td><code>is_approved</code></td>
+<td><code>review-enforcement == true</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="5-3-phase-build">5.3 Phase: BUILD</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Fonction</th>
+<th>Scope</th>
+<th>Description</th>
+<th>Inputs</th>
+<th>Outputs</th>
+<th>Condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>15</td>
+<td><code>build-process</code></td>
+<td>BUILD</td>
+<td>Exécuter build</td>
+<td><code>build-command</code></td>
+<td><code>artifact-path</code></td>
+<td><code>build-enabled == true</code></td>
+</tr>
+<tr>
+<td>16</td>
+<td><code>generate-checksum</code></td>
+<td>BUILD</td>
+<td>Générer SHA256 des artefacts</td>
+<td><code>artifact-path</code></td>
+<td><code>checksum-file</code></td>
+<td><code>generate-checksum == true</code></td>
+</tr>
+<tr>
+<td>17</td>
+<td><code>generate-version-file</code></td>
+<td>BUILD</td>
+<td>Créer VERSION/.version</td>
+<td><code>current-version</code></td>
+<td><code>version-file-path</code></td>
+<td><code>generate-version-file == true</code></td>
+</tr>
+<tr>
+<td>18</td>
+<td><code>artifact-verification</code></td>
+<td>BUILD</td>
+<td>Vérifier intégrité artefacts</td>
+<td>checksum</td>
+<td><code>artifact_verified</code></td>
+<td><code>artifact-verification == true</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="5-4-phase-tests-quality">5.4 Phase: TESTS &amp; QUALITY</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Fonction</th>
+<th>Scope</th>
+<th>Description</th>
+<th>Inputs</th>
+<th>Outputs</th>
+<th>Condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>19</td>
+<td><code>unit-tests</code></td>
+<td>TESTING</td>
+<td>Exécuter tests unitaires</td>
+<td><code>unit-tests-command</code></td>
+<td><code>tests-passed</code></td>
+<td><code>tests-enabled == true</code></td>
+</tr>
+<tr>
+<td>20</td>
+<td><code>integration-tests</code></td>
+<td>TESTING</td>
+<td>Exécuter tests d&#39;intégration</td>
+<td><code>integration-tests-command</code></td>
+<td>tests_results</td>
+<td><code>integration-tests-command != empty</code></td>
+</tr>
+<tr>
+<td>21</td>
+<td><code>coverage-check</code></td>
+<td>TESTING</td>
+<td>Analyser couverture de code</td>
+<td><code>coverage-file-path</code>, <code>coverage-threshold</code></td>
+<td><code>coverage-percentage</code>, <code>coverage-meets-threshold</code></td>
+<td><code>coverage-threshold &gt; 0</code></td>
+</tr>
+<tr>
+<td>22</td>
+<td><code>lint-check</code></td>
+<td>TESTING</td>
+<td>Exécuter linting</td>
+<td><code>lint-command</code></td>
+<td><code>lint-passed</code>, <code>lint-score</code></td>
+<td><code>lint-enabled == true</code></td>
+</tr>
+<tr>
+<td>23</td>
+<td><code>lint-report-parse</code></td>
+<td>TESTING</td>
+<td>Parser rapport lint/sonar</td>
+<td><code>lint-report-path</code></td>
+<td>lint_issues</td>
+<td><code>lint-report-parse == true</code></td>
+</tr>
+<tr>
+<td>24</td>
+<td><code>performance-benchmark</code></td>
+<td>TESTING</td>
+<td>Comparer perfs</td>
+<td><code>performance-benchmark-file</code></td>
+<td><code>performance-regression-detected</code>, <code>performance-comparison</code></td>
+<td><code>performance-benchmark-enabled == true</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="5-5-phase-security">5.5 Phase: SECURITY</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Fonction</th>
+<th>Scope</th>
+<th>Description</th>
+<th>Inputs</th>
+<th>Outputs</th>
+<th>Condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>25</td>
+<td><code>secret-scan</code></td>
+<td>SECURITY</td>
+<td>Scanner secrets dans commits</td>
+<td>trufflehog config</td>
+<td><code>secrets-found</code></td>
+<td><code>secret-scan-enabled == true</code></td>
+</tr>
+<tr>
+<td>26</td>
+<td><code>dependency-scan</code></td>
+<td>SECURITY</td>
+<td>Scan dépendances</td>
+<td><code>dependency-scan-tool</code>, <code>dependency-severity-threshold</code></td>
+<td><code>dependencies-vulnerable</code>, <code>vulnerable-packages</code></td>
+<td><code>dependency-scan-enabled == true</code></td>
+</tr>
+<tr>
+<td>27</td>
+<td><code>sast-analysis</code></td>
+<td>SECURITY</td>
+<td>Analyse statique (SAST)</td>
+<td><code>sast-tool</code></td>
+<td><code>sast-issues</code></td>
+<td><code>sast-enabled == true</code></td>
+</tr>
+<tr>
+<td>28</td>
+<td><code>commit-signature-check</code></td>
+<td>SECURITY</td>
+<td>Valider signatures GPG</td>
+<td>git log</td>
+<td><code>commit-signatures-valid</code></td>
+<td><code>commit-signature-check == true</code></td>
+</tr>
+<tr>
+<td>29</td>
+<td><code>supply-chain-check</code></td>
+<td>SECURITY</td>
+<td>Vérifier supply chain</td>
+<td>dépendances</td>
+<td><code>supply-chain-score</code></td>
+<td><code>supply-chain-check == true</code></td>
+</tr>
+<tr>
+<td>30</td>
+<td><code>generate-sbom</code></td>
+<td>SECURITY</td>
+<td>Générer SBOM</td>
+<td><code>sbom-format</code></td>
+<td><code>sbom-file-path</code></td>
+<td><code>generate-sbom == true</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="5-6-phase-version-changelog">5.6 Phase: VERSION &amp; CHANGELOG</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Fonction</th>
+<th>Scope</th>
+<th>Description</th>
+<th>Inputs</th>
+<th>Outputs</th>
+<th>Condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>31</td>
+<td><code>get-commit-stats</code></td>
+<td>VERSIONING</td>
+<td>Récupérer stats commits</td>
+<td>last tag</td>
+<td><code>commits-stats</code></td>
+<td>-</td>
+</tr>
+<tr>
+<td>32</td>
+<td><code>extract-breaking-changes</code></td>
+<td>VERSIONING</td>
+<td>Détecter BREAKING CHANGE</td>
+<td>commits</td>
+<td>breaking_changes</td>
+<td>-</td>
+</tr>
+<tr>
+<td>33</td>
+<td><code>detect-bump-type</code></td>
+<td>VERSIONING</td>
+<td>Scanner commits → bump auto</td>
+<td><code>major-indicator</code>, <code>minor-indicator</code>, <code>patch-indicator</code></td>
+<td><code>bump-type</code></td>
+<td><code>detect-bump-type == true</code></td>
+</tr>
+<tr>
+<td>34</td>
+<td><code>validate-semver</code></td>
+<td>VERSIONING</td>
+<td>Valider format version</td>
+<td><code>version</code> ou <code>initial</code></td>
+<td><code>is_valid</code></td>
+<td>-</td>
+</tr>
+<tr>
+<td>35</td>
+<td><code>compare-versions</code></td>
+<td>VERSIONING</td>
+<td>Comparer versions</td>
+<td>current vs previous</td>
+<td>comparison</td>
+<td>-</td>
+</tr>
+<tr>
+<td>36</td>
+<td><code>calculate-bump</code></td>
+<td>VERSIONING</td>
+<td>Calculer nouvelle version</td>
+<td><code>bump-type</code> ou <code>version</code></td>
+<td><code>current-version</code></td>
+<td>-</td>
+</tr>
+<tr>
+<td>37</td>
+<td><code>sync-version</code></td>
+<td>VERSIONING</td>
+<td>Sync version dans fichiers</td>
+<td><code>sync-version</code> paths, <code>current-version</code></td>
+<td>files_updated</td>
+<td><code>sync-version != empty</code></td>
+</tr>
+<tr>
+<td>38</td>
+<td><code>detect-changed-packages</code></td>
+<td>VERSIONING</td>
+<td>Lister packages modifiés (monorepo)</td>
+<td>git diff</td>
+<td>changed_packages</td>
+<td><code>monorepo-mode == true</code></td>
+</tr>
+<tr>
+<td>39</td>
+<td><code>generate-changelog</code></td>
+<td>CHANGELOG</td>
+<td>Générer changelog</td>
+<td>commits, <code>changelog-template</code></td>
+<td><code>changelog-generated</code>, <code>changelog-content</code></td>
+<td><code>generate-changelog == true</code></td>
+</tr>
+<tr>
+<td>40</td>
+<td><code>changelog-to-release-notes</code></td>
+<td>CHANGELOG</td>
+<td>Convertir changelog → release notes</td>
+<td><code>changelog-content</code></td>
+<td><code>release-notes</code></td>
+<td><code>changelog-to-release-notes == true</code></td>
+</tr>
+<tr>
+<td>41</td>
+<td><code>extract-changelog</code></td>
+<td>CHANGELOG</td>
+<td>Extraire dernière entrée</td>
+<td><code>changelog-file</code></td>
+<td><code>release-notes</code></td>
+<td><code>extract-changelog == true</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="5-7-phase-tagging-release">5.7 Phase: TAGGING &amp; RELEASE</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Fonction</th>
+<th>Scope</th>
+<th>Description</th>
+<th>Inputs</th>
+<th>Outputs</th>
+<th>Condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>42</td>
+<td><code>verify-tag</code></td>
+<td>VERSIONING</td>
+<td>Vérifier si tag existe</td>
+<td><code>current-version</code>, <code>version-prefix</code></td>
+<td><code>tag-already-exists</code></td>
+<td><code>verify-tag == true</code></td>
+</tr>
+<tr>
+<td>43</td>
+<td><code>idempotent-check</code></td>
+<td>VERSIONING</td>
+<td>Arrêter si tag existe</td>
+<td><code>tag-already-exists</code></td>
+<td>idempotent_check</td>
+<td><code>idempotent-check == true</code></td>
+</tr>
+<tr>
+<td>44</td>
+<td><code>create-tag</code></td>
+<td>VERSIONING</td>
+<td>Créer tag Git</td>
+<td><code>current-version</code>, <code>tag-signature</code></td>
+<td><code>tag-name</code>, <code>tag-created</code></td>
+<td><code>create-tag == true</code></td>
+</tr>
+<tr>
+<td>45</td>
+<td><code>auto-commit</code></td>
+<td>GIT &amp; CONFIG</td>
+<td>Commit changelog/version</td>
+<td><code>auto-commit-message</code></td>
+<td>commit_sha</td>
+<td><code>auto-commit == true</code></td>
+</tr>
+<tr>
+<td>46</td>
+<td><code>auto-push</code></td>
+<td>GIT &amp; CONFIG</td>
+<td>Push commits et tag</td>
+<td><code>auto-push</code>, <code>branch-protection-aware</code></td>
+<td>push_success</td>
+<td><code>auto-push == true</code></td>
+</tr>
+<tr>
+<td>47</td>
+<td><code>create-release</code></td>
+<td>CHANGELOG</td>
+<td>Créer GitHub Release</td>
+<td><code>tag-name</code>, <code>release-notes</code>, <code>release-draft</code>, <code>release-prerelease</code></td>
+<td><code>release-created</code>, <code>release-url</code></td>
+<td><code>create-release == true</code></td>
+</tr>
+<tr>
+<td>48</td>
+<td><code>package-release</code></td>
+<td>CHANGELOG</td>
+<td>Release par package (monorepo)</td>
+<td>changed_packages</td>
+<td>releases_created</td>
+<td><code>package-release == true</code></td>
+</tr>
+<tr>
+<td>49</td>
+<td><code>upload-artifact</code></td>
+<td>BUILD</td>
+<td>Upload changelog/version</td>
+<td><code>upload-artifact</code></td>
+<td>artifact_uploaded</td>
+<td><code>upload-artifact == true</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="5-8-phase-deployment-optionnel-">5.8 Phase: DEPLOYMENT (Optionnel)</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Fonction</th>
+<th>Scope</th>
+<th>Description</th>
+<th>Inputs</th>
+<th>Outputs</th>
+<th>Condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>50</td>
+<td><code>pre-deploy-check</code></td>
+<td>DEPLOYMENT</td>
+<td>Vérifier repo avant déploiement</td>
+<td>git status</td>
+<td><code>repo-clean</code></td>
+<td><code>pre-deploy-check == true</code></td>
+</tr>
+<tr>
+<td>51</td>
+<td><code>deploy-process</code></td>
+<td>DEPLOYMENT</td>
+<td>Exécuter déploiement</td>
+<td><code>deploy-command</code>, <code>deploy-env</code>, <code>deploy-matrix</code></td>
+<td><code>deployment-status</code>, <code>deployment-duration</code></td>
+<td><code>deploy-enabled == true</code></td>
+</tr>
+<tr>
+<td>52</td>
+<td><code>post-deploy-validation</code></td>
+<td>DEPLOYMENT</td>
+<td>Valider déploiement (health check)</td>
+<td><code>post-deploy-check-url</code></td>
+<td><code>post-deploy-validation-passed</code></td>
+<td><code>post-deploy-validation == true</code></td>
+</tr>
+<tr>
+<td>53</td>
+<td><code>rollback-process</code></td>
+<td>DEPLOYMENT</td>
+<td>Rollback auto en cas d&#39;échec</td>
+<td>previous tag</td>
+<td><code>rollback-performed</code></td>
+<td><code>rollback-support == true</code> AND validation failed</td>
+</tr>
+</tbody>
+</table>
+<h3 id="5-9-phase-reporting-cleanup">5.9 Phase: REPORTING &amp; CLEANUP</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Fonction</th>
+<th>Scope</th>
+<th>Description</th>
+<th>Inputs</th>
+<th>Outputs</th>
+<th>Condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>54</td>
+<td><code>generate-compliance-report</code></td>
+<td>REPORTING</td>
+<td>Rapport audit complet</td>
+<td>all_outputs</td>
+<td><code>compliance-report-path</code></td>
+<td><code>generate-compliance-report == true</code></td>
+</tr>
+<tr>
+<td>55</td>
+<td><code>generate-deployment-report</code></td>
+<td>REPORTING</td>
+<td>Rapport post-déploiement</td>
+<td>deployment_data</td>
+<td><code>deployment-report-path</code></td>
+<td><code>generate-deployment-report == true</code></td>
+</tr>
+<tr>
+<td>56</td>
+<td><code>audit-log-export</code></td>
+<td>REPORTING</td>
+<td>Exporter logs [AUDIT] JSON</td>
+<td>[AUDIT] logs</td>
+<td><code>audit-log-path</code></td>
+<td><code>audit-log-export == true</code></td>
+</tr>
+<tr>
+<td>57</td>
+<td><strong>[WEBHOOK: post-release]</strong></td>
+<td>HOOKS</td>
+<td>Appeler webhook post-release</td>
+<td><code>webhook-post-release-url</code>, all_outputs</td>
+<td>webhook_response</td>
+<td><code>webhook-post-release-enabled == true</code></td>
+</tr>
+<tr>
+<td>58</td>
+<td><strong>[PLUGIN: post-release]</strong></td>
+<td>HOOKS</td>
+<td>Exécuter script post-release</td>
+<td><code>plugin-post-release-script</code>, all_outputs</td>
+<td>script_output</td>
+<td><code>plugin-post-release-enabled == true</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="5-10-phase-error-handling-si-erreur-d-tect-e-">5.10 Phase: ERROR HANDLING (Si erreur détectée)</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Fonction</th>
+<th>Scope</th>
+<th>Description</th>
+<th>Inputs</th>
+<th>Outputs</th>
+<th>Condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>X1</td>
+<td><code>retry-logic</code></td>
+<td>ERROR HANDLING</td>
+<td>Réessayer opération</td>
+<td><code>retry-attempts</code>, <code>retry-delay</code></td>
+<td>retry_result</td>
+<td><code>retry-on-failure == true</code></td>
+</tr>
+<tr>
+<td>X2</td>
+<td><code>tag-delete-on-failure</code></td>
+<td>VERSIONING</td>
+<td>Supprimer tag créé</td>
+<td><code>tag-name</code></td>
+<td>tag_deleted</td>
+<td><code>tag-delete-on-failure == true</code> AND tag created</td>
+</tr>
+<tr>
+<td>X3</td>
+<td><strong>[WEBHOOK: on-failure]</strong></td>
+<td>HOOKS</td>
+<td>Appeler webhook d&#39;erreur</td>
+<td><code>webhook-on-failure-url</code>, error_details</td>
+<td>webhook_response</td>
+<td><code>webhook-on-failure-enabled == true</code></td>
+</tr>
+<tr>
+<td>X4</td>
+<td><strong>[PLUGIN: on-failure]</strong></td>
+<td>HOOKS</td>
+<td>Exécuter script d&#39;erreur</td>
+<td><code>plugin-on-failure-script</code>, error_details</td>
+<td>script_output</td>
+<td><code>plugin-on-failure-enabled == true</code></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="6-placement-des-hooks-plugins-dans-le-workflow">6. PLACEMENT DES HOOKS &amp; PLUGINS DANS LE WORKFLOW</h2>
+<h3 id="6-1-timeline-compl-te-avec-webhooks-plugins">6.1 Timeline Complète avec Webhooks &amp; Plugins</h3>
+<pre><code>┌─ WORKFLOW START ──────────────────────────────────────────────────┐
+│                                                                    │
+│  [PRE-FLIGHT PHASE]                                                │
+│  ├─ Load Config                                                   │
+│  ├─ Validate <span class="hljs-keyword">Token</span>                                                │
+│  ├─ Environment Lock                                              │
+│  │                                                                │
+│  ├─► ⚡ WEBHOOK: pre-flight (si enabled)                          │
+│  │   Payload: {config, token_valid, lock_status}                 │
+│  │   Timeout: webhook-timeout (30s)                              │
+│  │   Retry: webhook-retry-attempts (3)                           │
+│  │                                                                │
+│  ├─► 🔌 <span class="hljs-keyword">PLUGIN</span>: pre-flight (si enabled)                           │
+│  │   Script: <span class="hljs-keyword">plugin</span>-pre-flight-script                            │
+│  │   Timeout: <span class="hljs-keyword">plugin</span>-timeout (300s)                              │
+│  │   <span class="hljs-keyword">On</span> <span class="hljs-keyword">Error</span>: <span class="hljs-keyword">plugin</span>-<span class="hljs-keyword">error</span>-strategy (warn/<span class="hljs-keyword">error</span>/ignore)         │
+│  │                                                                │
+│  ├─ <span class="hljs-keyword">Generate</span> Pre-Flight Summary                                  │
+│  └─ <span class="hljs-keyword">CI</span> Status Check                                              │
+│                                                                   │
+│  [BUILD PHASE]                                                    │
+│  ├─ Git User Config                                              │
+│  ├─ Build Application                                            │
+│  ├─ <span class="hljs-keyword">Generate</span> <span class="hljs-keyword">Checksum</span>                                            │
+│  ├─ Artifact Verification                                        │
+│  └─ Create <span class="hljs-keyword">Version</span> <span class="hljs-keyword">File</span>                                          │
+│                                                                   │
+│  [<span class="hljs-keyword">TEST</span> PHASE]                                                     │
+│  ├─ Unit Tests                                                   │
+│  ├─ Integration Tests                                            │
+│  ├─ Coverage Check                                               │
+│  ├─ Lint Check                                                   │
+│  └─ Performance Benchmark                                        │
+│                                                                   │
+│  [SECURITY PHASE]                                                 │
+│  ├─ Secret Scan                                                  │
+│  ├─ Dependency Scan                                              │
+│  ├─ SAST Analysis                                                │
+│  ├─ Commit Signature Check                                       │
+│  ├─ Supply Chain Check                                           │
+│  └─ <span class="hljs-keyword">Generate</span> SBOM                                                │
+│                                                                   │
+│  [<span class="hljs-keyword">VERSION</span> &amp; CHANGELOG PHASE]                                     │
+│  ├─ Get Commit Stats                                             │
+│  ├─ Detect Bump <span class="hljs-keyword">Type</span>                                             │
+│  ├─ Calculate <span class="hljs-keyword">Version</span>                                            │
+│  ├─ Sync <span class="hljs-keyword">Version</span> <span class="hljs-keyword">in</span> Files                                        │
+│  ├─ <span class="hljs-keyword">Generate</span> Changelog                                           │
+│  └─ Extract Release <span class="hljs-keyword">Notes</span>                                        │
+│                                                                   │
+│  [TAGGING &amp; RELEASE PHASE]                                       │
+│  ├─ Verify Tag Doesn't Exist                                     │
+│  ├─ Create Git Tag (+ GPG sign <span class="hljs-keyword">if</span> enabled)                       │
+│  ├─ Auto Commit (changelog/<span class="hljs-keyword">version</span> files)                        │
+│  ├─ Auto Push (commits + tag)                                    │
+│  └─ Create GitHub Release                                        │
+│                                                                   │
+│  [DEPLOYMENT PHASE] (si deploy-enabled)                          │
+│  ├─ Pre-Deploy Check (clean repo)                                │
+│  ├─ Execute Deploy Command                                       │
+│  ├─ <span class="hljs-keyword">Post</span>-Deploy Validation (health check)                        │
+│  └─ Rollback (si validation échoue)                              │
+│                                                                   │
+│  [<span class="hljs-keyword">POST</span>-RELEASE PHASE]                                             │
+│  ├─ <span class="hljs-keyword">Generate</span> Reports (compliance, deployment)                    │
+│  ├─ Export Audit Logs                                            │
+│  ├─ Upload Artifacts                                             │
+│  │                                                                │
+│  ├─► ⚡ WEBHOOK: <span class="hljs-keyword">post</span>-release (si enabled)                        │
+│  │   Payload: {<span class="hljs-keyword">version</span>, tag, release_url, all_stats}            │
+│  │   Timeout: webhook-timeout (30s)                              │
+│  │   Retry: webhook-retry-attempts (3)                           │
+│  │                                                                │
+│  ├─► 🔌 <span class="hljs-keyword">PLUGIN</span>: <span class="hljs-keyword">post</span>-release (si enabled)                         │
+│  │   Script: <span class="hljs-keyword">plugin</span>-<span class="hljs-keyword">post</span>-release-script                          │
+│  │   <span class="hljs-keyword">Args</span>: <span class="hljs-keyword">VERSION</span> TAG RELEASE_URL                               │
+│  │   Timeout: <span class="hljs-keyword">plugin</span>-timeout (300s)                              │
+│  │   <span class="hljs-keyword">On</span> <span class="hljs-keyword">Error</span>: <span class="hljs-keyword">plugin</span>-<span class="hljs-keyword">error</span>-strategy (warn/<span class="hljs-keyword">error</span>/ignore)         │
+│  │                                                                │
+│  └─ WORKFLOW COMPLETE ✓                                           │
+│                                                                   │
+└───────────────────────────────────────────────────────────────────┘
+
+┌─ <span class="hljs-keyword">ERROR</span> / FAILURE ─────────────────────────────────────────────────┐
+│                                                                    │
+│  [<span class="hljs-keyword">ERROR</span> DETECTED]                                                  │
+│  ├─ Retry Logic (si retry-<span class="hljs-keyword">on</span>-failure)                            │
+│  ├─ Rollback Changes (si applicable)                             │
+│  ├─ Delete Tag (si tag-delete-<span class="hljs-keyword">on</span>-failure)                        │
+│  │                                                                │
+│  ├─► ⚡ WEBHOOK: <span class="hljs-keyword">on</span>-failure (si enabled)                          │
+│  │   Payload: {error_message, phase, attempt, timestamp}        │
+│  │   Timeout: webhook-timeout (30s)                              │
+│  │   Retry: webhook-retry-attempts (3)                           │
+│  │                                                                │
+│  ├─► 🔌 <span class="hljs-keyword">PLUGIN</span>: <span class="hljs-keyword">on</span>-failure (si enabled)                           │
+│  │   Script: <span class="hljs-keyword">plugin</span>-<span class="hljs-keyword">on</span>-failure-script                            │
+│  │   <span class="hljs-keyword">Args</span>: ERROR_MESSAGE PHASE ATTEMPT                           │
+│  │   Timeout: <span class="hljs-keyword">plugin</span>-timeout (300s)                              │
+│  │   <span class="hljs-keyword">On</span> <span class="hljs-keyword">Error</span>: ignore (pour ne pas masquer erreur principale)    │
+│  │                                                                │
+│  └─ WORKFLOW FAILED ✗                                             │
+│                                                                   │
+└───────────────────────────────────────────────────────────────────┘
+</code></pre><h3 id="6-2-d-tails-des-payloads-webhooks">6.2 Détails des Payloads Webhooks</h3>
+<p><strong>WEBHOOK: pre-flight</strong></p>
+<pre><code class="lang-json">{
+  <span class="hljs-attr">"event"</span>: <span class="hljs-string">"pre-flight"</span>,
+  <span class="hljs-attr">"timestamp"</span>: <span class="hljs-string">"2024-01-15T10:30:00Z"</span>,
+  <span class="hljs-attr">"repository"</span>: <span class="hljs-string">"owner/repo"</span>,
+  <span class="hljs-attr">"branch"</span>: <span class="hljs-string">"main"</span>,
+  <span class="hljs-attr">"config"</span>: {
+    <span class="hljs-attr">"version_prefix"</span>: <span class="hljs-string">"v"</span>,
+    <span class="hljs-attr">"initial_version"</span>: <span class="hljs-string">"0.1.0"</span>,
+    <span class="hljs-attr">"enable_deploy"</span>: <span class="hljs-literal">false</span>
+  },
+  <span class="hljs-attr">"validation"</span>: {
+    <span class="hljs-attr">"token_valid"</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">"lock_acquired"</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">"ci_status"</span>: <span class="hljs-string">"success"</span>
+  },
+  <span class="hljs-attr">"environment"</span>: <span class="hljs-string">"production"</span>
+}
+</code></pre>
+<p><strong>WEBHOOK: post-release</strong></p>
+<pre><code class="lang-json">{
+  <span class="hljs-attr">"event"</span>: <span class="hljs-string">"post-release"</span>,
+  <span class="hljs-attr">"timestamp"</span>: <span class="hljs-string">"2024-01-15T10:45:00Z"</span>,
+  <span class="hljs-attr">"repository"</span>: <span class="hljs-string">"owner/repo"</span>,
+  <span class="hljs-attr">"branch"</span>: <span class="hljs-string">"main"</span>,
+  <span class="hljs-attr">"release"</span>: {
+    <span class="hljs-attr">"version"</span>: <span class="hljs-string">"1.2.3"</span>,
+    <span class="hljs-attr">"tag"</span>: <span class="hljs-string">"v1.2.3"</span>,
+    <span class="hljs-attr">"url"</span>: <span class="hljs-string">"https://github.com/.../releases/tag/v1.2.3"</span>,
+    <span class="hljs-attr">"created_at"</span>: <span class="hljs-string">"2024-01-15T10:44:00Z"</span>
+  },
+  <span class="hljs-attr">"stats"</span>: {
+    <span class="hljs-attr">"commits_since_last"</span>: <span class="hljs-number">12</span>,
+    <span class="hljs-attr">"build_duration"</span>: <span class="hljs-number">120</span>,
+    <span class="hljs-attr">"tests_passed"</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">"coverage"</span>: <span class="hljs-number">92.5</span>,
+    <span class="hljs-attr">"security_issues"</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">"deployment_status"</span>: <span class="hljs-string">"skipped"</span>
+  },
+  <span class="hljs-attr">"artifacts"</span>: [
+    {<span class="hljs-attr">"name"</span>: <span class="hljs-string">"build.tar.gz"</span>, <span class="hljs-attr">"size"</span>: <span class="hljs-number">2048576</span>, <span class="hljs-attr">"checksum"</span>: <span class="hljs-string">"sha256:..."</span>}
+  ]
+}
+</code></pre>
+<p><strong>WEBHOOK: on-failure</strong></p>
+<pre><code class="lang-json">{
+  <span class="hljs-attr">"event"</span>: <span class="hljs-string">"on-failure"</span>,
+  <span class="hljs-attr">"timestamp"</span>: <span class="hljs-string">"2024-01-15T10:40:00Z"</span>,
+  <span class="hljs-attr">"repository"</span>: <span class="hljs-string">"owner/repo"</span>,
+  <span class="hljs-attr">"error"</span>: {
+    <span class="hljs-attr">"message"</span>: <span class="hljs-string">"Tests failed: 2 unit tests"</span>,
+    <span class="hljs-attr">"phase"</span>: <span class="hljs-string">"testing"</span>,
+    <span class="hljs-attr">"code"</span>: <span class="hljs-string">"TEST_FAILURE"</span>
+  },
+  <span class="hljs-attr">"context"</span>: {
+    <span class="hljs-attr">"attempt"</span>: <span class="hljs-number">1</span>,
+    <span class="hljs-attr">"max_attempts"</span>: <span class="hljs-number">3</span>,
+    <span class="hljs-attr">"retry_in_seconds"</span>: <span class="hljs-number">5</span>
+  }
+}
+</code></pre>
+<h3 id="6-3-param-tres-des-plugins-scripts">6.3 Paramètres des Plugins/Scripts</h3>
+<p><strong>Plugin: pre-flight</strong></p>
+<pre><code class="lang-bash"><span class="hljs-meta">#!/bin/bash</span>
+<span class="hljs-comment"># Arguments passés en variables d'environnement</span>
+GITHUB_TOKEN=<span class="hljs-string">"<span class="hljs-variable">$1</span>"</span>
+CONFIG_PATH=<span class="hljs-string">"<span class="hljs-variable">$2</span>"</span>
+DEBUG_MODE=<span class="hljs-string">"<span class="hljs-variable">$3</span>"</span>
+
+<span class="hljs-comment"># Le script doit retourner:</span>
+<span class="hljs-comment"># - Code 0: succès (continue)</span>
+<span class="hljs-comment"># - Code 1: erreur bloquante (selon plugin-error-strategy)</span>
+<span class="hljs-comment"># - Code 2: warning (toujours)</span>
+
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"[AUDIT] Pre-flight validation started"</span>
+<span class="hljs-built_in">exit</span> 0
+</code></pre>
+<p><strong>Plugin: post-release</strong></p>
+<pre><code class="lang-bash"><span class="hljs-meta">#!/bin/bash</span>
+<span class="hljs-comment"># Arguments positionnels</span>
+VERSION=<span class="hljs-string">"<span class="hljs-variable">$1</span>"</span>
+TAG=<span class="hljs-string">"<span class="hljs-variable">$2</span>"</span>
+RELEASE_URL=<span class="hljs-string">"<span class="hljs-variable">$3</span>"</span>
+DRY_RUN=<span class="hljs-string">"<span class="hljs-variable">$4</span>"</span>
+
+<span class="hljs-comment"># Variables d'environnement disponibles</span>
+<span class="hljs-comment"># - GITHUB_REPOSITORY</span>
+<span class="hljs-comment"># - GITHUB_ACTOR</span>
+<span class="hljs-comment"># - GITHUB_SHA</span>
+<span class="hljs-comment"># - All action outputs</span>
+
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"[AUDIT] Publishing release notification..."</span>
+<span class="hljs-built_in">exit</span> 0
+</code></pre>
+<hr>
+<h2 id="7-matrice-de-configuration-par-cas-d-usage">7. MATRICE DE CONFIGURATION PAR CAS D&#39;USAGE</h2>
+<h3 id="7-1-configuration-minimale-quick-release-">7.1 Configuration Minimale (Quick Release)</h3>
+<pre><code class="lang-yaml"><span class="hljs-string">trigger-branches:</span> <span class="hljs-string">main
+</span><span class="hljs-string">auto-commit:</span> <span class="hljs-string">true
+</span><span class="hljs-string">auto-push:</span> <span class="hljs-string">true
+</span><span class="hljs-string">generate-changelog:</span> <span class="hljs-string">true
+</span><span class="hljs-built_in">create-tag:</span> <span class="hljs-string">true
+</span><span class="hljs-built_in">create-release:</span> <span class="hljs-string">true</span>
+</code></pre>
+<h3 id="7-2-configuration-monorepo-multiple-packages-">7.2 Configuration Monorepo (Multiple Packages)</h3>
+<pre><code class="lang-yaml">monorepo-mode: <span class="hljs-literal">true</span>
+<span class="hljs-keyword">package</span>-release: <span class="hljs-literal">true</span>
+detect-changed-packages: <span class="hljs-literal">true</span>
+sync-version: <span class="hljs-string">"package.json,packages/*/package.json,Chart.yaml"</span>
+deploy-matrix: '{<span class="hljs-string">"dev"</span>:<span class="hljs-string">""</span>,<span class="hljs-string">"staging"</span>:<span class="hljs-string">"-rc"</span>,<span class="hljs-string">"prod"</span>:<span class="hljs-string">""</span>}'
+</code></pre>
+<h3 id="7-3-configuration-s-curit-maximale">7.3 Configuration Sécurité Maximale</h3>
+<pre><code class="lang-yaml">secret-scan-<span class="hljs-string">enabled:</span> <span class="hljs-literal">true</span>
+dependency-scan-<span class="hljs-string">enabled:</span> <span class="hljs-literal">true</span>
+sast-<span class="hljs-string">enabled:</span> <span class="hljs-literal">true</span>
+commit-signature-<span class="hljs-string">check:</span> <span class="hljs-literal">true</span>
+tag-<span class="hljs-string">signature:</span> <span class="hljs-literal">true</span>
+supply-chain-<span class="hljs-string">check:</span> <span class="hljs-literal">true</span>
+generate-<span class="hljs-string">sbom:</span> <span class="hljs-literal">true</span>
+generate-compliance-<span class="hljs-string">report:</span> <span class="hljs-literal">true</span>
+</code></pre>
+<h3 id="7-4-configuration-multi-environnements-avec-d-ploiement">7.4 Configuration Multi-Environnements avec Déploiement</h3>
+<pre><code class="lang-yaml">deploy-enabled: <span class="hljs-literal">true</span>
+deploy-<span class="hljs-built_in">matrix</span>: '{<span class="hljs-string">"dev"</span>:<span class="hljs-string">"-dev"</span>,<span class="hljs-string">"staging"</span>:<span class="hljs-string">"-rc"</span>,<span class="hljs-string">"prod"</span>:<span class="hljs-string">""</span>}'
+post-deploy-validation: <span class="hljs-literal">true</span>
+post-deploy-check-url: <span class="hljs-string">"https://api.example.com/health"</span>
+rollback-support: <span class="hljs-literal">true</span>
+</code></pre>
+<hr>
+<h2 id="8-exemple-d-utilisation-compl-te">8. EXEMPLE D&#39;UTILISATION COMPLÈTE</h2>
+<h3 id="action-yml">action.yml</h3>
+<pre><code class="lang-yaml"><span class="hljs-attribute">name</span>: 'Instant Release - CI/CD Framework'
+<span class="hljs-attribute">description</span>: 'Modular GitHub Action for complete CI/CD automation'
+
+<span class="yaml"><span class="hljs-attr">inputs:</span>
+  <span class="hljs-comment"># Git &amp; Config (REQUIRED)</span>
+<span class="hljs-attr">  github-token:</span>
+<span class="hljs-attr">    description:</span> <span class="hljs-string">'GitHub token with contents:write permission'</span>
+<span class="hljs-attr">    required:</span> <span class="hljs-literal">true</span>
+<span class="hljs-attr">  git-user-name:</span>
+<span class="hljs-attr">    description:</span> <span class="hljs-string">'Git user name for commits'</span>
+<span class="hljs-attr">    default:</span> <span class="hljs-string">'github-actions[bot]'</span>
+<span class="hljs-attr">  git-user-email:</span>
+<span class="hljs-attr">    description:</span> <span class="hljs-string">'Git user email'</span>
+<span class="hljs-attr">    default:</span> <span class="hljs-string">'github-actions[bot]@github.com'</span>
+
+  <span class="hljs-comment"># Versioning</span>
+<span class="hljs-attr">  bump:</span>
+<span class="hljs-attr">    description:</span> <span class="hljs-string">'Version bump type: auto|major|minor|patch'</span>
+<span class="hljs-attr">    default:</span> <span class="hljs-string">'auto'</span>
+<span class="hljs-attr">  generate-changelog:</span>
+<span class="hljs-attr">    description:</span> <span class="hljs-string">'Generate changelog'</span>
+<span class="hljs-attr">    default:</span> <span class="hljs-string">'true'</span>
+<span class="hljs-attr">  create-tag:</span>
+<span class="hljs-attr">    description:</span> <span class="hljs-string">'Create Git tag'</span>
+<span class="hljs-attr">    default:</span> <span class="hljs-string">'true'</span>
+<span class="hljs-attr">  create-release:</span>
+<span class="hljs-attr">    description:</span> <span class="hljs-string">'Create GitHub Release'</span>
+<span class="hljs-attr">    default:</span> <span class="hljs-string">'true'</span>
+
+  <span class="hljs-comment"># Build</span>
+<span class="hljs-attr">  build-enabled:</span>
+<span class="hljs-attr">    description:</span> <span class="hljs-string">'Enable build step'</span>
+<span class="hljs-attr">    default:</span> <span class="hljs-string">'true'</span>
+<span class="hljs-attr">  build-command:</span>
+<span class="hljs-attr">    description:</span> <span class="hljs-string">'Build command'</span>
+<span class="hljs-attr">    default:</span> <span class="hljs-string">'npm run build'</span>
+
+  <span class="hljs-comment"># Tests</span>
+<span class="hljs-attr">  tests-enabled:</span>
+<span class="hljs-attr">    description:</span> <span class="hljs-string">'Enable tests'</span>
+<span class="hljs-attr">    default:</span> <span class="hljs-string">'true'</span>
+<span class="hljs-attr">  unit-tests-command:</span>
+<span class="hljs-attr">    description:</span> <span class="hljs-string">'Unit tests command'</span>
+<span class="hljs-attr">    default:</span> <span class="hljs-string">'npm test'</span>
+<span class="hljs-attr">  coverage-threshold:</span>
+<span class="hljs-attr">    description:</span> <span class="hljs-string">'Minimum coverage percentage'</span>
+<span class="hljs-attr">    default:</span> <span class="hljs-string">'80'</span>
+
+  <span class="hljs-comment"># Security</span>
+<span class="hljs-attr">  dependency-scan-enabled:</span>
+<span class="hljs-attr">    description:</span> <span class="hljs-string">'Enable dependency scanning'</span>
+<span class="hljs-attr">    default:</span> <span class="hljs-string">'true'</span>
+<span class="hljs-attr">  secret-scan-enabled:</span>
+<span class="hljs-attr">    description:</span> <span class="hljs-string">'Enable secret scanning'</span>
+<span class="hljs-attr">    default:</span> <span class="hljs-string">'false'</span>
+
+  <span class="hljs-comment"># Deployment</span>
+<span class="hljs-attr">  deploy-enabled:</span>
+<span class="hljs-attr">    description:</span> <span class="hljs-string">'Enable deployment'</span>
+<span class="hljs-attr">    default:</span> <span class="hljs-string">'false'</span>
+<span class="hljs-attr">  deploy-command:</span>
+<span class="hljs-attr">    description:</span> <span class="hljs-string">'Deploy command'</span>
+
+  <span class="hljs-comment"># Webhooks &amp; Plugins</span>
+<span class="hljs-attr">  webhook-post-release-enabled:</span>
+<span class="hljs-attr">    description:</span> <span class="hljs-string">'Enable post-release webhook'</span>
+<span class="hljs-attr">    default:</span> <span class="hljs-string">'false'</span>
+<span class="hljs-attr">  webhook-post-release-url:</span>
+<span class="hljs-attr">    description:</span> <span class="hljs-string">'Post-release webhook URL'</span>
+<span class="hljs-attr">  plugin-post-release-enabled:</span>
+<span class="hljs-attr">    description:</span> <span class="hljs-string">'Enable post-release plugin'</span>
+<span class="hljs-attr">    default:</span> <span class="hljs-string">'false'</span>
+<span class="hljs-attr">  plugin-post-release-script:</span>
+<span class="hljs-attr">    description:</span> <span class="hljs-string">'Post-release plugin script path'</span>
+
+  <span class="hljs-comment"># Debug &amp; Dry-run</span>
+<span class="hljs-attr">  debug:</span>
+<span class="hljs-attr">    description:</span> <span class="hljs-string">'Enable debug mode'</span>
+<span class="hljs-attr">    default:</span> <span class="hljs-string">'false'</span>
+<span class="hljs-attr">  dry-run:</span>
+<span class="hljs-attr">    description:</span> <span class="hljs-string">'Enable dry-run mode'</span>
+<span class="hljs-attr">    default:</span> <span class="hljs-string">'false'</span>
+
+<span class="hljs-attr">outputs:</span>
+<span class="hljs-attr">  current-version:</span>
+<span class="hljs-attr">    description:</span> <span class="hljs-string">'Current version created'</span>
+<span class="hljs-attr">    value:</span> ${{ steps.version.outputs.current-version }}
+<span class="hljs-attr">  bump-type:</span>
+<span class="hljs-attr">    description:</span> <span class="hljs-string">'Bump type applied'</span>
+<span class="hljs-attr">    value:</span> ${{ steps.version.outputs.bump-type }}
+<span class="hljs-attr">  tag-created:</span>
+<span class="hljs-attr">    description:</span> <span class="hljs-string">'Whether tag was created'</span>
+<span class="hljs-attr">    value:</span> ${{ steps.tag.outputs.tag-created }}
+<span class="hljs-attr">  changelog-generated:</span>
+<span class="hljs-attr">    description:</span> <span class="hljs-string">'Whether changelog was generated'</span>
+<span class="hljs-attr">    value:</span> ${{ steps.changelog.outputs.changelog-generated }}
+<span class="hljs-attr">  release-url:</span>
+<span class="hljs-attr">    description:</span> <span class="hljs-string">'GitHub Release URL'</span>
+<span class="hljs-attr">    value:</span> ${{ steps.release.outputs.release-url }}
+<span class="hljs-attr">  deployment-status:</span>
+<span class="hljs-attr">    description:</span> <span class="hljs-string">'Deployment status'</span>
+<span class="hljs-attr">    value:</span> ${{ steps.deploy.outputs.deployment-status }}
+
+
+
+<span class="hljs-attr">runs:</span>
+<span class="hljs-attr">  using:</span> <span class="hljs-string">'composite'</span>
+<span class="hljs-attr">  steps:</span>
+    <span class="hljs-comment"># Pre-flight</span>
+<span class="hljs-attr">    - name:</span> Pre-flight checks
+<span class="hljs-attr">      run:</span> ${{ github.action_path }}/scripts/pre-flight.sh
+<span class="hljs-attr">      shell:</span> bash
+<span class="hljs-attr">      env:</span>
+<span class="hljs-attr">        GITHUB_TOKEN:</span> ${{ inputs.github-token }}
+<span class="hljs-attr">        DEBUG:</span> ${{ inputs.debug }}
+<span class="hljs-attr">        DRY_RUN:</span> ${{ inputs.dry-run }}
+
+    <span class="hljs-comment"># Webhook pre-flight</span>
+<span class="hljs-attr">    - name:</span> Webhook pre-flight
+<span class="hljs-attr">      if:</span> ${{ inputs.webhook-pre-flight-enabled == <span class="hljs-string">'true'</span> }}
+<span class="hljs-attr">      run:</span> ${{ github.action_path }}/scripts/webhook-call.sh
+<span class="hljs-attr">      shell:</span> bash
+<span class="hljs-attr">      env:</span>
+<span class="hljs-attr">        WEBHOOK_URL:</span> ${{ inputs.webhook-pre-flight-url }}
+<span class="hljs-attr">        WEBHOOK_EVENT:</span> <span class="hljs-string">'pre-flight'</span>
+<span class="hljs-attr">        WEBHOOK_TIMEOUT:</span> ${{ inputs.webhook-timeout }}
+
+    <span class="hljs-comment"># Plugin pre-flight</span>
+<span class="hljs-attr">    - name:</span> Plugin pre-flight
+<span class="hljs-attr">      if:</span> ${{ inputs.plugin-pre-flight-enabled == <span class="hljs-string">'true'</span> }}
+<span class="hljs-attr">      run:</span> <span class="hljs-string">|
+        bash "$<span class="hljs-template-variable">{{ inputs.plugin-pre-flight-script }}</span>" \
+          "$<span class="hljs-template-variable">{{ inputs.github-token }}</span>" \
+          "$<span class="hljs-template-variable">{{ inputs.config-path }}</span>" \
+          "$<span class="hljs-template-variable">{{ inputs.debug }}</span>"
+</span><span class="hljs-attr">      shell:</span> bash
+<span class="hljs-attr">      timeout-minutes:</span> ${{ inputs.plugin-timeout }}
+
+    <span class="hljs-comment"># Build</span>
+<span class="hljs-attr">    - name:</span> Build
+<span class="hljs-attr">      if:</span> ${{ inputs.build-enabled == <span class="hljs-string">'true'</span> }}
+<span class="hljs-attr">      run:</span> ${{ inputs.build-command }}
+<span class="hljs-attr">      shell:</span> bash
+
+    <span class="hljs-comment"># Tests</span>
+<span class="hljs-attr">    - name:</span> Unit Tests
+<span class="hljs-attr">      if:</span> ${{ inputs.tests-enabled == <span class="hljs-string">'true'</span> }}
+<span class="hljs-attr">      run:</span> ${{ inputs.unit-tests-command }}
+<span class="hljs-attr">      shell:</span> bash
+
+<span class="hljs-attr">    - name:</span> Coverage Check
+<span class="hljs-attr">      if:</span> ${{ inputs.tests-enabled == <span class="hljs-string">'true'</span> }}
+<span class="hljs-attr">      run:</span> ${{ github.action_path }}/scripts/coverage-check.sh
+<span class="hljs-attr">      shell:</span> bash
+<span class="hljs-attr">      env:</span>
+<span class="hljs-attr">        COVERAGE_THRESHOLD:</span> ${{ inputs.coverage-threshold }}
+<span class="hljs-attr">        COVERAGE_FILE:</span> ${{ inputs.coverage-file-path }}
+
+<span class="hljs-attr">    - name:</span> Lint
+<span class="hljs-attr">      if:</span> ${{ inputs.lint-enabled == <span class="hljs-string">'true'</span> }}
+<span class="hljs-attr">      run:</span> ${{ inputs.lint-command }}
+<span class="hljs-attr">      shell:</span> bash
+
+    <span class="hljs-comment"># Security</span>
+<span class="hljs-attr">    - name:</span> Dependency Scan
+<span class="hljs-attr">      if:</span> ${{ inputs.dependency-scan-enabled == <span class="hljs-string">'true'</span> }}
+<span class="hljs-attr">      run:</span> ${{ github.action_path }}/scripts/dependency-scan.sh
+<span class="hljs-attr">      shell:</span> bash
+<span class="hljs-attr">      env:</span>
+<span class="hljs-attr">        SCAN_TOOL:</span> ${{ inputs.dependency-scan-tool }}
+<span class="hljs-attr">        SEVERITY_THRESHOLD:</span> ${{ inputs.dependency-severity-threshold }}
+
+<span class="hljs-attr">    - name:</span> Secret Scan
+<span class="hljs-attr">      if:</span> ${{ inputs.secret-scan-enabled == <span class="hljs-string">'true'</span> }}
+<span class="hljs-attr">      run:</span> ${{ github.action_path }}/scripts/secret-scan.sh
+<span class="hljs-attr">      shell:</span> bash
+
+<span class="hljs-attr">    - name:</span> SAST Analysis
+<span class="hljs-attr">      if:</span> ${{ inputs.sast-enabled == <span class="hljs-string">'true'</span> }}
+<span class="hljs-attr">      run:</span> ${{ github.action_path }}/scripts/sast-analysis.sh
+<span class="hljs-attr">      shell:</span> bash
+<span class="hljs-attr">      env:</span>
+<span class="hljs-attr">        SAST_TOOL:</span> ${{ inputs.sast-tool }}
+
+    <span class="hljs-comment"># Versioning</span>
+<span class="hljs-attr">    - name:</span> Calculate Version
+<span class="hljs-attr">      id:</span> version
+<span class="hljs-attr">      run:</span> ${{ github.action_path }}/scripts/calculate-version.sh
+<span class="hljs-attr">      shell:</span> bash
+<span class="hljs-attr">      env:</span>
+<span class="hljs-attr">        BUMP:</span> ${{ inputs.bump }}
+<span class="hljs-attr">        VERSION:</span> ${{ inputs.version }}
+<span class="hljs-attr">        INITIAL:</span> ${{ inputs.initial }}
+<span class="hljs-attr">        MAJOR_INDICATOR:</span> ${{ inputs.major-indicator }}
+<span class="hljs-attr">        MINOR_INDICATOR:</span> ${{ inputs.minor-indicator }}
+<span class="hljs-attr">        PATCH_INDICATOR:</span> ${{ inputs.patch-indicator }}
+
+<span class="hljs-attr">    - name:</span> Sync Version Files
+<span class="hljs-attr">      if:</span> ${{ inputs.sync-version != <span class="hljs-string">''</span> }}
+<span class="hljs-attr">      run:</span> ${{ github.action_path }}/scripts/sync-version.sh
+<span class="hljs-attr">      shell:</span> bash
+<span class="hljs-attr">      env:</span>
+<span class="hljs-attr">        VERSION:</span> ${{ steps.version.outputs.current-version }}
+<span class="hljs-attr">        SYNC_PATHS:</span> ${{ inputs.sync-version }}
+
+    <span class="hljs-comment"># Changelog</span>
+<span class="hljs-attr">    - name:</span> Generate Changelog
+<span class="hljs-attr">      if:</span> ${{ inputs.generate-changelog == <span class="hljs-string">'true'</span> }}
+<span class="hljs-attr">      id:</span> changelog
+<span class="hljs-attr">      run:</span> ${{ github.action_path }}/scripts/generate-changelog.sh
+<span class="hljs-attr">      shell:</span> bash
+<span class="hljs-attr">      env:</span>
+<span class="hljs-attr">        CHANGELOG_FILE:</span> ${{ inputs.changelog-file }}
+<span class="hljs-attr">        CHANGELOG_TEMPLATE:</span> ${{ inputs.changelog-template }}
+<span class="hljs-attr">        VERSION:</span> ${{ steps.version.outputs.current-version }}
+
+    <span class="hljs-comment"># Tagging &amp; Release</span>
+<span class="hljs-attr">    - name:</span> Create Tag
+<span class="hljs-attr">      if:</span> ${{ inputs.create-tag == <span class="hljs-string">'true'</span> }}
+<span class="hljs-attr">      id:</span> tag
+<span class="hljs-attr">      run:</span> ${{ github.action_path }}/scripts/create-tag.sh
+<span class="hljs-attr">      shell:</span> bash
+<span class="hljs-attr">      env:</span>
+<span class="hljs-attr">        VERSION:</span> ${{ steps.version.outputs.current-version }}
+<span class="hljs-attr">        VERSION_PREFIX:</span> ${{ inputs.version-prefix }}
+<span class="hljs-attr">        TAG_SIGNATURE:</span> ${{ inputs.tag-signature }}
+<span class="hljs-attr">        GPG_KEY:</span> ${{ inputs.gpg-key }}
+<span class="hljs-attr">        DRY_RUN:</span> ${{ inputs.dry-run }}
+
+<span class="hljs-attr">    - name:</span> Auto Commit
+<span class="hljs-attr">      if:</span> ${{ inputs.auto-commit == <span class="hljs-string">'true'</span> &amp;&amp; inputs.create-tag == <span class="hljs-string">'true'</span> }}
+<span class="hljs-attr">      run:</span> ${{ github.action_path }}/scripts/auto-commit.sh
+<span class="hljs-attr">      shell:</span> bash
+<span class="hljs-attr">      env:</span>
+<span class="hljs-attr">        GIT_USER_NAME:</span> ${{ inputs.git-user-name }}
+<span class="hljs-attr">        GIT_USER_EMAIL:</span> ${{ inputs.git-user-email }}
+<span class="hljs-attr">        COMMIT_MESSAGE:</span> ${{ inputs.auto-commit-message }}
+<span class="hljs-attr">        VERSION:</span> ${{ steps.version.outputs.current-version }}
+<span class="hljs-attr">        DRY_RUN:</span> ${{ inputs.dry-run }}
+
+<span class="hljs-attr">    - name:</span> Auto Push
+<span class="hljs-attr">      if:</span> ${{ inputs.auto-push == <span class="hljs-string">'true'</span> &amp;&amp; inputs.create-tag == <span class="hljs-string">'true'</span> }}
+<span class="hljs-attr">      run:</span> ${{ github.action_path }}/scripts/auto-push.sh
+<span class="hljs-attr">      shell:</span> bash
+<span class="hljs-attr">      env:</span>
+<span class="hljs-attr">        GITHUB_TOKEN:</span> ${{ inputs.github-token }}
+<span class="hljs-attr">        TARGET_BRANCH:</span> ${{ inputs.target-branch }}
+<span class="hljs-attr">        DRY_RUN:</span> ${{ inputs.dry-run }}
+
+<span class="hljs-attr">    - name:</span> Create Release
+<span class="hljs-attr">      if:</span> ${{ inputs.create-release == <span class="hljs-string">'true'</span> &amp;&amp; inputs.create-tag == <span class="hljs-string">'true'</span> }}
+<span class="hljs-attr">      id:</span> release
+<span class="hljs-attr">      run:</span> ${{ github.action_path }}/scripts/create-release.sh
+<span class="hljs-attr">      shell:</span> bash
+<span class="hljs-attr">      env:</span>
+<span class="hljs-attr">        GITHUB_TOKEN:</span> ${{ inputs.github-token }}
+<span class="hljs-attr">        TAG:</span> ${{ steps.tag.outputs.tag-name }}
+<span class="hljs-attr">        RELEASE_NOTES:</span> ${{ steps.changelog.outputs.release-notes }}
+<span class="hljs-attr">        DRAFT:</span> ${{ inputs.release-draft }}
+<span class="hljs-attr">        PRERELEASE:</span> ${{ inputs.release-prerelease }}
+<span class="hljs-attr">        DRY_RUN:</span> ${{ inputs.dry-run }}
+
+    <span class="hljs-comment"># Deployment</span>
+<span class="hljs-attr">    - name:</span> Pre-Deploy Check
+<span class="hljs-attr">      if:</span> ${{ inputs.deploy-enabled == <span class="hljs-string">'true'</span> }}
+<span class="hljs-attr">      run:</span> ${{ github.action_path }}/scripts/pre-deploy-check.sh
+<span class="hljs-attr">      shell:</span> bash
+
+<span class="hljs-attr">    - name:</span> Deploy
+<span class="hljs-attr">      if:</span> ${{ inputs.deploy-enabled == <span class="hljs-string">'true'</span> }}
+<span class="hljs-attr">      id:</span> deploy
+<span class="hljs-attr">      run:</span> ${{ inputs.deploy-command }}
+<span class="hljs-attr">      shell:</span> bash
+<span class="hljs-attr">      env:</span>
+<span class="hljs-attr">        ENVIRONMENT:</span> ${{ inputs.deploy-env }}
+<span class="hljs-attr">        VERSION:</span> ${{ steps.version.outputs.current-version }}
+<span class="hljs-attr">        DRY_RUN:</span> ${{ inputs.dry-run }}
+
+<span class="hljs-attr">    - name:</span> Post-Deploy Validation
+<span class="hljs-attr">      if:</span> ${{ inputs.post-deploy-validation == <span class="hljs-string">'true'</span> &amp;&amp; inputs.deploy-enabled == <span class="hljs-string">'true'</span> }}
+<span class="hljs-attr">      run:</span> ${{ github.action_path }}/scripts/post-deploy-validation.sh
+<span class="hljs-attr">      shell:</span> bash
+<span class="hljs-attr">      env:</span>
+<span class="hljs-attr">        CHECK_URL:</span> ${{ inputs.post-deploy-check-url }}
+<span class="hljs-attr">        TIMEOUT:</span> <span class="hljs-number">300</span>
+
+    <span class="hljs-comment"># Reporting</span>
+<span class="hljs-attr">    - name:</span> Generate Reports
+<span class="hljs-attr">      if:</span> ${{ always() }}
+<span class="hljs-attr">      run:</span> ${{ github.action_path }}/scripts/generate-reports.sh
+<span class="hljs-attr">      shell:</span> bash
+<span class="hljs-attr">      env:</span>
+<span class="hljs-attr">        GENERATE_COMPLIANCE:</span> ${{ inputs.generate-compliance-report }}
+<span class="hljs-attr">        GENERATE_DEPLOYMENT:</span> ${{ inputs.generate-deployment-report }}
+<span class="hljs-attr">        VERSION:</span> ${{ steps.version.outputs.current-version }}
+
+    <span class="hljs-comment"># Webhook post-release</span>
+<span class="hljs-attr">    - name:</span> Webhook post-release
+<span class="hljs-attr">      if:</span> ${{ success() &amp;&amp; inputs.webhook-post-release-enabled == <span class="hljs-string">'true'</span> }}
+<span class="hljs-attr">      run:</span> ${{ github.action_path }}/scripts/webhook-call.sh
+<span class="hljs-attr">      shell:</span> bash
+<span class="hljs-attr">      env:</span>
+<span class="hljs-attr">        WEBHOOK_URL:</span> ${{ inputs.webhook-post-release-url }}
+<span class="hljs-attr">        WEBHOOK_EVENT:</span> <span class="hljs-string">'post-release'</span>
+<span class="hljs-attr">        VERSION:</span> ${{ steps.version.outputs.current-version }}
+<span class="hljs-attr">        TAG:</span> ${{ steps.tag.outputs.tag-name }}
+<span class="hljs-attr">        RELEASE_URL:</span> ${{ steps.release.outputs.release-url }}
+
+    <span class="hljs-comment"># Plugin post-release</span>
+<span class="hljs-attr">    - name:</span> Plugin post-release
+<span class="hljs-attr">      if:</span> ${{ success() &amp;&amp; inputs.plugin-post-release-enabled == <span class="hljs-string">'true'</span> }}
+<span class="hljs-attr">      run:</span> <span class="hljs-string">|
+        bash "$<span class="hljs-template-variable">{{ inputs.plugin-post-release-script }}</span>" \
+          "$<span class="hljs-template-variable">{{ steps.version.outputs.current-version }}</span>" \
+          "$<span class="hljs-template-variable">{{ steps.tag.outputs.tag-name }}</span>" \
+          "$<span class="hljs-template-variable">{{ steps.release.outputs.release-url }}</span>" \
+          "$<span class="hljs-template-variable">{{ inputs.dry-run }}</span>"
+</span><span class="hljs-attr">      shell:</span> bash
+<span class="hljs-attr">      timeout-minutes:</span> ${{ inputs.plugin-timeout }}
+
+    <span class="hljs-comment"># Error handling - Webhook on-failure</span>
+<span class="hljs-attr">    - name:</span> Webhook on-failure
+<span class="hljs-attr">      if:</span> ${{ failure() &amp;&amp; inputs.webhook-on-failure-enabled == <span class="hljs-string">'true'</span> }}
+<span class="hljs-attr">      run:</span> ${{ github.action_path }}/scripts/webhook-call.sh
+<span class="hljs-attr">      shell:</span> bash
+<span class="hljs-attr">      env:</span>
+<span class="hljs-attr">        WEBHOOK_URL:</span> ${{ inputs.webhook-on-failure-url }}
+<span class="hljs-attr">        WEBHOOK_EVENT:</span> <span class="hljs-string">'on-failure'</span>
+<span class="hljs-attr">        ERROR_MESSAGE:</span> ${{ job.status }}
+<span class="hljs-attr">        PHASE:</span> <span class="hljs-string">'workflow'</span>
+
+    <span class="hljs-comment"># Error handling - Plugin on-failure</span>
+<span class="hljs-attr">    - name:</span> Plugin on-failure
+<span class="hljs-attr">      if:</span> ${{ failure() &amp;&amp; inputs.plugin-on-failure-enabled == <span class="hljs-string">'true'</span> }}
+<span class="hljs-attr">      run:</span> <span class="hljs-string">|
+        bash "$<span class="hljs-template-variable">{{ inputs.plugin-on-failure-script }}</span>" \
+          "$<span class="hljs-template-variable">{{ job.status }}</span>" \
+          "workflow" \
+          "1"
+</span><span class="hljs-attr">      shell:</span> bash
+<span class="hljs-attr">      timeout-minutes:</span> ${{ inputs.plugin-timeout }}
+<span class="hljs-attr">      continue-on-error:</span> <span class="hljs-literal">true</span>
+
+    <span class="hljs-comment"># Cleanup</span>
+<span class="hljs-attr">    - name:</span> Upload Artifacts
+<span class="hljs-attr">      if:</span> ${{ always() &amp;&amp; inputs.upload-artifact == <span class="hljs-string">'true'</span> }}
+<span class="hljs-attr">      uses:</span> actions/upload-artifact@v3
+<span class="hljs-attr">      with:</span>
+<span class="hljs-attr">        name:</span> release-artifacts
+<span class="hljs-attr">        path:</span> <span class="hljs-string">|
+          $<span class="hljs-template-variable">{{ inputs.changelog-file }}</span>
+          $<span class="hljs-template-variable">{{ steps.version.outputs.version-file-path }}</span>
+</span><span class="hljs-attr">        retention-days:</span> ${{ inputs.artifact-retention-days }}</span>
+</code></pre>
+<hr>
+<h2 id="9-guide-d-int-gration-dans-un-workflow">9. GUIDE D&#39;INTÉGRATION DANS UN WORKFLOW</h2>
+<h3 id="9-1-workflow-simple-automatique-">9.1 Workflow Simple (Automatique)</h3>
+<pre><code class="lang-yaml"><span class="hljs-attribute">name</span>: Release
+
+<span class="yaml"><span class="hljs-attr">on:</span>
+<span class="hljs-attr">  push:</span>
+<span class="hljs-attr">    branches:</span> [ main ]
+
+<span class="hljs-attr">jobs:</span>
+<span class="hljs-attr">  release:</span>
+<span class="hljs-attr">    runs-on:</span> ubuntu-latest
+<span class="hljs-attr">    permissions:</span>
+<span class="hljs-attr">      contents:</span> write
+<span class="hljs-attr">      packages:</span> write
+
+<span class="hljs-attr">    steps:</span>
+<span class="hljs-attr">      - uses:</span> actions/checkout@v3
+<span class="hljs-attr">        with:</span>
+<span class="hljs-attr">          fetch-depth:</span> <span class="hljs-number">0</span>
+
+<span class="hljs-attr">      - name:</span> Release
+<span class="hljs-attr">        uses:</span> ./
+<span class="hljs-attr">        with:</span>
+<span class="hljs-attr">          github-token:</span> ${{ secrets.GITHUB_TOKEN }}
+<span class="hljs-attr">          build-command:</span> npm run build
+<span class="hljs-attr">          unit-tests-command:</span> npm test</span>
+</code></pre>
+<h3 id="9-2-workflow-avanc-avec-webhooks-plugins-">9.2 Workflow Avancé (Avec Webhooks &amp; Plugins)</h3>
+<pre><code class="lang-yaml"><span class="hljs-attribute">name</span>: Advanced Release
+
+<span class="yaml"><span class="hljs-attr">on:</span>
+<span class="hljs-attr">  push:</span>
+<span class="hljs-attr">    branches:</span> [ main ]
+<span class="hljs-attr">  workflow_dispatch:</span>
+<span class="hljs-attr">    inputs:</span>
+<span class="hljs-attr">      bump:</span>
+<span class="hljs-attr">        description:</span> <span class="hljs-string">'Version bump'</span>
+<span class="hljs-attr">        required:</span> <span class="hljs-literal">false</span>
+<span class="hljs-attr">        default:</span> <span class="hljs-string">'auto'</span>
+
+<span class="hljs-attr">jobs:</span>
+<span class="hljs-attr">  release:</span>
+<span class="hljs-attr">    runs-on:</span> ubuntu-latest
+<span class="hljs-attr">    permissions:</span>
+<span class="hljs-attr">      contents:</span> write
+<span class="hljs-attr">      packages:</span> write
+
+<span class="hljs-attr">    steps:</span>
+<span class="hljs-attr">      - uses:</span> actions/checkout@v3
+<span class="hljs-attr">        with:</span>
+<span class="hljs-attr">          fetch-depth:</span> <span class="hljs-number">0</span>
+
+<span class="hljs-attr">      - name:</span> Setup Node
+<span class="hljs-attr">        uses:</span> actions/setup-node@v3
+<span class="hljs-attr">        with:</span>
+<span class="hljs-attr">          node-version:</span> <span class="hljs-number">18</span>
+
+<span class="hljs-attr">      - name:</span> Release with Webhooks
+<span class="hljs-attr">        uses:</span> ./
+<span class="hljs-attr">        with:</span>
+<span class="hljs-attr">          github-token:</span> ${{ secrets.GITHUB_TOKEN }}
+<span class="hljs-attr">          bump:</span> ${{ github.event.inputs.bump || <span class="hljs-string">'auto'</span> }}
+
+          <span class="hljs-comment"># Build &amp; Tests</span>
+<span class="hljs-attr">          build-command:</span> npm run build
+<span class="hljs-attr">          unit-tests-command:</span> npm test
+<span class="hljs-attr">          coverage-threshold:</span> <span class="hljs-number">85</span>
+
+          <span class="hljs-comment"># Security</span>
+<span class="hljs-attr">          dependency-scan-enabled:</span> <span class="hljs-string">'true'</span>
+<span class="hljs-attr">          secret-scan-enabled:</span> <span class="hljs-string">'true'</span>
+<span class="hljs-attr">          sast-enabled:</span> <span class="hljs-string">'true'</span>
+<span class="hljs-attr">          sast-tool:</span> codeql
+
+          <span class="hljs-comment"># Deployment</span>
+<span class="hljs-attr">          deploy-enabled:</span> <span class="hljs-string">'true'</span>
+<span class="hljs-attr">          deploy-command:</span> npm run deploy
+<span class="hljs-attr">          deploy-env:</span> production
+<span class="hljs-attr">          post-deploy-validation:</span> <span class="hljs-string">'true'</span>
+<span class="hljs-attr">          post-deploy-check-url:</span> https://api.example.com/health
+
+          <span class="hljs-comment"># Webhooks</span>
+<span class="hljs-attr">          webhook-post-release-enabled:</span> <span class="hljs-string">'true'</span>
+<span class="hljs-attr">          webhook-post-release-url:</span> ${{ secrets.WEBHOOK_URL }}
+
+          <span class="hljs-comment"># Plugins</span>
+<span class="hljs-attr">          plugin-post-release-enabled:</span> <span class="hljs-string">'true'</span>
+<span class="hljs-attr">          plugin-post-release-script:</span> ./scripts/post-release.sh
+
+          <span class="hljs-comment"># Reporting</span>
+<span class="hljs-attr">          generate-compliance-report:</span> <span class="hljs-string">'true'</span>
+<span class="hljs-attr">          generate-deployment-report:</span> <span class="hljs-string">'true'</span>
+<span class="hljs-attr">          audit-log-export:</span> <span class="hljs-string">'true'</span></span>
+</code></pre>
+<hr>
+<h2 id="10-structure-des-fichiers-du-projet">10. STRUCTURE DES FICHIERS DU PROJET</h2>
+<pre><code><span class="hljs-string">instantrelease/</span>
+├── <span class="hljs-string">action.</span><span class="hljs-string">yml </span>                         <span class="hljs-comment"># Définition action</span>
+├── <span class="hljs-string">README.</span><span class="hljs-string">md </span>                          <span class="hljs-comment"># Documentation principale</span>
+├── <span class="hljs-string">SPECIFICATION.</span><span class="hljs-string">md </span>                   <span class="hljs-comment"># Cette documentation</span>
+│
+├── <span class="hljs-string">scripts/</span>
+│   ├── <span class="hljs-string">lib/</span>                           <span class="hljs-comment"># Librairies réutilisables</span>
+│   │   ├── <span class="hljs-string">logger.</span><span class="hljs-string">sh </span>                <span class="hljs-comment"># Logging avec [AUDIT], [DEBUG]</span>
+│   │   ├── <span class="hljs-string">utils.</span><span class="hljs-string">sh </span>                 <span class="hljs-comment"># Fonctions utilitaires</span>
+│   │   ├── <span class="hljs-string">git.</span><span class="hljs-string">sh </span>                   <span class="hljs-comment"># Opérations Git</span>
+│   │   ├── <span class="hljs-string">github-api.</span><span class="hljs-string">sh </span>            <span class="hljs-comment"># Interactions GitHub API</span>
+│   │   └── <span class="hljs-string">validators.</span><span class="hljs-string">sh </span>            <span class="hljs-comment"># Validations (semver, yaml, etc.)</span>
+│   │
+│   ├── <span class="hljs-string">pre-flight.</span><span class="hljs-string">sh </span>                <span class="hljs-comment"># Phase pré-vol</span>
+│   ├── <span class="hljs-string">webhook-call.</span><span class="hljs-string">sh </span>              <span class="hljs-comment"># Appels webhooks</span>
+│   │
+│   ├── <span class="hljs-string">build/</span>
+│   │   ├── <span class="hljs-string">build.</span><span class="hljs-string">sh </span>                 <span class="hljs-comment"># Build application</span>
+│   │   ├── <span class="hljs-string">generate-checksum.</span><span class="hljs-string">sh </span>     <span class="hljs-comment"># Génération checksums</span>
+│   │   └── <span class="hljs-string">generate-version-</span><span class="hljs-string">file.</span><span class="hljs-string">sh </span> <span class="hljs-comment"># Création VERSION file</span>
+│   │
+│   ├── <span class="hljs-string">tests/</span>
+│   │   ├── <span class="hljs-string">unit-tests.</span><span class="hljs-string">sh </span>            <span class="hljs-comment"># Tests unitaires</span>
+│   │   ├── <span class="hljs-string">coverage-check.</span><span class="hljs-string">sh </span>        <span class="hljs-comment"># Vérification couverture</span>
+│   │   ├── <span class="hljs-string">lint.</span><span class="hljs-string">sh </span>                  <span class="hljs-comment"># Linting</span>
+│   │   └── <span class="hljs-string">performance-benchmark.</span><span class="hljs-string">sh </span> <span class="hljs-comment"># Benchmarks</span>
+│   │
+│   ├── <span class="hljs-string">security/</span>
+│   │   ├── <span class="hljs-string">dependency-scan.</span><span class="hljs-string">sh </span>       <span class="hljs-comment"># Scan dépendances</span>
+│   │   ├── <span class="hljs-string">secret-scan.</span><span class="hljs-string">sh </span>           <span class="hljs-comment"># Scan secrets</span>
+│   │   ├── <span class="hljs-string">sast-analysis.</span><span class="hljs-string">sh </span>         <span class="hljs-comment"># Analyse SAST</span>
+│   │   ├── <span class="hljs-string">commit-signature-</span><span class="hljs-string">check.</span><span class="hljs-string">sh </span><span class="hljs-comment"># Vérification signatures</span>
+│   │   └── <span class="hljs-string">supply-chain-</span><span class="hljs-string">check.</span><span class="hljs-string">sh </span>    <span class="hljs-comment"># Vérification supply chain</span>
+│   │
+│   ├── <span class="hljs-string">versioning/</span>
+│   │   ├── <span class="hljs-string">calculate-version.</span><span class="hljs-string">sh </span>     <span class="hljs-comment"># Calcul version</span>
+│   │   ├── <span class="hljs-string">detect-bump-</span><span class="hljs-string">type.</span><span class="hljs-string">sh </span>      <span class="hljs-comment"># Détection bump</span>
+│   │   ├── <span class="hljs-string">validate-semver.</span><span class="hljs-string">sh </span>       <span class="hljs-comment"># Validation semver</span>
+│   │   └── <span class="hljs-string">sync-version.</span><span class="hljs-string">sh </span>          <span class="hljs-comment"># Sync fichiers version</span>
+│   │
+│   ├── <span class="hljs-string">changelog/</span>
+│   │   ├── <span class="hljs-string">generate-changelog.</span><span class="hljs-string">sh </span>    <span class="hljs-comment"># Génération changelog</span>
+│   │   ├── <span class="hljs-string">extract-changelog.</span><span class="hljs-string">sh </span>     <span class="hljs-comment"># Extraction dernière entrée</span>
+│   │   └── <span class="hljs-string">changelog-to-</span><span class="hljs-string">release-notes.</span><span class="hljs-string">sh </span><span class="hljs-comment"># Conversion</span>
+│   │
+│   ├── <span class="hljs-string">release/</span>
+│   │   ├── <span class="hljs-built_in">create-tag.sh</span>             <span class="hljs-comment"># Création tag</span>
+│   │   ├── <span class="hljs-string">verify-tag.</span><span class="hljs-string">sh </span>            <span class="hljs-comment"># Vérification tag</span>
+│   │   ├── <span class="hljs-string">auto-commit.</span><span class="hljs-string">sh </span>           <span class="hljs-comment"># Commit auto</span>
+│   │   ├── <span class="hljs-string">auto-push.</span><span class="hljs-string">sh </span>             <span class="hljs-comment"># Push auto</span>
+│   │   └── <span class="hljs-built_in">create-release.sh</span>         <span class="hljs-comment"># Création GitHub Release</span>
+│   │
+│   ├── <span class="hljs-string">deploy/</span>
+│   │   ├── <span class="hljs-string">pre-deploy-</span><span class="hljs-string">check.</span><span class="hljs-string">sh </span>      <span class="hljs-comment"># Pré-déploiement</span>
+│   │   ├── <span class="hljs-string">post-deploy-</span><span class="hljs-string">validation.</span><span class="hljs-string">sh </span><span class="hljs-comment"># Post-déploiement</span>
+│   │   └── <span class="hljs-string">rollback.</span><span class="hljs-string">sh </span>              <span class="hljs-comment"># Rollback</span>
+│   │
+│   └── <span class="hljs-string">reporting/</span>
+│       ├── <span class="hljs-string">generate-reports.</span><span class="hljs-string">sh </span>      <span class="hljs-comment"># Génération rapports</span>
+│       ├── <span class="hljs-string">compliance-report.</span><span class="hljs-string">sh </span>     <span class="hljs-comment"># Rapport audit</span>
+│       └── <span class="hljs-string">audit-log-</span><span class="hljs-string">export.</span><span class="hljs-string">sh </span>      <span class="hljs-comment"># Export logs audit</span>
+│
+├── <span class="hljs-string">templates/</span>
+│   ├── <span class="hljs-string">changelog-default.</span><span class="hljs-string">hbs </span>        <span class="hljs-comment"># Template changelog défaut</span>
+│   ├── <span class="hljs-string">compliance-report.</span><span class="hljs-string">hbs </span>        <span class="hljs-comment"># Template rapport</span>
+│   └── <span class="hljs-string">pre-flight-</span><span class="hljs-string">summary.</span><span class="hljs-string">hbs </span>       <span class="hljs-comment"># Template résumé pré-vol</span>
+│
+└── <span class="hljs-string">tests/</span>
+    ├── <span class="hljs-string">unit/</span>                         <span class="hljs-comment"># Tests unitaires des scripts</span>
+    └── <span class="hljs-string">integration/</span>                  <span class="hljs-comment"># Tests d'intégration</span>
+</code></pre><hr>
+<h2 id="11-r-sum-ex-cutif">11. RÉSUMÉ EXÉCUTIF</h2>
+<h3 id="points-cl-s-de-l-architecture">Points Clés de l&#39;Architecture</h3>
+<p>✅ <strong>Modularité</strong> : Chaque scope est indépendant et can-disable<br>✅ <strong>Robustesse</strong> : Retry logic, timeout, error handling complets<br>✅ <strong>Transparence</strong> : Logs [AUDIT], [DEBUG], rapports détaillés<br>✅ <strong>Extensibilité</strong> : Webhooks + Plugins à 3 moments clés<br>✅ <strong>Sécurité</strong> : Scanning complet, signing, supply chain<br>✅ <strong>Monorepo-Ready</strong> : Support multi-packages avec versioning indépendant<br>✅ <strong>Cloud-Native</strong> : Conçu pour GitHub Actions, intégrable ailleurs  </p>
+<h3 id="timeline-d-ex-cution-typique">Timeline d&#39;Exécution Typique</h3>
+<pre><code>PRE-FLIGHT (<span class="hljs-number">30s</span>)
+  ↓
+BUILD (<span class="hljs-number">120s</span>)
+  ↓
+TESTS + QUALITY (<span class="hljs-number">180s</span>)
+  ↓
+SECURITY (<span class="hljs-number">120s</span>)
+  ↓
+VERSIONING + CHANGELOG (<span class="hljs-number">30s</span>)
+  ↓
+TAGGING + RELEASE (<span class="hljs-number">15s</span>)
+  ↓
+DEPLOYMENT (<span class="hljs-number">300s</span>, si enabled)
+  ↓
+REPORTING + WEBHOOKS (<span class="hljs-number">30s</span>)
+  ↓
+TOTAL: <span class="hljs-number">5</span><span class="hljs-number">-10</span> minutes
+</code></pre>
+      </article>
+    </main>
+  </body>
+</html>
