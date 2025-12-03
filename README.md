@@ -1,4 +1,6 @@
-# Instant-Release
+# [Instant-Release](https://yohemm.github.io/Intstant-Release/)
+
+[*Instant-Release*](https://yohemm.github.io/Intstant-Release/)
 
 Automatic versioning for simpler continuous deployment!
 
@@ -10,6 +12,10 @@ GitHub Action that automatically generates:
 * [x] Detailed changelogs of your commits / commit types, version differences, and version statistics
 * [ ] Project versioning following a custom commit convention
 * [ ] Synchronization of files (package.json, composer.json, etc...)
+
+## Description de 50 mots
+
+InstantRelease est un framework CI/CD intelligent qui automatise et fiabilise tout le cycle de release, du versioning au tagging jusqu'à la génération de changelogs. Actuellement en phase de POC, il vise à offrir un pipeline totalement autonome, robuste et adaptable, réduisant les erreurs humaines et accélérant drastiquement les livraisons logiciel 
 
 ## ![License](./LICENSE.md)
 
