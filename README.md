@@ -1,6 +1,6 @@
-# ![Instant-Release](https://yohemm.github.io/Intstant-Release/)
+# <a href="https://yohemm.github.io/Intstant-Release/" target="_blank">Instant-Release</a>
 
-![*Instant-Release*](https://yohemm.github.io/Intstant-Release/)
+<a href="https://yohemm.github.io/Intstant-Release/" target="_blank">Instant-Release</a>
 
 Automatic versioning for simpler continuous deployment!
 
