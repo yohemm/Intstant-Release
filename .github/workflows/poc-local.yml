@@ -3,8 +3,8 @@ name: POC Local Test
 on:
   workflow_dispatch:
   push:
-  #   branches:
-  #     - feat/POC
+    branches:
+      - feat/POC
 
 jobs:
   poc:
