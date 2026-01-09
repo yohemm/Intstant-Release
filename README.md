@@ -1,31 +1,96 @@
 # <a href="https://yohemm.github.io/Intstant-Release/" target="_blank">Instant-Release</a>
 
-<a href="https://yohemm.github.io/Intstant-Release/" target="_blank">Instant-Release</a>
+<p align="center">
+  <img src="https://placehold.co/1200x360?text=InstantRelease+Hero" alt="InstantRelease Hero" />
+</p>
 
-Automatic versioning for simpler continuous deployment!
+<p align="center">
+  <a href="https://github.com/yohemm/Intstant-Release/actions/workflows/poc-tests-minimal.yml">
+    <img alt="POC Tests Minimal" src="https://github.com/yohemm/Intstant-Release/actions/workflows/poc-tests-minimal.yml/badge.svg" />
+  </a>
+  <a href="https://github.com/yohemm/Intstant-Release/actions/workflows/poc-tests-verbose.yml">
+    <img alt="POC Tests Verbose" src="https://github.com/yohemm/Intstant-Release/actions/workflows/poc-tests-verbose.yml/badge.svg" />
+  </a>
+  <a href="LICENSE.md">
+    <img alt="License" src="https://img.shields.io/badge/license-Non--Commercial-blue" />
+  </a>
+</p>
 
-GitHub Action that automatically generates:
+InstantRelease est une GitHub Action CI/CD qui automatise le versioning, le changelog, le tag et la release. L'objectif: livrer plus vite, sans erreurs humaines, avec un pipeline propre et reproductible.
 
-* [x] Project versioning following the Angular semantic-release commit convention (or custom)
-* [x] Version tags
-* [x] Releases
-* [x] Detailed changelogs of your commits / commit types, version differences, and version statistics
-* [ ] Project versioning following a custom commit convention
-* [ ] Synchronization of files (package.json, composer.json, etc...)
+## Pourquoi InstantRelease
 
-## Description de 50 mots
+- Versioning automatique base sur vos commits (convention type Angular)
+- Changelog clair, structure et lisible par l'equipe
+- Tags et releases GitHub generes sans friction
+- Mode POC rapide a integrer, extensible vers une version complete
 
-InstantRelease est un framework CI/CD intelligent qui automatise et fiabilise tout le cycle de release, du versioning au tagging jusqu'à la génération de changelogs. Actuellement en phase de POC, il vise à offrir un pipeline totalement autonome, robuste et adaptable, réduisant les erreurs humaines et accélérant drastiquement les livraisons logiciel 
+## Ce que vous gagnez
 
-## ![License](./LICENSE.md)
+- Moins de temps perdu en release manuelles
+- Une version coherent a chaque merge
+- Une trace propre pour vos utilisateurs et vos stakeholders
 
-This extension is free for personal, educational, or non-commercial use.
-Any professional or commercial use is strictly prohibited without prior written authorization from the author.
+## Fonctionnalites (POC)
 
-Please refer to the ![LICENSE.md](./LICENSE.md) file for full details.
+- [x] Detection du bump (major/minor/patch) via commits
+- [x] Generation de changelog
+- [x] Creation de tag
+- [x] Tests locaux (bash + Docker) et CI POC
+- [ ] Creation de release GitHub (prochaine etape)
+- [ ] Synchronisation de version dans plusieurs fichiers
 
-To obtain a professional license, contact: [vaxelaire.yohem@gmail.com](mailto:vaxelaire.yohem@gmail.com).
+## Demo rapide
+
+Workflow minimal pour tester rapidement le POC :
+
+```yaml
+name: InstantRelease Demo
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Run InstantRelease POC
+        uses: ./poc-action
+        with:
+          generate-changelog: true
+          create-tags: true
+          dry-run: true
+```
+
+## Cas d'usage
+
+- Projets open source qui veulent des releases propres sans effort
+- Equipes produit qui publient souvent et veulent garder l'historique clair
+- POCs et MVPs qui veulent un process simple, sans lourdeur
+
+## Etat du projet
+
+Le projet est en phase POC mais deja exploitable pour tester un workflow de release complet. Les prochaines evolutions sont listees dans `docs/ROADMAP.md`.
+
+## Documentation
+
+- Technique: `docs/TECHNICAL_DOCS.md`
+- Roadmap: `docs/ROADMAP.md`
+
+## Licence
+
+Cette extension est gratuite pour un usage personnel, educatif ou non commercial.
+Tout usage professionnel ou commercial est interdit sans autorisation ecrite de l'auteur.
+
+Voir `LICENSE.md` pour les details.
+Pour une licence pro: [vaxelaire.yohem@gmail.com](mailto:vaxelaire.yohem@gmail.com).
 
 ## Attribution
 
-If you use this extension in a personal or educational project, please credit the project in your work or documentation.
+Si vous utilisez ce projet a titre personnel ou educatif, merci de le mentionner dans votre travail ou documentation.

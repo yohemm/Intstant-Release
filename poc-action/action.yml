@@ -1,0 +1,108 @@
+name: InstantRelease POC (bash)
+description: POC action that runs bash scripts for versioning and changelog
+
+inputs:
+  trigger-branches:
+    description: Branches on which to trigger versioning (comma-separated)
+    required: false
+    default: main,develop
+  breaking-change-indicators:
+    description: Commit indicators for breaking changes (comma-separated)
+    required: false
+    default: 'BREAKING CHANGE,!:,!:'
+  feature-types:
+    description: Commit types considered as features (comma-separated)
+    required: false
+    default: feat,feature
+  fix-types:
+    description: Commit types considered as fixes (comma-separated)
+    required: false
+    default: fix,bugfix
+  refactor-types:
+    description: Commit types considered as refactors/perf (comma-separated)
+    required: false
+    default: refactor,perf
+  git-user-name:
+    description: Git username for commits
+    required: false
+    default: github-actions[bot]
+  git-user-email:
+    description: Git email for commits
+    required: false
+    default: github-actions[bot]@users.noreply.github.com
+  initial-version:
+    description: Initial version if no tags exist
+    required: false
+    default: v0.0.1
+  generate-changelog:
+    description: Generate or update CHANGELOG.md
+    required: false
+    default: true
+  changelog-file:
+    description: Path to the changelog file
+    required: false
+    default: CHANGELOG.md
+  auto-commit:
+    description: Auto-commit changelog updates
+    required: false
+    default: true
+  create-tags:
+    description: Create Git tags
+    required: false
+    default: true
+  create-release:
+    description: Create GitHub Release (not implemented in POC)
+    required: false
+    default: false
+  debug:
+    description: Debug mode for detailed logs
+    required: false
+    default: false
+  dry-run:
+    description: Simulate run without pushing
+    required: false
+    default: false
+  strict-dry-run:
+    description: Avoid any write (no tag/commit/changelog)
+    required: false
+    default: false
+
+outputs:
+  current-version:
+    description: New version created
+    value: ${{ steps.poc.outputs.current-version }}
+  version-bump:
+    description: Bump type (major, minor, patch, none)
+    value: ${{ steps.poc.outputs.version-bump }}
+  changelog-generated:
+    description: Indicates if changelog was generated/updated
+    value: ${{ steps.poc.outputs.changelog-generated }}
+  tag-created:
+    description: Indicates if a new tag was created
+    value: ${{ steps.poc.outputs.tag-created }}
+
+runs:
+  using: composite
+  steps:
+    - name: Run POC scripts
+      id: poc
+      shell: bash
+      env:
+        IR_TRIGGER_BRANCHES: ${{ inputs.trigger-branches }}
+        IR_BREAKING_CHANGE_INDICATORS: ${{ inputs.breaking-change-indicators }}
+        IR_FEATURE_TYPES: ${{ inputs.feature-types }}
+        IR_FIX_TYPES: ${{ inputs.fix-types }}
+        IR_REFACTOR_TYPES: ${{ inputs.refactor-types }}
+        IR_GIT_USER_NAME: ${{ inputs.git-user-name }}
+        IR_GIT_USER_EMAIL: ${{ inputs.git-user-email }}
+        IR_INITIAL_VERSION: ${{ inputs.initial-version }}
+        IR_GENERATE_CHANGELOG: ${{ inputs.generate-changelog }}
+        IR_CHANGELOG_FILE: ${{ inputs.changelog-file }}
+        IR_AUTO_COMMIT: ${{ inputs.auto-commit }}
+        IR_CREATE_TAGS: ${{ inputs.create-tags }}
+        IR_CREATE_RELEASE: ${{ inputs.create-release }}
+        IR_DEBUG: ${{ inputs.debug }}
+        IR_DRY_RUN: ${{ inputs.dry-run }}
+        IR_STRICT_DRY_RUN: ${{ inputs.strict-dry-run }}
+      run: |
+        bash "$GITHUB_ACTION_PATH/../scripts/poc/main.sh"
