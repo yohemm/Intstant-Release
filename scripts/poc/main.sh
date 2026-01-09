@@ -62,7 +62,7 @@ fi
 
 tag_created="false"
 if [ "$IR_CREATE_TAGS" = "true" ]; then
-  tag_created="$(create_tag "$new_version")"
+  tag_created="$(create_tag "$new_version" | tail -n 1)"
 fi
 
 set_output "current-version" "$new_version"

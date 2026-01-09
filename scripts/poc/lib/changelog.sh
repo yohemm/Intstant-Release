@@ -48,7 +48,11 @@ generate_changelog() {
   fixes="$(echo "$all_commits" | grep -E "^- (${IR_FIX_PATTERN})" || true)"
   refactors="$(echo "$all_commits" | grep -E "^- (${IR_REFACTOR_PATTERN})" || true)"
   merges="$(echo "$all_commits" | grep -E "^ - Merge|^- Merge" || true)"
-  misc="$(echo "$all_commits" | grep -Ev "^- (${IR_FEATURE_PATTERN}|${IR_FIX_PATTERN}|${IR_REFACTOR_PATTERN})|(${IR_BREAKING_PATTERN})|Merge" || true)"
+  if [ "$IR_MISC_ENABLED" = "true" ]; then
+    misc="$(echo "$all_commits" | grep -Ev "^- (${IR_FEATURE_PATTERN}|${IR_FIX_PATTERN}|${IR_REFACTOR_PATTERN})|(${IR_BREAKING_PATTERN})|Merge" || true)"
+  else
+    misc=""
+  fi
 
   add_section "Breaking Changes" "$breaking"
   add_section "Features" "$features"

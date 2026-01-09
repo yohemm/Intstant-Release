@@ -19,4 +19,5 @@ jobs:
           generate-changelog: true
           create-tags: true
           dry-run: true
+          strict-dry-run: true
           debug: false

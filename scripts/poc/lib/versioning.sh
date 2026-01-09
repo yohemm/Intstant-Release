@@ -1,7 +1,13 @@
 #!/usr/bin/env bash
 
 get_last_tag() {
-  git describe --tags --abbrev=0 2>/dev/null || echo ""
+  local tag
+  tag="$(git tag --list 'v*' --sort=-v:refname | head -n 1)"
+  if [ -n "$tag" ]; then
+    echo "$tag"
+  else
+    git describe --tags --abbrev=0 2>/dev/null || echo ""
+  fi
 }
 
 collect_commits() {

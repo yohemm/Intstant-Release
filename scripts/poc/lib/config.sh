@@ -33,6 +33,7 @@ IR_CREATE_TAGS="$(ir_default IR_CREATE_TAGS 'true')"
 IR_CREATE_RELEASE="$(ir_default IR_CREATE_RELEASE 'false')"
 IR_DEBUG="$(ir_default IR_DEBUG 'false')"
 IR_STRICT_DRY_RUN="$(ir_default IR_STRICT_DRY_RUN 'false')"
+IR_MISC_ENABLED="$(ir_default IR_MISC_ENABLED 'true')"
 
 if [ -n "${IR_DRY_RUN-}" ]; then
   DRY_RUN="$IR_DRY_RUN"
