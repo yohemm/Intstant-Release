@@ -1,3 +1,10 @@
+## v1.2.2 - 2026-01-09
+
+### Fixes
+- fix: add POC docker tests and CI workflows ([commit 60a07ba](https://github.com/yohemm/Intstant-Release/commit/60a07ba37c39129a8019e062ad2fc56cd7a238a4)) by Yohem
+
+Compare changes: [v1.2.1...v1.2.2](https://github.com/yohemm/Intstant-Release/compare/v1.2.1...v1.2.2)
+
 ## v1.2.1 - 2026-01-09
 
 ### Fixes
