@@ -219,6 +219,28 @@ instantrelease/
 ### 7.1 Tests
 - commande unique, retourne code non zero si echec
 - blocage de la release en cas d'echec (sauf `dry-run`)
+- tests POC : scripts bash + integration sur repo temporaire
+- CI : workflows POC (minimal + verbose)
+
+### 7.1.1 Comment lancer les tests
+Local (bash) :
+```
+bash tests_poc/run.sh
+```
+
+Local (Docker, isole) :
+```
+bash scripts/run-tests-docker.sh
+```
+
+Local (Docker, silencieux) :
+```
+bash scripts/run-tests-docker.sh --quiet
+```
+
+CI :
+- `.github/workflows/poc-tests-minimal.yml`
+- `.github/workflows/poc-tests-verbose.yml`
 
 ### 7.2 Securite
 - audit dependances si active

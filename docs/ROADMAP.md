@@ -36,17 +36,19 @@ Objectif : valider les choix techniques et le perimetre avant de coder.
 ## 4. Backlog technique par lot
 
 ### Lot 1 - POC livrable
-- lecture config YAML
-- calcul version via commits
-- changelog Markdown
-- creation tag + release
-- dry-run
+- [x] lecture config YAML
+- [x] calcul version via commits
+- [x] changelog Markdown
+- [x] creation tag
+- [ ] creation release GitHub
+- [x] dry-run
 
 ### Lot 2 - Qualite & robustesse
-- validation schema YAML
-- gestion erreurs centralisee
-- logs [AUDIT] et [DEBUG]
-- tests unitaires scripts
+- [ ] validation schema YAML
+- [ ] gestion erreurs centralisee
+- [ ] logs [AUDIT] et [DEBUG]
+- [x] tests scripts (integration + Docker)
+- [x] CI tests POC (minimal + verbose)
 
 ### Lot 3 - Securite & compliance
 - scan dependances
