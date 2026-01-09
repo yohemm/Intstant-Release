@@ -1,3 +1,16 @@
+## v1.2.3 - 2026-01-09
+
+### Refactors
+- refactor: add archives folder ([commit c169da9](https://github.com/yohemm/Intstant-Release/commit/c169da90ce029f522868eabd26bb8ff34c1231cf)) by Yohem
+
+### Other Changes
+- docs: refresh README and add tests/CI guidance ([commit f10c49a](https://github.com/yohemm/Intstant-Release/commit/f10c49a39f81686c39642986810dbf267d183b30)) by Yohem
+
+### Merges
+- Merge branch 'feat/POC' of github.com:yohemm/Intstant-Release into feat/POC ([commit 0636538](https://github.com/yohemm/Intstant-Release/commit/063653883f451c28a2ba7e5d9c908d4d833c6cc2)) by Yohem
+
+Compare changes: [v1.2.2...v1.2.3](https://github.com/yohemm/Intstant-Release/compare/v1.2.2...v1.2.3)
+
 ## v1.2.2 - 2026-01-09
 
 ### Fixes
