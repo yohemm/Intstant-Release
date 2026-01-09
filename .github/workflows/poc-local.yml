@@ -2,9 +2,9 @@ name: POC Local Test
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - feat/POC
+  # push:
+  #   branches:
+  #     - feat/POC
 jobs:
   poc:
     runs-on: ubuntu-latest
@@ -20,6 +20,6 @@ jobs:
         with:
           generate-changelog: true
           create-tags: true
-          dry-run: true
+          dry-run: false
           strict-dry-run: false
           debug: false
