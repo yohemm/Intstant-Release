@@ -23,5 +23,4 @@ jobs:
           create-tags: true
           dry-run: false
           strict-dry-run: false
-          debug: false
-          
+          debug: true
