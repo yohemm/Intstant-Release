@@ -1,3 +1,13 @@
+## v1.2.1 - 2026-01-09
+
+### Fixes
+- fix: test ([commit e3b98b1](https://github.com/yohemm/Intstant-Release/commit/e3b98b165660a57d677d7631aa1808344eb76d8d)) by TestBot
+
+### Merges
+- Merge branch 'feat/POC' of github.com:yohemm/Intstant-Release into feat/POC ([commit 67e65f9](https://github.com/yohemm/Intstant-Release/commit/67e65f9ec4724596f01e09bb8766aac36741be24)) by TestBot
+
+Compare changes: [v1.2.0...v1.2.1](https://github.com/yohemm/Intstant-Release/compare/v1.2.0...v1.2.1)
+
 ## v1.2.0 - 2026-01-09
 
 ### Features
