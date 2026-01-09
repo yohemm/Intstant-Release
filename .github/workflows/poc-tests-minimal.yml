@@ -1,0 +1,19 @@
+name: POC Tests (Minimal)
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - feat/*
+  pull_request:
+
+jobs:
+  poc-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Run POC tests (Docker)
+        run: bash scripts/run-tests-docker.sh --quiet

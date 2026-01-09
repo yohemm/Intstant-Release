@@ -13,7 +13,7 @@ ir_default() {
 }
 
 clean_csv() {
-  echo "$1" | tr -d ' '
+  echo "$1" | sed -E 's/[[:space:]]*,[[:space:]]*/,/g'
 }
 
 IR_TRIGGER_BRANCHES="$(clean_csv "$(ir_default IR_TRIGGER_BRANCHES 'main,develop')")"
