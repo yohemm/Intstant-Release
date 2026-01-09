@@ -1,7 +1,7 @@
 # <a href="https://yohemm.github.io/Intstant-Release/" target="_blank">Instant-Release</a>
 
 <p align="center">
-  <img src="https://placehold.co/1200x360?text=InstantRelease+Hero" alt="InstantRelease Hero" />
+  <img src="https://nas.vaxelaire.fr/public.php/dav/files/Yn5yjmeHYMPtsX7/?accept=zip" alt="InstantRelease Hero" />
 </p>
 
 <p align="center">
